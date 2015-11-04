@@ -6,8 +6,6 @@
 //  Copyright © 2015 CocoaPods. All rights reserved.
 //
 
-import Foundation
-
 import XCTest
 import XCTest_Gherkin
 

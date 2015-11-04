@@ -1,8 +1,15 @@
-import UIKit
+//
+//  ExampleFeatures.swift
+//  XCTest-Gherkin
+//
+//  Created by Sam Dean on 04/11/2015.
+//  Copyright © 2015 CocoaPods. All rights reserved.
+//
+
 import XCTest
 import XCTest_Gherkin
 
-class ExampleTests: XCTestCase {
+class ExampleFeatures: XCTestCase {
 
     func testBasicSteps() {
         Given("I have a working Gherkin environment")
