@@ -16,7 +16,7 @@ Adds Gherkin syntax to XCTestCase
 
   s.homepage         = "https://github.com/net-a-porter-mobile/XCTest-Gherkin"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
-  s.license          = 'MIT'
+  s.license          = 'NAP'
   s.author           = { "Sam Dean" => "sam.dean@net-a-porter.com" }
   s.source           = { :git => "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
