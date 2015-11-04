@@ -20,7 +20,7 @@ import Foundation
  - parameter baseClass: The base type to match against
  - returns: An array of T, where T is a subclass of `baseClass`
 */
-public func allSubclassesOf<T>(baseClass: T) -> [T] {
+func allSubclassesOf<T>(baseClass: T) -> [T] {
     var matches:[T] = []
     
     // Get all the classes which implement 'baseClass' and return them
