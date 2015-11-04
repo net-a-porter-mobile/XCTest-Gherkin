@@ -14,11 +14,11 @@ Pod::Spec.new do |s|
 Adds Gherkin syntax to XCTestCase
                        DESC
 
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/XCTest-Gherkin"
+  s.homepage         = "https://github.com/net-a-porter-mobile/XCTest-Gherkin"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "Sam Dean" => "sam.dean@net-a-porter.com" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/XCTest-Gherkin.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform     = :ios, '8.0'
@@ -30,6 +30,6 @@ Adds Gherkin syntax to XCTestCase
   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  s.frameworks = 'XCTest'
   # s.dependency 'AFNetworking', '~> 2.3'
 end

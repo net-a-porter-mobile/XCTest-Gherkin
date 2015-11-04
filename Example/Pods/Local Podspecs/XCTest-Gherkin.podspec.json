@@ -1,15 +1,15 @@
 {
   "name": "XCTest-Gherkin",
   "version": "0.1.0",
-  "summary": "A short description of XCTest-Gherkin.",
-  "description": "",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/XCTest-Gherkin",
+  "summary": "Gherkin style tests",
+  "description": "Adds Gherkin syntax to XCTestCase",
+  "homepage": "https://github.com/net-a-porter-mobile/XCTest-Gherkin",
   "license": "MIT",
   "authors": {
     "Sam Dean": "sam.dean@net-a-porter.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/XCTest-Gherkin.git",
+    "git": "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git",
     "tag": "0.1.0"
   },
   "platforms": {
@@ -21,5 +21,6 @@
     "XCTest-Gherkin": [
       "Pod/Assets/*.png"
     ]
-  }
+  },
+  "frameworks": "XCTest"
 }
