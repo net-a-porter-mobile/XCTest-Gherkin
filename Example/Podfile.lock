@@ -1,0 +1,14 @@
+PODS:
+  - XCTest-Gherkin (0.1.0)
+
+DEPENDENCIES:
+  - XCTest-Gherkin (from `../`)
+
+EXTERNAL SOURCES:
+  XCTest-Gherkin:
+    :path: ../
+
+SPEC CHECKSUMS:
+  XCTest-Gherkin: 70e8c0ab03e1f1d157b6c00d29d5f0116d3ef336
+
+COCOAPODS: 0.39.0

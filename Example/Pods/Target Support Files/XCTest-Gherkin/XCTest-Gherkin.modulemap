@@ -1,0 +1,6 @@
+framework module XCTest_Gherkin {
+  umbrella header "XCTest-Gherkin-umbrella.h"
+
+  export *
+  module * { export * }
+}
