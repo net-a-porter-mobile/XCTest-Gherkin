@@ -173,15 +173,17 @@ extension XCTestCase {
             }
         }
         
-        // Get the range of expression to match over - this is all of it
+        // Get the step(s) which match this expression
         let range = NSMakeRange(0, expression.characters.count)
-        let options:NSMatchingOptions = []
+        let matches = steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
+            if let match = step.regex.firstMatchInString(expression, options: [], range: range) {
+                return (step:step, match:match)
+            } else {
+                return nil
+            }
+        }.flatMap { $0! }
         
-        let matchingSteps = steps.filter { (step: Step) -> Bool in
-            return step.regex.numberOfMatchesInString(expression, options: options, range: range) > 0
-        }
-        
-        switch matchingSteps.count {
+        switch matches.count {
             
         case 0:
             self.dynamicType.printStepDefinitions()
@@ -189,8 +191,7 @@ extension XCTestCase {
             
         case 1:
             // Get the step and the matches inside it
-            let step = matchingSteps.first!
-            let match = step.regex.firstMatchInString(expression, options: options, range: range)!
+            let (step, match) = matches.first!
             
             // Covert them to strings to pass back into the step function
             // TODO: This should really only need to be a map function :(
@@ -221,7 +222,9 @@ extension XCTestCase {
             currentStepDepth--
             
         default:
-            XCTFail("Multiple steps found for : \(expression)")
+            // Dump out all the steps found which match so we can work out why
+            matches.forEach { NSLog("Matching step : \(String(reflecting: $0.step))") }
+            XCTFail("Multiple step definitions found for : '\(ColorLog.red(expression))'")
         }
         
         return self
