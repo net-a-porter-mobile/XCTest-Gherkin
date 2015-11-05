@@ -1,6 +1,6 @@
 # XCTest-Gherkin
 
-[![CI Status](http://img.shields.io/travis/Sam Dean/XCTest-Gherkin.svg?style=flat)](https://travis-ci.org/Sam Dean/XCTest-Gherkin)
+[![CI Status](http://img.shields.io/travis/net-a-porter-mobile/XCTest-Gherkin.svg?style=flat)](https://travis-ci.org/net-a-porter-mobile/XCTest-Gherkin)
 [![Version](https://img.shields.io/cocoapods/v/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 [![License](https://img.shields.io/cocoapods/l/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 [![Platform](https://img.shields.io/cocoapods/p/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
