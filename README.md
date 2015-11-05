@@ -98,11 +98,11 @@ If there isn't a step definition found for a step in your feature file then the 
 steps
 -------------
 /I have a working Gherkin environment/  (SanitySteps.swift:17)
-/I use the example name (?:Alice|Bob)/  (SanitySteps.swift:38)
-/The age should be ([0-9]*)/  (SanitySteps.swift:44)
-/This is another step/  (SanitySteps.swift:33)
-/This step should call another step/  (SanitySteps.swift:28)
-/This test should not ([a-zA-Z0-9]*)/  (SanitySteps.swift:23)
+/I use the example name (?:Alice|Bob)/  (SanitySteps.swift:38)
+/The age should be ([0-9]*)/  (SanitySteps.swift:44)
+/This is another step/  (SanitySteps.swift:33)
+/This step should call another step/  (SanitySteps.swift:28)
+/This test should not ([a-zA-Z0-9]*)/  (SanitySteps.swift:23)
 -------------
 XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Step definition not found for 'I have a working Pickle environment'
 ```
