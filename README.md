@@ -150,4 +150,4 @@ Sam Dean, sam.dean@net-a-porter.com
 
 ## License
 
-This is currently owned by net-a-porter - it's hopefully going to be open sourced, but it isn't yet.
+See LICENSE for details - it's the Apache license.
