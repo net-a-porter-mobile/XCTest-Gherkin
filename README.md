@@ -5,11 +5,107 @@
 [![License](https://img.shields.io/cocoapods/l/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 [![Platform](https://img.shields.io/cocoapods/p/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 
-## Usage
+# XCTest+Gherkin
+At net-a-porter we have traditionally done our UI testing using Cucumber and Appium, which has worked fine and did the job. However, it has a few disadvantages; it requires konwing another language (in our case Ruby), it requires more moving parts on our CI stack (cucumber, node, appium, ruby, gems etc), it ran slowly, and it always seemed to lag a bit behind the latest Xcode tech. None of these by themselves are deal breakers but put together it all adds up to make UI testing more of a chore than we think it should be.
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+The goals of this project are to 
 
-## Requirements
+1. Increase speed and reduce tech overhead of writing UI tests, with the end goal of developers sitting with testers and writing UI tests when they write unit tests. These tests would be run by our CI on each merge so they have to be fast.
+2. Not lose any of the existing test coverage. We've been using Appium for a while so we've built up a good set of feature files that cover a big chunk of functionality which we don't want to lose.
+
+Goal #1 is easy to achieve; we just use a technology built into Xcode so we have a common technology between the tests and the app, using a common language our developers and testers both know.
+
+Goal #2 is tricker - we will need to keep our .feature files and move them over to the new system somehow. The structure of our tests should be as similar to Cucumber's structure as possible to reduce the learning curve; we're already asking to testers to learn a new language!
+
+The solution was to extend `XCTestCase` to allow Gherkin style syntax when writing tests, like this:
+
+### Features
+```swift
+import XCTest
+import XCTest_Gherkin
+
+class testAThingThatNeedsTesting: XCTestCase {
+    func testBasicSteps() {
+        Given("A situation that I want to start at")
+        When("I do a thing")
+        And("I do another thing")
+        Then("This value should be 100")
+        And("This condition should be met as well")
+    }
+}
+```
+
+This is a valid test case that should run inside Xcode, with the failing line highlighted and the tests appearing in the test inspector pane. An important thing to keep is visibility of which test failed and why!
+
+### Step definitions
+The next step is to write step definitions for each of these steps. Here's two of them:
+
+```swift
+class SomeStepDefinitions : StepDefiner {  
+    override func defineSteps() {
+        step("A situation that I want to start at") {
+            // Your setup code here
+        }
+        
+        step("This value should be ([0-9]*)" { (matches:String) in
+            let expectedValue = matches.first!
+            let someValueFromTheUI = /* However you want to get this */
+            XCTAssertEqual(expectedValue, someValueFromTheUI)
+        }
+    }
+}
+```
+
+These steps match (via regular expressions, using `NSRegularExpression` obvs) and return the capture groups (if there are any). The second step will capture the digits from the end of the test and compare it to the current state of the UI.
+
+### Examples and feature outlines
+If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with is here too!
+
+```swift
+    func testOutlineTests() {
+        Examples(
+            [ "name", "age" ],
+            [ "Alice", "20" ],
+            [ "Bob", "20" ]
+        )
+        
+        Outline {
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }
+    }
+```
+
+This will run the tests twice, once with the values `Alice,20` and once with the values `Bob,20`.
+
+NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherkin you specify them afterwards. Sorry about that.
+
+### Dealing with errors / debugging tests
+
+#### Duplicate steps:
+
+If there are step definitions which both match a step in your feature then the test will fail with an error something like 
+
+```
+-[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Multiple steps found for : I have a working Gherkin environment
+```
+
+#### Missing steps
+
+If there isn't a step definition found for a step in your feature file then the extensions will output a list of all the available steps and then fail the test, something like:
+
+```
+steps
+-------------
+/I have a working Gherkin environment/  (SanitySteps.swift:17)
+/I use the example name (?:Alice|Bob)/  (SanitySteps.swift:38)
+/The age should be ([0-9]*)/  (SanitySteps.swift:44)
+/This is another step/  (SanitySteps.swift:33)
+/This step should call another step/  (SanitySteps.swift:28)
+/This test should not ([a-zA-Z0-9]*)/  (SanitySteps.swift:23)
+-------------
+XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Step definition not found for 'I have a working Pickle environment'
+```
 
 ## Installation
 
@@ -19,6 +115,17 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "XCTest-Gherkin"
 ```
+
+and run `pod install`
+
+## Examples
+There are working examples in the pod's Example project - just run the tests and see what happens!
+
+## XCTest+Gherkin at net-a-porter
+
+We use this extensino along with KIF to do our UI tests. For unit tests we just use XCTest plain. KIF is working really well for us, and is far far faster than our previous test suite.
+
+We put our calls to KIF inside our step definitions, which happens to closely mirror how we workied with our previous Cucumber implementation, making migrating even easier.
 
 ## Author
 
