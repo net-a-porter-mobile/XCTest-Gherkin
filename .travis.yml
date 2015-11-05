@@ -1,4 +1,4 @@
-# references:
+\# references:
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
@@ -13,5 +13,5 @@ podfile: Example/Podfile
 #- pod install --project-directory=Example
 
 script:
-- set -o pipefail && xcodebuild test -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator -destination "OS=9.1" ONLY_ACTIVE_ARCH=NO | xcpretty
+- set -o pipefail && xcodebuild test -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
