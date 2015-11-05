@@ -71,17 +71,24 @@ public extension XCTestCase {
         print("-------------")
     }
     
-    // MARK: Adding steps
-    // Methods from the StepDefinerBase helpers all call back here
-    func addStep(expression: String, file: String, line: Int, _ function: ([String])->()) {
-        let step = Step(expression, file: file, line: line, function)
-        steps.insert(step);
-    }
-    
-    // MARK: Expecting steps helpers
+    /**
+     Run the step matching the specified expression
+     */
     func Given(expression: String) -> Self { return performStep(expression) }
+    
+    /**
+     Run the step matching the specified expression
+     */
     func When(expression: String) -> Self { return performStep(expression) }
+    
+    /**
+     Run the step matching the specified expression
+     */
     func Then(expression: String) -> Self { return performStep(expression) }
+    
+    /**
+     Run the step matching the specified expression
+     */
     func And(expression: String) -> Self { return performStep(expression) }
     
     /**
@@ -129,6 +136,22 @@ public extension XCTestCase {
             routine()
             currentExample = nil
         }
+    }
+    
+}
+
+/**
+ Put our package methods into this extension
+*/
+extension XCTestCase {
+    // MARK: Adding steps
+    
+    /**
+     Adds a step to the global store of steps, but only if this expression isn't already defined with a step
+    */
+    func addStep(expression: String, file: String, line: Int, _ function: ([String])->()) {
+        let step = Step(expression, file: file, line: line, function)
+        steps.insert(step);
     }
     
     /**
@@ -187,7 +210,7 @@ public extension XCTestCase {
                     currentTestName = testName
                 }
             }
-
+            
             // Debug the step name
             let coloredExpression = currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
             NSLog("step \(currentStepDepthString())\(coloredExpression)")
@@ -212,5 +235,4 @@ public extension XCTestCase {
     private func currentStepDepthString() -> String {
         return Repeat<String>(count: currentStepDepth, repeatedValue: " ").joinWithSeparator("")
     }
-    
 }

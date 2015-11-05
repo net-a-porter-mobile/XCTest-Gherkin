@@ -133,4 +133,4 @@ Sam Dean, sam.dean@net-a-porter.com
 
 ## License
 
-XCTest-Gherkin is available under the MIT license. See the LICENSE file for more info.
+This is currently owned by net-a-porter - it's hopefully going to be open sourced, but it isn't yet.
