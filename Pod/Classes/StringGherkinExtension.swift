@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     
     /**
      Given a human readable string this method will return a 'CamelCaseified' version of it.
