@@ -123,7 +123,7 @@ There are working examples in the pod's Example project - just run the tests and
 
 ## XCTest+Gherkin at net-a-porter
 
-We use this extensino along with KIF to do our UI tests. For unit tests we just use XCTest plain. KIF is working really well for us, and is far far faster than our previous test suite.
+We use this extension along with KIF to do our UI tests. For unit tests we just use XCTest plain. KIF is working really well for us, and is far far faster than our previous test suite.
 
 We put our calls to KIF inside our step definitions, which happens to closely mirror how we workied with our previous Cucumber implementation, making migrating even easier.
 
