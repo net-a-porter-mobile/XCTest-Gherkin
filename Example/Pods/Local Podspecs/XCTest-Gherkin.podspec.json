@@ -4,7 +4,10 @@
   "summary": "Gherkin style tests",
   "description": "Adds Gherkin syntax to XCTestCase",
   "homepage": "https://github.com/net-a-porter-mobile/XCTest-Gherkin",
-  "license": "MIT",
+  "license": {
+    "type": "Apache",
+    "file": "LICENSE"
+  },
   "authors": {
     "Sam Dean": "sam.dean@net-a-porter.com"
   },
@@ -16,11 +19,15 @@
     "ios": "8.0"
   },
   "requires_arc": true,
-  "source_files": "Pod/Classes/**/*",
-  "resource_bundles": {
-    "XCTest-Gherkin": [
-      "Pod/Assets/*.png"
-    ]
-  },
-  "frameworks": "XCTest"
+  "frameworks": "XCTest",
+  "subspecs": [
+    {
+      "name": "Core",
+      "source_files": "Pod/Core/**/*"
+    },
+    {
+      "name": "Native",
+      "source_files": "Pod/Native/**/*"
+    }
+  ]
 }

@@ -24,12 +24,19 @@ Adds Gherkin syntax to XCTestCase
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'XCTest-Gherkin' => ['Pod/Assets/*.png']
-  }
+  s.subspec 'Core' do |ss|
+    ss.source_files = 'Pod/Core/**/*'
+  end
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
+  s.subspec 'Native' do |ss|
+    ss.source_files = 'Pod/Native/**/*'
+  end
+
+  #s.resource_bundles = {
+  #  'XCTest-Gherkin' => ['Pod/Assets/*.png']
+  #}
+
+  # s.public_header_files = 'Pod/Core/**/*.h'
   s.frameworks = 'XCTest'
   # s.dependency 'AFNetworking', '~> 2.3'
 end
