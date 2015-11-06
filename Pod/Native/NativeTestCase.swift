@@ -11,16 +11,6 @@ import ObjectiveC
 
 import XCTest
 
-private struct FileTags {
-    static let Feature = "Feature: "
-    static let Scenario = "Scenario: "
-    static let Outline = "Scenario Outline: "
-    static let Given = "Given"
-    static let When = "When"
-    static let Then = "Then"
-    static let And = "And"
-}
-
 public class NativeTestCase : XCTestCase {
     
     public var path:NSURL?
@@ -50,68 +40,12 @@ public class NativeTestCase : XCTestCase {
     private func parseAndRunFeature(url: NSURL) {
         print("Running tests from \(url.lastPathComponent!)")
         
-        // Read in the file
-        let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
+        // Parse the lines into a feature
+        let feature =  NativeFeature(contentsOfURL: url)
+        XCTAssertNotNil(feature, "Could not parse \(url.lastPathComponent) into a feature")
         
-        // The file will be made up of lots of scenarios
-        let lines = contents.componentsSeparatedByString("\n")
-        
-        var featureDescription: String = "UnnamedFeature"
-        
-        // We will build up enough state here while we parse the file to
-        // create some NativeScenarios
-        var scenarioDescription:String?
-        var scenarioSteps:[String] = []
-        
-        var scenarios:[NativeScenario] = []
-        
-        // This isn't very functional at all - it will take the current state and append
-        // a scenario to the array of scenarios
-        func appendScenarioFromCurrentState() {
-            if let desc = scenarioDescription
-                where scenarioSteps.count > 0 {
-                    scenarios.append(NativeScenario(desc, steps: scenarioSteps))
-
-                    scenarioDescription = nil
-                    scenarioSteps = []
-            }
-        }
-        
-        // Go over each line and create our scenarios
-        lines.map {
-            $0.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        }.forEach { line in
-            guard let (linePrefix, lineSuffix) = line.lineComponents() else { return }
-            
-            switch(linePrefix) {
-            case FileTags.Feature:
-                featureDescription = lineSuffix
-            
-            case FileTags.Scenario:
-                appendScenarioFromCurrentState()
-                
-                scenarioDescription = lineSuffix
-                scenarioSteps = []
-                
-            case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
-                scenarioSteps.append(lineSuffix)
-            
-            case FileTags.Outline:
-                appendScenarioFromCurrentState()
-                print(ColorLog.red("Scenario Outline not yet supported"))
-            
-            default:
-                // Just ignore lines we don't recognise yet
-                break;
-            }
-        }
-        
-        // Make sure we don't have any stray state at the end of the file
-        appendScenarioFromCurrentState()
-        
-        // Now, create and perform the feature
-        let feature = NativeFeature(description: featureDescription, scenarios: scenarios)
-        performFeature(feature)
+        // Perform the feature
+        performFeature(feature!)
     }
     
     func performFeature(feature: NativeFeature) {
@@ -175,29 +109,5 @@ public class NativeTestCase : XCTestCase {
             testCase.runTest()
         }
         
-    }
-}
-
-private let whitepsace = NSCharacterSet.whitespaceCharacterSet()
-
-extension String {
-    
-    private func componentsWithPrefix(prefix: String) -> (String, String) {
-        let index = (prefix as NSString).length
-        let suffix = (self as NSString).substringFromIndex(index).stringByTrimmingCharactersInSet(whitepsace)
-        return (prefix, suffix)
-    }
-    
-    private func lineComponents() -> (String, String)? {
-        let prefixes = [ FileTags.Feature, FileTags.Scenario, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline ]
-        
-        func first(a: [String]) -> (String, String)? {
-            if a.count == 0 { return nil }
-            let p = a.first!
-            if (self.hasPrefix(p)) { return self.componentsWithPrefix(p) }
-            return first(Array(a.dropFirst(1)))
-        }
-        
-        return first(prefixes)
     }
 }

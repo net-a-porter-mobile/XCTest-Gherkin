@@ -35,19 +35,3 @@ class NativeScenario : CustomStringConvertible {
         }
     }
 }
-
-class NativeFeature : CustomStringConvertible {
-    let featureDescription: String
-    let scenarios: [NativeScenario]
-    
-    required init(description: String, scenarios:[NativeScenario]) {
-        self.featureDescription = description
-        self.scenarios = scenarios
-    }
-    
-    var description: String {
-        get {
-            return "<\(self.dynamicType) \(self.featureDescription) \(self.scenarios.count) scenario(s)"
-        }
-    }
-}
