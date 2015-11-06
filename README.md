@@ -84,7 +84,7 @@ NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherki
 
 #### Duplicate steps:
 
-If there are step definitions which both match a step in your feature then the test will fail with an error something like 
+If there are step definitions which all match a step in your feature then the test will fail with an error something like 
 
 ```
 -[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Multiple steps found for : I have a working Gherkin environment
@@ -123,7 +123,7 @@ and run `pod install`
 
 #### Colors
 There is only one place where configuration is needed - by default the extension will output debug information with colour enabled, which only works if you have the [XcodeColors](https://github.com/robbiehanson/XcodeColors) plugin installed.
-We have it installed (via [Alcatraz](http://alcatraz.io/)) but we get that you might not!
+We have it installed (via [Alcatraz](http://alcatraz.io/)) but we get that you might not want it!
 
 If you run this before your tests start (i.e. in `setUp()`) you will get more readable output;
 
