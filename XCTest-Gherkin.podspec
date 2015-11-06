@@ -30,6 +30,8 @@ Adds Gherkin syntax to XCTestCase
 
   s.subspec 'Native' do |ss|
     ss.source_files = 'Pod/Native/**/*'
+
+    ss.dependency 'XCTest-Gherkin/Core'
   end
 
   #s.resource_bundles = {

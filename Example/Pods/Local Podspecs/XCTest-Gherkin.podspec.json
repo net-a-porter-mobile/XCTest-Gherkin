@@ -27,7 +27,12 @@
     },
     {
       "name": "Native",
-      "source_files": "Pod/Native/**/*"
+      "source_files": "Pod/Native/**/*",
+      "dependencies": {
+        "XCTest-Gherkin/Core": [
+
+        ]
+      }
     }
   ]
 }

@@ -92,7 +92,7 @@ extension NativeFeature {
                     
                 case FileTags.Outline:
                     scenarioFromState()
-                    print("Scenario Outline not yet supported")
+                    print(ColorLog.red("Scenario Outline not yet supported"))
                     
                 default:
                     // Just ignore lines we don't recognise yet
