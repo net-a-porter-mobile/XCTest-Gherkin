@@ -41,7 +41,7 @@ class SanitySteps : StepDefiner {
             XCTAssertTrue(true)
         }
         
-        step("The age should be ([0-9]*)") { (matches:[String]) in
+        step("The age should be ([0-9]+)") { (matches:[String]) in
             XCTAssertEqual(matches.first!, "20", "Alice and Bob are both aged 20, making this test pretty easy.")
         }
         

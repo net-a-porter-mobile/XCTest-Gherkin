@@ -14,6 +14,7 @@ import XCTest
 private struct FileTags {
     static let Feature = "Feature: "
     static let Scenario = "Scenario: "
+    static let Outline = "Scenario Outline: "
     static let Given = "Given"
     static let When = "When"
     static let Then = "Then"
@@ -94,7 +95,11 @@ public class NativeTestCase : XCTestCase {
                 
             case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
                 scenarioSteps.append(lineSuffix)
-                
+            
+            case FileTags.Outline:
+                appendScenarioFromCurrentState()
+                print(ColorLog.red("Scenario Outline not yet supported"))
+            
             default:
                 // Just ignore lines we don't recognise yet
                 break;
@@ -104,14 +109,20 @@ public class NativeTestCase : XCTestCase {
         // Make sure we don't have any stray state at the end of the file
         appendScenarioFromCurrentState()
         
+        // Now, create and perform the feature
+        let feature = NativeFeature(description: featureDescription, scenarios: scenarios)
+        performFeature(feature)
+    }
+    
+    func performFeature(feature: NativeFeature) {
         // Create a test case to contain our tests
-        let testClassName = "\(featureDescription.camelCaseify)Tests"
+        let testClassName = "\(feature.featureDescription.camelCaseify)Tests"
         let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0)
         guard let testCaseClass = testCaseClassOptional else { XCTFail("Could not create test case class"); return }
         
         // Return the correct number of tests
         let countBlock : @convention(block) (AnyObject) -> UInt = { _ in
-            return UInt(scenarios.count)
+            return UInt(feature.scenarios.count)
         }
         let imp = imp_implementationWithBlock(unsafeBitCast(countBlock, AnyObject.self))
         let sel = sel_registerName(strdup("testCaseCount"))
@@ -120,7 +131,7 @@ public class NativeTestCase : XCTestCase {
         
         // Return a name
         let nameBlock : @convention(block) (AnyObject) -> String = { _ in
-            return featureDescription.camelCaseify
+            return feature.featureDescription.camelCaseify
         }
         let nameImp = imp_implementationWithBlock(unsafeBitCast(nameBlock, AnyObject.self))
         let nameSel = sel_registerName(strdup("name"))
@@ -138,7 +149,7 @@ public class NativeTestCase : XCTestCase {
         
         // For each scenario, make an invocation that runs through the steps
         let typeString = strdup("v@:")
-        scenarios.forEach { scenario in
+        feature.scenarios.forEach { scenario in
             print(scenario.description)
             
             // Create the block representing the test to be run
@@ -178,7 +189,7 @@ extension String {
     }
     
     private func lineComponents() -> (String, String)? {
-        let prefixes = [ FileTags.Feature, FileTags.Scenario, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And ]
+        let prefixes = [ FileTags.Feature, FileTags.Scenario, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline ]
         
         func first(a: [String]) -> (String, String)? {
             if a.count == 0 { return nil }

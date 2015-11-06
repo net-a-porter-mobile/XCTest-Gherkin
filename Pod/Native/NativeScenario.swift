@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class NativeScenario : CustomStringConvertible {
+class NativeScenario : CustomStringConvertible {
     let scenarioDescription: String
     let stepDescriptions: [String]
 
@@ -24,14 +24,30 @@ public class NativeScenario : CustomStringConvertible {
         get { return strdup(self.selectorString) }
     }
     
-    required public init(_ description: String, steps: [String]) {
+    required init(_ description: String, steps: [String]) {
         self.scenarioDescription = description
         self.stepDescriptions = steps
     }
     
-    public var description:String {
+    var description: String {
         get {
             return "<\(self.dynamicType) \(self.selectorString) \(self.stepDescriptions.count) steps>"
+        }
+    }
+}
+
+class NativeFeature : CustomStringConvertible {
+    let featureDescription: String
+    let scenarios: [NativeScenario]
+    
+    required init(description: String, scenarios:[NativeScenario]) {
+        self.featureDescription = description
+        self.scenarios = scenarios
+    }
+    
+    var description: String {
+        get {
+            return "<\(self.dynamicType) \(self.featureDescription) \(self.scenarios.count) scenario(s)"
         }
     }
 }

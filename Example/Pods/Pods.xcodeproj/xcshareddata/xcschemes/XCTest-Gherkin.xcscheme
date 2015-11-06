@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'F83B1A132AF3C1F1E17D904E'
+               BlueprintIdentifier = '012B319618E85B39C8237677'
                BlueprintName = 'XCTest-Gherkin'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'XCTest_Gherkin.framework'>
