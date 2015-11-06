@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 
 # XCTest+Gherkin
-At net-a-porter we have traditionally done our UI testing using Cucumber and Appium, which has worked fine and did the job. However, it has a few disadvantages; it requires konwing another language (in our case Ruby), it requires more moving parts on our CI stack (cucumber, node, appium, ruby, gems etc), it ran slowly, and it always seemed to lag a bit behind the latest Xcode tech. None of these by themselves are deal breakers but put together it all adds up to make UI testing more of a chore than we think it should be.
+At net-a-porter we have traditionally done our UI testing using Cucumber and Appium, which has worked fine and did the job. However, it has a few disadvantages; it requires knowing another language (in our case Ruby), it requires more moving parts on our CI stack (cucumber, node, appium, ruby, gems etc), it ran slowly, and it always seemed to lag a bit behind the latest Xcode tech. None of these by themselves are deal breakers but put together it all adds up to make UI testing more of a chore than we think it should be.
 
 The goals of this project are to 
 
