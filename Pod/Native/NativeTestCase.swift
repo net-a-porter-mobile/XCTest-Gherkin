@@ -104,7 +104,7 @@ public class NativeTestCase : XCTestCase {
         objc_registerClassPair(testCaseClass)
         
         // Add the test to our test suite
-        testCaseClass.testInvocations().forEach { invocation in
+        testCaseClass.testInvocations().sort { (a,b) in NSStringFromSelector(a.selector) > NSStringFromSelector(b.selector) }.forEach { invocation in
             let testCase = (testCaseClass as! XCTestCase.Type).init(invocation: invocation)
             testCase.runTest()
         }

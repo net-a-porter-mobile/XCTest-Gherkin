@@ -24,6 +24,7 @@
 		D97C4D8D4233E8A7F0B1AAF7F7DEC89C /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38BF98F1FDF393DA65CDB2E37850F21 /* Step.swift */; };
 		DD995C074DB86142A08D4B62F62733DD /* ColorLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B216C2784D4F14880674CED377F5B4 /* ColorLog.swift */; };
 		E1105A11817DCACE5F6211D5AEEC1A6C /* XCTestCase+Gherkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F445F48B1686122A9962C61670B5343 /* XCTestCase+Gherkin.swift */; };
+		E5DBC1421BF0D3820002DC6B /* ParseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5DBC1401BF0D37A0002DC6B /* ParseState.swift */; };
 		EDA30BA0C221534CE9922FD950ADCBED /* NativeScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38296A6CFD632228A9412BA1FAADAC60 /* NativeScenario.swift */; };
 		EDC86365A2FCDE8432D26DCDA212029C /* StringGherkinExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4913AA91A59F35F1BD1FDA5021D2B8B /* StringGherkinExtension.swift */; };
 		FB2B77E39D4439E70F08789B35522CB3 /* Example.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21520691BF8A3F99E6AE101C66A0AB5D /* Example.swift */; };
@@ -85,6 +86,7 @@
 		DA9B5AECD31CF87D31696D293B81F24E /* Pods-XCTest-Gherkin_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-XCTest-Gherkin_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		DC00C66C3ABC1B9AD80FEC7117624AE5 /* Pods-XCTest-Gherkin_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-XCTest-Gherkin_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E351727CD07BB90B2A3CAE2C2433F6C5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		E5DBC1401BF0D37A0002DC6B /* ParseState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseState.swift; sourceTree = "<group>"; };
 		E96AB2FB0B1718D7AD8FCEF9B9546A9C /* Pods-XCTest-Gherkin_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-XCTest-Gherkin_Example-resources.sh"; sourceTree = "<group>"; };
 		ED8A91E39235FBDCCBC801610F2FAC31 /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F973A82432BA78F7218B67A72EA67660 /* XCTest-Gherkin.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "XCTest-Gherkin.xcconfig"; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 				898CE805D2BF2733B27768C95B7230A4 /* NativeFeature.swift */,
 				38296A6CFD632228A9412BA1FAADAC60 /* NativeScenario.swift */,
 				8381C5E10723163E98266B56EFCDEDE7 /* NativeTestCase.swift */,
+				E5DBC1401BF0D37A0002DC6B /* ParseState.swift */,
 			);
 			path = Native;
 			sourceTree = "<group>";
@@ -381,7 +384,7 @@
 		D41D8CD98F00B204E9800998ECF8427E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
@@ -427,6 +430,7 @@
 				EDC86365A2FCDE8432D26DCDA212029C /* StringGherkinExtension.swift in Sources */,
 				47E48D1AFD7F84C0A61DDE1633E72607 /* XCTest-Gherkin-dummy.m in Sources */,
 				E1105A11817DCACE5F6211D5AEEC1A6C /* XCTestCase+Gherkin.swift in Sources */,
+				E5DBC1421BF0D3820002DC6B /* ParseState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -621,6 +625,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 58BAA1CCFFA69B8258F2100A7B0B2C9E /* Pods-XCTest-Gherkin_Example.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -652,6 +657,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 155F1BB8D9571EAAC0FB78999AE5F50D /* Pods-XCTest-Gherkin_Example.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
