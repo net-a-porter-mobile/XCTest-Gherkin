@@ -59,16 +59,13 @@ extension NativeFeature {
         self.init(description: featureDescription, scenarios: scenarios)
     }
     
-    private class func parseLines(inLines: [String]) -> [NativeScenario] {
+    private class func parseLines(lines: [String]) -> [NativeScenario] {
         
         var state = ParseState()
         var scenarios = Array<NativeScenario>()
         
         // Go through each line in turn
-        var lines = inLines
-        while (lines.count > 0) {
-            let line = lines.first!
-            lines = Array(lines.dropFirst(1))
+        for (lineIndex,line) in lines.enumerate() {
             
             if !line.isEmpty {
                 // What kind of line is it?
@@ -95,7 +92,7 @@ extension NativeFeature {
                         state.exampleLines = []
 
                     case FileTags.ExampleLine:
-                        state.exampleLines.append(lineSuffix)
+                        state.exampleLines.append( (lineIndex+1, lineSuffix) )
                         
                     case FileTags.Feature:
                         break

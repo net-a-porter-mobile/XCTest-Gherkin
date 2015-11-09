@@ -13,7 +13,7 @@ private let whitespace = NSCharacterSet.whitespaceCharacterSet()
 class ParseState {
     var description: String?
     var steps: [String]
-    var exampleLines: [String]
+    var exampleLines: [ (lineNumber:Int, line:String) ]
     
     convenience init() {
         self.init(description: nil)
@@ -25,30 +25,30 @@ class ParseState {
         exampleLines = []
     }
     
-    private var examples:[Example] {
+    private var examples:[NativeExample] {
         get {
             if self.exampleLines.count < 2 { return [] }
             
-            var examples:[Example] = []
+            var examples:[NativeExample] = []
             
             // The first line is the titles
-            let titles = self.exampleLines.first!.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+            let titles = self.exampleLines.first!.line.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
             
             // The other lines are the examples themselves
             self.exampleLines.dropFirst(1).forEach { rawLine in
-                let line = rawLine.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+                let line = rawLine.line.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
                 
-                var example:Example = Example()
+                var pairs:[String:String] = Dictionary()
                 
                 (0..<titles.count).forEach { n in
                     // Get the title and value for this column
                     let title = titles[n]
                     let value = line.count > n ? line[n] : ""
                     
-                    example[title] = value
+                    pairs[title] = value
                 }
                 
-                examples.append(example)
+                examples.append( (rawLine.lineNumber, pairs ) )
             }
             
             return examples
@@ -64,8 +64,7 @@ class ParseState {
         // If we have examples then we need to make more than one scenario
         if self.examples.count > 0 {
             // Replace each matching placeholder in each line with the example data
-            //self.examples.forEach { example in
-            for (index, example) in self.examples.enumerate() {
+            self.examples.forEach { example in
                 
                 // This hoop is beacuse the compiler doesn't seem to
                 // recognize mapdirectly on the state.steps object
@@ -73,7 +72,7 @@ class ParseState {
                 steps = self.steps.map { originalStep in
                     var step = originalStep
                     
-                    example.forEach { (title, value) in
+                    example.pairs.forEach { (title, value) in
                         step = step.stringByReplacingOccurrencesOfString("<\(title)>", withString: value)
                     }
                     
@@ -81,7 +80,7 @@ class ParseState {
                 }
                 
                 // The scenario description must be unique
-                let description = "\(d)_\(index)"
+                let description = "\(d)_line\(example.lineNumber)"
                 scenarios.append(NativeScenario(description, steps: steps))
                 
             }
