@@ -12,6 +12,7 @@ private struct FileTags {
     static let Feature = "Feature:"
     static let Scenario = "Scenario:"
     static let Outline = "Scenario Outline:"
+    static let Examples = "Examples:"
     static let Given = "Given"
     static let When = "When"
     static let Then = "Then"
@@ -40,10 +41,9 @@ extension NativeFeature {
         // Read in the file
         let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
         
-        // Get all the lines in the file, stripping empty ones
+        // Get all the lines in the file
         let lines = contents.componentsSeparatedByString("\n")
             .map { $0.stringByTrimmingCharactersInSet(whitepsace) }
-            .filter { (e:String) in !e.isEmpty }
         
         guard lines.count > 0 else { return nil }
         
@@ -58,61 +58,89 @@ extension NativeFeature {
         self.init(description: featureDescription, scenarios: scenarios)
     }
     
-    private class func parseLines(lines: [String]) -> [NativeScenario] {
+    private class func parseLines(inLines: [String]) -> [NativeScenario] {
         
-        typealias ParseState = ( description:String?, steps:[String] )
+        var state = ParseState()
+        var scenarios = Array<NativeScenario>()
         
-        func consumeLines(lines: [String], var state: ParseState, var scenarios:[NativeScenario]) -> [NativeScenario] {
-            // If we are at the end of the file just return what we have
-            if lines.count == 0 { return scenarios }
-
-            // Get the next line, and strip it from the array of lines
-            let line = lines.first!
-            let nextLines = Array(lines.dropFirst())
-
-            // This method will take the state and convert it into a scenario
-            func scenarioFromState() {
-                guard let d = state.description else { return }
-                guard state.steps.count > 0 else {return }
-                
-                scenarios.append(NativeScenario(d, steps: state.steps))
-                state = (nil, [])
-            }
+        func scenarioFromState() {
+            guard let d = state.description else { return }
+            guard state.steps.count > 0 else { return }
             
-            // If this is a line we are interested in, deal with it
-            if let (linePrefix, lineSuffix) = line.lineComponents() {
-                
-                switch(linePrefix) {
-                case FileTags.Scenario:
-                    scenarioFromState()
-                    state = (lineSuffix, [])
+            // If we have examples then we need to make more than one scenario
+            if state.examples.count > 0 {
+                // Replace each matching placeholder in each line with the example data
+                state.examples.forEach { example in
                     
-                case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
-                    state.steps.append(lineSuffix)
+                    // This hoop is beacuse the compiler doesn't seem to
+                    // recognize mapdirectly on the state.steps object
+                    var steps = state.steps
+                    steps = state.steps.map { originalStep in
+                        var step = originalStep
+                        
+                        example.forEach { (title, value) in
+                            step = step.stringByReplacingOccurrencesOfString("<\(title)>", withString: value)
+                        }
+                        
+                        return step
+                    }
                     
-                case FileTags.Outline:
-                    scenarioFromState()
-                    print(ColorLog.red("Scenario Outline not yet supported"))
+                    scenarios.append(NativeScenario(d, steps: steps))
                     
-                default:
-                    // Just ignore lines we don't recognise yet
-                    break;
                 }
-                
+            } else {
+                scenarios.append(NativeScenario(d, steps: state.steps))
             }
             
-            // We may have consumed more lines, or we need to keep going
-            if lines.count == 0 {
-                scenarioFromState()
-                return scenarios
-            }
-            
-            // Deal with the next line
-            return consumeLines(nextLines, state: state, scenarios: scenarios)
+            state = ParseState()
         }
         
-        return consumeLines(lines, state: (nil, []), scenarios: [])
+        // Go through each line in turn
+        var lines = inLines
+        while (lines.count > 0) {
+            let line = lines.first!
+            lines = Array(lines.dropFirst(1))
+            
+            if !line.isEmpty {
+                // What kind of line is it?
+                if let (linePrefix, lineSuffix) = line.lineComponents() {
+                    
+                    switch(linePrefix) {
+                    case FileTags.Scenario:
+                        scenarioFromState()
+                        state = ParseState(description: lineSuffix)
+                        
+                    case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
+                        state.steps.append(lineSuffix)
+                        
+                    case FileTags.Outline:
+                        scenarioFromState()
+                        state = ParseState(description: lineSuffix)
+                        
+                    case FileTags.Examples:
+                        state.examples = [ [ "name":"bob", "age":"20" ] ]
+                        break
+                        
+                    case FileTags.Feature:
+                        break
+                        
+                    default:
+                        // Just ignore lines we don't recognise yet
+                        break
+                    }
+                    
+                }
+            }
+
+        }
+        
+        // If we hit the end of the file, we need to make sure we have dealt with
+        // the last scenario
+        scenarioFromState()
+    
+        return scenarios
     }
+
 }
 
 private let whitepsace = NSCharacterSet.whitespaceCharacterSet()
@@ -142,5 +170,21 @@ extension String {
         }
         
         return first(prefixes)
+    }
+}
+
+private class ParseState {
+    var description: String?
+    var steps: [String]
+    var examples: [Example]
+    
+    convenience init() {
+        self.init(description: nil)
+    }
+    
+    required init(description: String?) {
+        self.description = description
+        steps = []
+        examples = []
     }
 }
