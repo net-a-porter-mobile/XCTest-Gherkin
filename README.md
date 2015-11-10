@@ -138,6 +138,27 @@ If you run this before your tests start (i.e. in `setUp()`) you will get more re
 ## Examples
 There are working examples in the pod's Example project - just run the tests and see what happens!
 
+# Native feature file parsing
+To help with moving from native feature files (we have lots of these from our previous test suite) to working in Swift, it would be handy to be able to parse the current feature files without having to modify them into their Swift counterparts.
+
+This is also useful when they are first being written by produyct owners who know Given/When/Then syntax but aren't Swift developers :)
+
+If you include the `Native` subpod in your podfile
+
+```
+pod 'XCTest-Gherkin/Native'
+```
+
+you will also include the ability to parse true Gherkin syntax feature files and have the libary create runtime tests from them.
+
+There is an example of this in the Example/ project as part of this pod. Look at the `ExampleNativeTest` class - all you need to do is specify the containing folder and all the feature files in that folder will be read.
+
+The advantages of this are obvious; you get to quickly run your existing feature files and can get up and running quickly. The disadvanages are beacuse the tests are generated at runtime they can't be run individually from inside xcode so debugging is tricker. I would use this to start testing inside Xcode but if it gets hairy, convert that feature file into a native Swift test and debug from there.
+
+### Disclaimer
+The Gherkin syntax parser here isn't really production ready - it's certainly not a validator and will probably happily parse malformed Gherkin files quite happily. The feature files it's parsing are assumed to be fairly well constructed. The purpose of this subpod is to help migrate from old feature files into the Swift way of doing things so that's all it does. Feel free to submit pull requests if you want to change this :)
+
+
 ## XCTest+Gherkin at net-a-porter
 
 We use this extension along with KIF to do our UI tests. For unit tests we just use XCTest plain. KIF is working really well for us, and is far far faster than our previous test suite.
