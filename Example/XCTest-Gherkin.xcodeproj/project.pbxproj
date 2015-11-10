@@ -14,8 +14,10 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		C8B279D4534F8C6E00882E7B /* Pods_XCTest_Gherkin_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */; };
+		E54130981BEBE06600E92975 /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
 		E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */; };
 		E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */; };
+		E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CFFEFB779B08E54A4401F43 /* Pods-XCTest-Gherkin_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		AD8DF65B966910B5E42CBECB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		E54130971BEBE06600E92975 /* NativeFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NativeFeatures; sourceTree = "<group>"; };
+		E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeTest.swift; sourceTree = "<group>"; };
 		E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleFeatures.swift; sourceTree = "<group>"; };
 		E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SanitySteps.swift; sourceTree = "<group>"; };
 		EECC6390476865D859E65C36 /* Pods-XCTest-Gherkin_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -165,7 +169,9 @@
 		E5805BFD1BEA939000D3ECD5 /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				E54130971BEBE06600E92975 /* NativeFeatures */,
 				E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */,
+				E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -265,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E54130981BEBE06600E92975 /* NativeFeatures in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
@@ -388,6 +395,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */,
+				E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */,
 				E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
