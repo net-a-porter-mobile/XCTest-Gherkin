@@ -59,7 +59,7 @@ class SomeStepDefinitions : StepDefiner {
 These steps match (via regular expressions, using `NSRegularExpression` obvs) and return the capture groups (if there are any). The second step will capture the digits from the end of the test and compare it to the current state of the UI.
 
 ### Examples and feature outlines
-If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with is here too!
+If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
 
 ```swift
     func testOutlineTests() {
