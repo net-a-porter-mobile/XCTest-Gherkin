@@ -19,6 +19,7 @@
     "ios": "8.0"
   },
   "requires_arc": true,
+  "default_subspecs": "Core",
   "frameworks": "XCTest",
   "subspecs": [
     {

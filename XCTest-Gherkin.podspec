@@ -15,14 +15,14 @@ Adds Gherkin syntax to XCTestCase
                        DESC
 
   s.homepage         = "https://github.com/net-a-porter-mobile/XCTest-Gherkin"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = { :type => 'Apache', :file => 'LICENSE' }
   s.author           = { "Sam Dean" => "sam.dean@net-a-porter.com" }
   s.source           = { :git => "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
+
+  s.default_subspec = 'Core'
 
   s.subspec 'Core' do |ss|
     ss.source_files = 'Pod/Core/**/*'
@@ -34,11 +34,5 @@ Adds Gherkin syntax to XCTestCase
     ss.dependency 'XCTest-Gherkin/Core'
   end
 
-  #s.resource_bundles = {
-  #  'XCTest-Gherkin' => ['Pod/Assets/*.png']
-  #}
-
-  # s.public_header_files = 'Pod/Core/**/*.h'
   s.frameworks = 'XCTest'
-  # s.dependency 'AFNetworking', '~> 2.3'
 end
