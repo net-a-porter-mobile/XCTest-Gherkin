@@ -87,8 +87,8 @@ public class NativeTestCase : XCTestCase {
             print(scenario.description)
             
             // Create the block representing the test to be run
-            let block : @convention(block) (AnyObject)->() = { _ in
-                scenario.stepDescriptions.forEach { self.performStep($0) }
+            let block : @convention(block) (XCTestCase)->() = { innerSelf in
+                scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
             }
             
             // Create the Method and selector
