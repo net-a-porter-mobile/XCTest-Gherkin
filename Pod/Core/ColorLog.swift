@@ -13,10 +13,13 @@ import Foundation
  
  Designed to work with the XcodeColors Xcode plugin (I use Alcatraz to install it)
  
- Call `ColorLog.enabled = false` early on if you don't want it :)
+ Call `ColorLog.enabled = true` early on if you want it :)
 */
-struct ColorLog {
-    static var enabled = true
+public struct ColorLog {
+    /**
+     Set this to true to add colour output. Defaults to `false`.
+     */
+    public static var enabled = false
     
     private static let ESCAPE = "\u{001b}["
     

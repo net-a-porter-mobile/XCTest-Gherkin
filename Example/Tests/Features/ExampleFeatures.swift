@@ -10,6 +10,11 @@ import XCTest
 import XCTest_Gherkin
 
 class ExampleFeatures: XCTestCase {
+    
+    override func setUp() {
+        super.setUp()
+        ColorLog.enabled = true
+    }
 
     func testBasicSteps() {
         Given("I have a working Gherkin environment")
