@@ -11,49 +11,62 @@ import Foundation
 import XCTest
 
 /**
-
-Why is there so much global state here?
-
-I wanted this to work with both KIFTestCase and UITestCase which meant extending 
+I wanted this to work with both KIFTestCase and UITestCase which meant extending
 UITestCase - a subclass wouldn't work with both of them.
 
-This meant that I couldn't have properties and given we are running UI tests
-we're inherently single threaded anyway so meh.
-
+It's nicer code IMHO to have the state as a single associated property beacuse of the grossness of setting/getting it.
+This means that anytime I want to access my extra properties I just do `state.{propertyName}`
 */
-
-// The list of all steps the system knows about
-private var steps = Set<Step>()
-
-// Used to track step nesting i.e. steps calling out to other steps
-private var currentStepDepth:Int = 0
-
-// When we are in an Outline block, this defines the examples to loop over
-private var examples:[Example]? = nil
-
-// The current example the Outline is running over
-private var currentExample:Example? = nil
-
-// Store the name of the current test to help debugging output
-private var currentTestName:String = "NO TESTS RUN YET"
+private class GherkinState {
+    // The list of all steps the system knows about
+    var steps = Set<Step>()
+    
+    // Used to track step nesting i.e. steps calling out to other steps
+    var currentStepDepth:Int = 0
+    
+    // When we are in an Outline block, this defines the examples to loop over
+    var examples:[Example]? = nil
+    
+    // The current example the Outline is running over
+    var currentExample:Example? = nil
+    
+    // Store the name of the current test to help debugging output
+    var currentTestName:String = "NO TESTS RUN YET"
+}
 
 /**
  Add Gherkin methods to XCTestCase
 */
 public extension XCTestCase {
+    
+    private struct AssociatedKeys {
+        static var State = "AssociatedStateKey"
+    }
+    
+    private var state: GherkinState {
+        get {
+            guard let s = objc_getAssociatedObject(self, &AssociatedKeys.State) else {
+                let initialState = GherkinState()
+                objc_setAssociatedObject(self, &AssociatedKeys.State, initialState, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+                return initialState
+            }
+
+            return s as! GherkinState
+        }
+    }
 
     /**
      This will populate the static steps array if it's empty.
      */
     private func loadAllStepsIfNeeded() {
-        if steps.count == 0 {
+        if state.steps.count == 0 {
             // Create an instance of each step definer and call it's defineSteps
             // method
             allSubclassesOf(StepDefiner).forEach { subclass in
                 subclass.init(test: self).defineSteps()
             }
             
-            XCTAssert(steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
+            XCTAssert(state.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
         }
     }
     
@@ -61,13 +74,13 @@ public extension XCTestCase {
     /**
     Dumps out a list of all the steps currently known, including the file and line they were defined on
     
-    It's a class method so just call `XCTestCase.printStepDefinitions()` anywhere you like, including in the debugger.
-    
+    Call this on the current XCTestCase instance and you will get all the steps defined for that test, which
+    is particularly useful in the debugger i.e. `po self.printStepDefinitions()`
     */
-    class func printStepDefinitions() {
+    func printStepDefinitions() {
         print("Defined steps")
         print("-------------")
-        print(steps.map { String(reflecting: $0) }.sort().joinWithSeparator("\n"))
+        print(state.steps.map { String(reflecting: $0) }.sort().joinWithSeparator("\n"))
         print("-------------")
     }
     
@@ -116,7 +129,7 @@ public extension XCTestCase {
             accumulator.append(example)
         }
         
-        examples = accumulator
+        state.examples = accumulator
     }
     
     /**
@@ -128,13 +141,13 @@ public extension XCTestCase {
      */
     func Outline( @noescape routine:()->() ) {
         
-        XCTAssertNotNil(examples, "You need to define examples before running an Outline block - use Examples(...)");
-        XCTAssert(examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
+        XCTAssertNotNil(state.examples, "You need to define examples before running an Outline block - use Examples(...)");
+        XCTAssert(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
         
-        examples!.forEach { example in
-            currentExample = example
+        state.examples!.forEach { example in
+            state.currentExample = example
             routine()
-            currentExample = nil
+            state.currentExample = nil
         }
     }
     
@@ -151,7 +164,7 @@ extension XCTestCase {
     */
     func addStep(expression: String, file: String, line: Int, _ function: ([String])->()) {
         let step = Step(expression, file: file, line: line, function)
-        steps.insert(step);
+        state.steps.insert(step);
     }
     
     /**
@@ -165,7 +178,7 @@ extension XCTestCase {
         loadAllStepsIfNeeded()
         
         // If we are in an example, transform the step to reflect the current example's value
-        if let example = currentExample {
+        if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
             example.forEach { (key, value) in
                 let needle = "<\(key)>"
@@ -175,7 +188,7 @@ extension XCTestCase {
         
         // Get the step(s) which match this expression
         let range = NSMakeRange(0, expression.characters.count)
-        let matches = steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
+        let matches = state.steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
             if let match = step.regex.firstMatchInString(expression, options: [], range: range) {
                 return (step:step, match:match)
             } else {
@@ -186,7 +199,7 @@ extension XCTestCase {
         switch matches.count {
             
         case 0:
-            self.dynamicType.printStepDefinitions()
+            self.printStepDefinitions()
             XCTFail("Step definition not found for '\(ColorLog.red(expression))'")
             
         case 1:
@@ -203,23 +216,23 @@ extension XCTestCase {
             }
             
             // If this the first step, debug the test name as well
-            if currentStepDepth == 0 {
+            if state.currentStepDepth == 0 {
                 let rawName = String(self.invocation!.selector)
                 let testName = rawName.hasPrefix("test") ? (rawName as NSString).substringFromIndex(4) : rawName
-                if testName != currentTestName {
+                if testName != state.currentTestName {
                     NSLog("steps from \(ColorLog.darkGreen(testName.humanReadableString))")
-                    currentTestName = testName
+                    state.currentTestName = testName
                 }
             }
             
             // Debug the step name
-            let coloredExpression = currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
+            let coloredExpression = state.currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
             NSLog("step \(currentStepDepthString())\(coloredExpression)")
             
             // Run the step
-            currentStepDepth++
+            state.currentStepDepth++
             step.function(matchStrings)
-            currentStepDepth--
+            state.currentStepDepth--
             
         default:
             // Dump out all the steps found which match so we can work out why
@@ -236,6 +249,6 @@ extension XCTestCase {
      - returns: A String of spaces equal to the current step depth
      */
     private func currentStepDepthString() -> String {
-        return Repeat<String>(count: currentStepDepth, repeatedValue: " ").joinWithSeparator("")
+        return Repeat<String>(count: state.currentStepDepth, repeatedValue: " ").joinWithSeparator("")
     }
 }
