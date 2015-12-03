@@ -78,6 +78,8 @@ public extension XCTestCase {
     is particularly useful in the debugger i.e. `po self.printStepDefinitions()`
     */
     func printStepDefinitions() {
+        loadAllStepsIfNeeded()
+        
         print("Defined steps")
         print("-------------")
         print(state.steps.map { String(reflecting: $0) }.sort().joinWithSeparator("\n"))
