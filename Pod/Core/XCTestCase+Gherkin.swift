@@ -213,7 +213,7 @@ extension XCTestCase {
             var matchStrings = Array<String>()
             for i in 1..<match.numberOfRanges {
                 let range = match.rangeAtIndex(i)
-                let string = (expression as NSString).substringWithRange(range)
+                let string = range.location != NSNotFound ? (expression as NSString).substringWithRange(range) : ""
                 matchStrings.append(string)
             }
             
