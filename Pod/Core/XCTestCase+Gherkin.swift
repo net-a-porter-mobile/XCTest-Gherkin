@@ -82,7 +82,7 @@ public extension XCTestCase {
         
         print("Defined steps")
         print("-------------")
-        print(state.steps.map { String(reflecting: $0) }.sort().joinWithSeparator("\n"))
+        print(state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
         print("-------------")
     }
     
