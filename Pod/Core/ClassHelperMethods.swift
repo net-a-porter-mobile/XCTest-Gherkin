@@ -11,9 +11,9 @@ import Foundation
 /**
  Returns all subclasses of the given type. For example:
 
-    allSubClassesOf(UIView) { subclasses:[UIView] in
-        subclasses.forEach { print @0 }
-    }
+     allSubClassesOf(UIView) { subclasses:[UIView] in
+         subclasses.forEach { print @0 }
+     }
  
     would list all the known current subclasses of `UIView`
  

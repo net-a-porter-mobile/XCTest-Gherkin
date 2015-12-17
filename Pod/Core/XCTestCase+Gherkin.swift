@@ -114,7 +114,21 @@ public extension XCTestCase {
      - parameter titles: The titles for each column; these are the keys used to replace the placeholders in each step
      - parameter allValues: This is an array of columns - each array will be used as a single test
      */
-    func Examples(titles:[String], _ allValues:[String]...) {
+    func Examples(titles: [String], _ allValues: [String]...) {
+        ExamplesA(titles, allValues: allValues)
+    }
+    
+    /**
+     If you wanted to reuse examples between steps, use this version of example instead
+     
+         let examples = [ "a", "b", "c", "d" ]
+        
+         ...
+     
+         ExamplesA( [ "text", examples )
+     
+     */
+    func ExamplesA(titles: [String], allValues:[[String]]) {
         XCTAssert(allValues.count > 0, "You must pass at least one set of example data")
         
         // TODO: Hints at a reduce, but we're going over two arrays at once . . . :|
