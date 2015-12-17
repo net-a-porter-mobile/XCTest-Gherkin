@@ -115,21 +115,31 @@ public extension XCTestCase {
      - parameter allValues: This is an array of columns - each array will be used as a single test
      */
     func Examples(titles: [String], _ allValues: [String]...) {
-        ExamplesA(titles, allValues: allValues)
+        var all = [titles]
+        all.appendContentsOf(allValues)
+        Examples(all)
     }
     
     /**
-     If you wanted to reuse examples between steps, use this version of example instead
+     If you want to reuse examples between tests then you can just pass in an array of examples directly.
      
-         let examples = [ "a", "b", "c", "d" ]
-        
+         let examples = [ 
+                [ "title", "age" ],
+                [ "a",     "20"  ],
+                [ "b",     "25"  ]
+            ]
+     
          ...
      
-         ExamplesA( [ "text", examples )
+         Examples(examples)
      
      */
-    func ExamplesA(titles: [String], allValues:[[String]]) {
-        XCTAssert(allValues.count > 0, "You must pass at least one set of example data")
+    func Examples(values: [[String]]) {
+        XCTAssert(values.count > 1, "You must pass at least one set of example data")
+        
+        // Split out the titles and the example data
+        let titles = values.first!
+        let allValues = values.dropFirst()
         
         // TODO: Hints at a reduce, but we're going over two arrays at once . . . :|
         var accumulator = Array<Example>()

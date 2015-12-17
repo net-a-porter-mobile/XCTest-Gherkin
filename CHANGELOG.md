@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.4.0
++ Add shared examples
+
 ### 0.3.3
 + Fix crash when steps contain optional matching groups and one of them doesn't match 
 

@@ -39,4 +39,28 @@ class ExampleFeatures: XCTestCase {
         }
     }
     
+    let examples = [
+        [ "name",   "age", "height" ],
+        [  "Alice",  "20",  "170"   ],
+        [  "Bob",    "20",  "170"   ]
+    ]
+    
+    func testReusableExamples1() {
+        Examples(examples)
+        
+        Outline {
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }
+    }
+
+    func testReusableExamples2() {
+        Examples(examples)
+        
+        Outline {
+            Given("I use the example name <name>")
+            Then("The height should be <height>")
+        }
+    }
+
 }
