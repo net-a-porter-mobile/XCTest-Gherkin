@@ -18,7 +18,8 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            return self.componentsSeparatedByString(" ").filter {
+            let separators = NSCharacterSet(charactersInString: " -")
+            return self.componentsSeparatedByCharactersInSet(separators).filter {
                 // Empty sections aren't interesting
                 $0.characters.count > 0
             }.map {
