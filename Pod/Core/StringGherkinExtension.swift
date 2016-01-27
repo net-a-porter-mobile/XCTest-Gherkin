@@ -19,7 +19,7 @@ public extension String {
     var camelCaseify: String {
         get {
             let separators = NSCharacterSet(charactersInString: " -")
-            return self.componentsSeparatedByCharactersInSet(separators).filter {
+            return self.lowercaseString.componentsSeparatedByCharactersInSet(separators).filter {
                 // Empty sections aren't interesting
                 $0.characters.count > 0
             }.map {
