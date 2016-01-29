@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+## 0.4.1
+
++ Fixed bug in camelcaseify function, added tests
+
 ## 0.4.0
 + Add shared examples
 
