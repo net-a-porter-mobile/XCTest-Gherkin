@@ -57,4 +57,9 @@ class StringGherkinExtensionTests: XCTestCase {
         XCTAssertEqual("DesignerAZ", simpleString.camelCaseify)
     }
     
+    func testCamelCaseify_emptyStringDoesntCrash() {
+        let simpleString = ""
+        XCTAssertEqual("", simpleString.camelCaseify)
+    }
+    
 }

@@ -41,6 +41,9 @@ public extension String {
     var uppercaseFirstLetterString: String {
         get {
             let s = self as NSString
+            guard s.length>0 else {
+                return self
+            }
             return s.substringToIndex(1).uppercaseString.stringByAppendingString(s.substringFromIndex(1))
         }
     }
