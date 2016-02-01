@@ -40,7 +40,7 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            guard self.isEmpty else {
+            guard !self.isEmpty else {
                 return self
             }
             let s = self as NSString
