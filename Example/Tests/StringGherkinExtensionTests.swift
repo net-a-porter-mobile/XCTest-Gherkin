@@ -37,15 +37,24 @@ class StringGherkinExtensionTests: XCTestCase {
         XCTAssertEqual("DEsignersAz", simpleString.camelCaseify)
     }
     
-    func testCamelCaseify_alreadyCamelCase() {
-        let simpleString = "ThisIsCamelCase"
-        XCTAssertEqual("Thisiscamelcase", simpleString.camelCaseify)
-    }
-    
     func testCamelCaseify_allCaps() {
         let simpleString = "THIS IS ALL CAPS"
         XCTAssertEqual("ThisIsAllCaps", simpleString.camelCaseify)
     }
     
+    func testCamelCaseify_home() {
+        let simpleString = "home"
+        XCTAssertEqual("Home", simpleString.camelCaseify)
+    }
+    
+    func testCamelCaseify_ShoppingBag() {
+        let simpleString = "ShoppingBag"
+        XCTAssertEqual("ShoppingBag", simpleString.camelCaseify)
+    }
+    
+    func testCamelCaseify_DesignerAZ() {
+        let simpleString = "DesignerAZ"
+        XCTAssertEqual("DesignerAZ", simpleString.camelCaseify)
+    }
     
 }

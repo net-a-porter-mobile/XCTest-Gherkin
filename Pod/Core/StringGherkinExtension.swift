@@ -19,6 +19,9 @@ public extension String {
     var camelCaseify: String {
         get {
             let separators = NSCharacterSet(charactersInString: " -")
+            if self.rangeOfCharacterFromSet(separators) == nil {
+                return self.uppercaseFirstLetterString
+            }
             return self.lowercaseString.componentsSeparatedByCharactersInSet(separators).filter {
                 // Empty sections aren't interesting
                 $0.characters.count > 0
