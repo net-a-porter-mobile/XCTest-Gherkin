@@ -40,10 +40,10 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            let s = self as NSString
-            guard s.length>0 else {
+            guard self.isEmpty else {
                 return self
             }
+            let s = self as NSString
             return s.substringToIndex(1).uppercaseString.stringByAppendingString(s.substringFromIndex(1))
         }
     }
