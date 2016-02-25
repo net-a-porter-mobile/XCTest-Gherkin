@@ -2,12 +2,13 @@
 
 ### Unreleased
 
-## 0.4.2
+### 0.4.3
++ Make the print step definitions debug method not need an instance of XCTestCase in scope
 
+### 0.4.2
 + Fixed another issue in camelcaseify, added tests
 
-## 0.4.1
-
+### 0.4.1
 + Fixed bug in camelcaseify function, added tests
 
 ## 0.4.0

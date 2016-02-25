@@ -56,33 +56,31 @@ public extension XCTestCase {
     }
 
     /**
-     This will populate the static steps array if it's empty.
+     This will populate the steps array if it's empty.
      */
     private func loadAllStepsIfNeeded() {
-        if state.steps.count == 0 {
-            // Create an instance of each step definer and call it's defineSteps
-            // method
-            allSubclassesOf(StepDefiner).forEach { subclass in
-                subclass.init(test: self).defineSteps()
-            }
-            
-            XCTAssert(state.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
+        guard state.steps.count == 0 else { return }
+
+        // Create an instance of each step definer and call it's defineSteps method
+        allSubclassesOf(StepDefiner).forEach { subclass in
+            subclass.init(test: self).defineSteps()
         }
+        
+        XCTAssert(state.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
     
     // MARK: Debugging methods
+
     /**
-    Dumps out a list of all the steps currently known, including the file and line they were defined on
-    
-    Call this on the current XCTestCase instance and you will get all the steps defined for that test, which
-    is particularly useful in the debugger i.e. `po self.printStepDefinitions()`
-    */
-    func printStepDefinitions() {
-        loadAllStepsIfNeeded()
-        
+     Dumps out a list of all the steps currently known, including the file and line they were defined on.
+     */
+    class func printStepDefinitions() {
+        let instance = self.init()
+        instance.loadAllStepsIfNeeded()
+
         print("Defined steps")
         print("-------------")
-        print(state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
+        print(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
         print("-------------")
     }
     
@@ -225,7 +223,7 @@ extension XCTestCase {
         switch matches.count {
             
         case 0:
-            self.printStepDefinitions()
+            self.dynamicType.printStepDefinitions()
             XCTFail("Step definition not found for '\(ColorLog.red(expression))'")
             
         case 1:
