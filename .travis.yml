@@ -5,12 +5,12 @@
 language: objective-c
 osx_image: xcode7.1
 
-#cache: cocoapods
-#podfile: Example/Podfile
-#before_install:
-#- gem install cocoapods # Since Travis is not always on latest version
-#- pod install --project-directory=Example
+env:
+  - DESTINATION="platform=iOS Simulator,name=iPhone 6,OS=9.1"
+  - DESTINATION="platform=iOS Simulator,name=iPhone 6,OS=8.4"
+  - DESTINATION="platform=iOS Simulator,name=iPad Air,OS=9.1"
+  - DESTINATION="platform=iOS Simulator,name=iPad Air,OS=8.4"
 
 script:
-- set -o pipefail && xcodebuild test -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
+- set -o pipefail && xcodebuild test -destination=$DESTINATION -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO | xcpretty
 - pod lib lint
