@@ -78,10 +78,10 @@ public extension XCTestCase {
         let instance = self.init()
         instance.loadAllStepsIfNeeded()
 
-        print("Defined steps")
-        print("-------------")
-        print(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
-        print("-------------")
+        NSLog("Defined steps")
+        NSLog("-------------")
+        NSLog(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
+        NSLog("-------------")
     }
     
     /**

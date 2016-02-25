@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+### 0.4.4
++ Make debug use NSLog instead of print - get thread safety
+
 ### 0.4.3
 + Make the print step definitions debug method not need an instance of XCTestCase in scope
 

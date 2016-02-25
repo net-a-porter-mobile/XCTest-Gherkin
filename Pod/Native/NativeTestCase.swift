@@ -38,7 +38,7 @@ public class NativeTestCase : XCTestCase {
     }
     
     private func parseAndRunFeature(url: NSURL) {
-        print("Running tests from \(url.lastPathComponent!)")
+        NSLog("Running tests from \(url.lastPathComponent!)")
         
         // Parse the lines into a feature
         let feature =  NativeFeature(contentsOfURL: url)
@@ -84,7 +84,7 @@ public class NativeTestCase : XCTestCase {
         // For each scenario, make an invocation that runs through the steps
         let typeString = strdup("v@:")
         feature.scenarios.forEach { scenario in
-            print(scenario.description)
+            NSLog(scenario.description)
             
             // Create the block representing the test to be run
             let block : @convention(block) (XCTestCase)->() = { innerSelf in
