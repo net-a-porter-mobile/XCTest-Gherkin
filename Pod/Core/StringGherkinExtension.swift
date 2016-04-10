@@ -18,7 +18,7 @@ public extension String {
         get {
             return self.characters
                 .split { $0 == " " || $0 == "-" }
-                .map { String($0).uppercaseFirstLetterString }
+                .map { String($0).lowercaseString.uppercaseFirstLetterString }
                 .joinWithSeparator("")
         }
     }
