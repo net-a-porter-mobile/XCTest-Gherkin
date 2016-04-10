@@ -34,8 +34,8 @@ class ExampleFeatures: XCTestCase {
         )
         
         Outline {
-            Given("I use the example name <name>")
-            Then("The age should be <age>")
+            self.Given("I use the example name <name>")
+            self.Then("The age should be <age>")
         }
     }
     
@@ -49,8 +49,8 @@ class ExampleFeatures: XCTestCase {
         Examples(examples)
         
         Outline {
-            Given("I use the example name <name>")
-            Then("The age should be <age>")
+            self.Given("I use the example name <name>")
+            self.Then("The age should be <age>")
         }
     }
 
@@ -58,21 +58,21 @@ class ExampleFeatures: XCTestCase {
         Examples(examples)
         
         Outline {
-            Given("I use the example name <name>")
-            Then("The height should be <height>")
+            self.Given("I use the example name <name>")
+            self.Then("The height should be <height>")
         }
     }
 
     func testExamplesAfterOutline() {
         Outline {
-            Given("I use the example name <name>")
-            Then("The height should be <height>")
+            self.Given("I use the example name <name>")
+            self.Then("The height should be <height>")
         }
 
         Examples(
-            [ "name", "age" ],
-            [ "Alice", "20" ],
-            [ "Bob", "20" ]
+            [ "name",   "age", "height" ],
+            [ "Alice",  "20",  "170"   ],
+            [ "Bob",    "20",  "170"   ]
         )
     }
 

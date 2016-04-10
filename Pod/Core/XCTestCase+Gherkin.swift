@@ -32,6 +32,9 @@ private class GherkinState {
     
     // Store the name of the current test to help debugging output
     var currentTestName:String = "NO TESTS RUN YET"
+
+    // Store the outline for this step until we have some example data.
+    var outline: ( ()->() )?
 }
 
 /**
@@ -154,6 +157,11 @@ public extension XCTestCase {
         }
         
         state.examples = accumulator
+
+        // Though, if we get to the end of the examples block and we have an outline in our state, just perform it!
+        if let outline = state.outline {
+            Outline(outline)
+        }
     }
     
     /**
@@ -163,14 +171,18 @@ public extension XCTestCase {
      
      - parameter routine: A block containing your Given/When/Then which will be run once per example
      */
-    func Outline( @noescape routine:()->() ) {
-        
-        XCTAssertNotNil(state.examples, "You need to define examples before running an Outline block - use Examples(...)");
-        XCTAssert(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
+    func Outline(outline: ()->() ) {
+
+        // If there aren't any examples, just store this in the state and we
+        // will run it when the example method arrives
+        guard state.examples != nil else {
+            state.outline = outline
+            return
+        }
         
         state.examples!.forEach { example in
             state.currentExample = example
-            routine()
+            outline()
             state.currentExample = nil
         }
     }
