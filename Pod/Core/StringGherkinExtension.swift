@@ -6,8 +6,6 @@
 //  Copyright © 2015 net-a-porter. All rights reserved.
 //
 
-import Foundation
-
 public extension String {
     
     /**
@@ -18,17 +16,10 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            let separators = NSCharacterSet(charactersInString: " -")
-            if self.rangeOfCharacterFromSet(separators) == nil {
-                return self.uppercaseFirstLetterString
-            }
-            return self.lowercaseString.componentsSeparatedByCharactersInSet(separators).filter {
-                // Empty sections aren't interesting
-                $0.characters.count > 0
-            }.map {
-                // Uppercase each word
-                $0.uppercaseFirstLetterString
-            }.joinWithSeparator("")
+            return self.characters
+                .split { $0 == " " || $0 == "-" }
+                .map { String($0).lowercaseString.uppercaseFirstLetterString }
+                .joinWithSeparator("")
         }
     }
 
@@ -40,11 +31,9 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            let s = self as NSString
-            guard s.length>0 else {
-                return self
-            }
-            return s.substringToIndex(1).uppercaseString.stringByAppendingString(s.substringFromIndex(1))
+            let c = self.characters
+            return String(c.prefix(1)).uppercaseString +
+                String(c.suffixFrom(c.startIndex.advancedBy(1, limit: c.endIndex)))
         }
     }
     
@@ -55,25 +44,20 @@ public extension String {
      */
     var humanReadableString: String {
         get {
-            // This is probably easier in NSStringland
-            let s = self as NSString
+            guard let c1 = self.characters.first else { return self }
             
-            // The output string can start with the first letter
-            var o = s.substringToIndex(1)
+            let cRest = self.characters
+                .suffixFrom(self.characters.startIndex.successor())
             
-            // For each other letter, if it's the same as it's uppercase counterpart, insert a space before it
-            for (var i = 1; i < s.length; ++i) {
-                let l = s.substringWithRange(NSMakeRange(i, 1))
-                let u = l.uppercaseString
-                
-                if (u == l) {
-                    o += " "
+            return String(c1) + cRest.reduce("") { (sum, c) in
+                let s = String(c)
+                if s == s.uppercaseString {
+                    return sum + " " + s
                 }
-                
-                o += l
+                else {
+                    return sum + s
+                }
             }
-            
-            return o
         }
     }
 }
