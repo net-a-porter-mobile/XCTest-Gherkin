@@ -63,4 +63,17 @@ class ExampleFeatures: XCTestCase {
         }
     }
 
+    func testExamplesAfterOutline() {
+        Outline {
+            Given("I use the example name <name>")
+            Then("The height should be <height>")
+        }
+
+        Examples(
+            [ "name", "age" ],
+            [ "Alice", "20" ],
+            [ "Bob", "20" ]
+        )
+    }
+
 }
