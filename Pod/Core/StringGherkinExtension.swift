@@ -35,8 +35,9 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            guard case var c = self.characters where c.count > 0 else { return self }
-            return String(c.removeFirst()).uppercaseString + String(c)
+            guard case let c = self.characters,
+                let c1 = c.first else { return self }
+            return String(c1).uppercaseString + String(c.dropFirst())
         }
     }
     
@@ -47,8 +48,9 @@ public extension String {
      */
     var humanReadableString: String {
         get {
-            guard case var c = self.characters where c.count > 1 else { return self }
-            return String(c.removeFirst()) + c.reduce("") { (sum, c) in
+            guard case let c = self.characters where c.count > 1,
+                let c1 = c.first else { return self }
+            return String(c1) + c.dropFirst().reduce("") { (sum, c) in
                 let s = String(c)
                 if s == s.uppercaseString {
                     return sum + " " + s
