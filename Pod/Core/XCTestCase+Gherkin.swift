@@ -254,9 +254,9 @@ extension XCTestCase {
             NSLog("step \(currentStepDepthString())\(coloredExpression)")
             
             // Run the step
-            state.currentStepDepth++
+            state.currentStepDepth += 1
             step.function(matchStrings)
-            state.currentStepDepth--
+            state.currentStepDepth -= 1
             
         default:
             // Dump out all the steps found which match so we can work out why

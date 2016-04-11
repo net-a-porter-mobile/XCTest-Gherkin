@@ -62,7 +62,7 @@ public extension String {
             var o = s.substringToIndex(1)
             
             // For each other letter, if it's the same as it's uppercase counterpart, insert a space before it
-            for (var i = 1; i < s.length; ++i) {
+            for i in 1..<s.length {
                 let l = s.substringWithRange(NSMakeRange(i, 1))
                 let u = l.uppercaseString
                 
@@ -71,8 +71,7 @@ public extension String {
                 }
                 
                 o += l
-            }
-            
+            }            
             return o
         }
     }
