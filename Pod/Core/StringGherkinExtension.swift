@@ -18,17 +18,12 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            let separators = NSCharacterSet(charactersInString: " -")
-            if self.rangeOfCharacterFromSet(separators) == nil {
+            guard case let c = (self.characters.split { $0 == " " || $0 == "-" })
+                where c.count > 1 else {
                 return self.uppercaseFirstLetterString
             }
-            return self.lowercaseString.componentsSeparatedByCharactersInSet(separators).filter {
-                // Empty sections aren't interesting
-                $0.characters.count > 0
-            }.map {
-                // Uppercase each word
-                $0.uppercaseFirstLetterString
-            }.joinWithSeparator("")
+            return c.map { String($0).lowercaseString.uppercaseFirstLetterString }
+                .joinWithSeparator("")
         }
     }
 
@@ -40,11 +35,9 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            let s = self as NSString
-            guard s.length>0 else {
-                return self
-            }
-            return s.substringToIndex(1).uppercaseString.stringByAppendingString(s.substringFromIndex(1))
+            guard case let c = self.characters,
+                let c1 = c.first else { return self }
+            return String(c1).uppercaseString + String(c.dropFirst())
         }
     }
     
@@ -55,24 +48,17 @@ public extension String {
      */
     var humanReadableString: String {
         get {
-            // This is probably easier in NSStringland
-            let s = self as NSString
-            
-            // The output string can start with the first letter
-            var o = s.substringToIndex(1)
-            
-            // For each other letter, if it's the same as it's uppercase counterpart, insert a space before it
-            for i in 1..<s.length {
-                let l = s.substringWithRange(NSMakeRange(i, 1))
-                let u = l.uppercaseString
-                
-                if (u == l) {
-                    o += " "
+            guard case let c = self.characters where c.count > 1,
+                let c1 = c.first else { return self }
+            return String(c1) + c.dropFirst().reduce("") { (sum, c) in
+                let s = String(c)
+                if s == s.uppercaseString {
+                    return sum + " " + s
                 }
-                
-                o += l
-            }            
-            return o
+                else {
+                    return sum + s
+                }
+            }
         }
     }
 }
