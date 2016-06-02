@@ -47,7 +47,7 @@ class SomeStepDefinitions : StepDefiner {
             // Your setup code here
         }
         
-        step("This value should be ([0-9]*)" { (matches:String) in
+        step("This value should be ([0-9]*)") { (matches: [String]) in
             let expectedValue = matches.first!
             let someValueFromTheUI = /* However you want to get this */
             XCTAssertEqual(expectedValue, someValueFromTheUI)
@@ -113,7 +113,7 @@ XCTest-Gherkin is available through [CocoaPods](http://cocoapods.org). To instal
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "XCTest-Gherkin"
+pod 'XCTest-Gherkin'
 ```
 
 and run `pod install`
