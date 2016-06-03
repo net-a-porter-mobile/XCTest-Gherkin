@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		27D846191C59282A002C835B /* StringGherkinExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D846181C59282A002C835B /* StringGherkinExtensionTests.swift */; };
-		5E32EE4406C7ED0B180CA6A9 /* Pods_XCTest_Gherkin_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E785CC0B7D5748A8F8019F5 /* Pods_XCTest_Gherkin_Tests.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		C8B279D4534F8C6E00882E7B /* Pods_XCTest_Gherkin_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */; };
+		AE7D6C386C4DAF0C1292DE0B /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */; };
+		DECAC73D7389FA6DBB085AF4 /* Pods_XCTest_Gherkin_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 295FB96ECF4E36A80D3B3F04 /* Pods_XCTest_Gherkin_Example.framework */; };
 		E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */; };
 		E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */; };
 		E5B911FE1D0961DA0030AD1D /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
@@ -33,8 +33,9 @@
 
 /* Begin PBXFileReference section */
 		27D846181C59282A002C835B /* StringGherkinExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringGherkinExtensionTests.swift; sourceTree = "<group>"; };
-		4E785CC0B7D5748A8F8019F5 /* Pods_XCTest_Gherkin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		553C0A1CD5DF43CC0F5D1A95 /* Pods-XCTest-Gherkin_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		295FB96ECF4E36A80D3B3F04 /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3797209CB013F3B503E75F1E /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		50D5C85A0E0130261BB017CF /* Pods-XCTest-Gherkin_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.release.xcconfig"; sourceTree = "<group>"; };
 		58C4996252B2FCDA30E1A382 /* XCTest-Gherkin.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "XCTest-Gherkin.podspec"; path = "../XCTest-Gherkin.podspec"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* XCTest-Gherkin_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "XCTest-Gherkin_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,17 +46,16 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* XCTest-Gherkin_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "XCTest-Gherkin_Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8CFFEFB779B08E54A4401F43 /* Pods-XCTest-Gherkin_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		7150CEEAA1CD24EB97D789AC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		AD8DF65B966910B5E42CBECB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1D9F2B14D731F99318CB6E8 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E54130971BEBE06600E92975 /* NativeFeatures */ = {isa = PBXFileReference; lastKnownFileType = folder; path = NativeFeatures; sourceTree = "<group>"; };
 		E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeTest.swift; sourceTree = "<group>"; };
 		E568C3CD1C1068CF00270E6F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleFeatures.swift; sourceTree = "<group>"; };
 		E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SanitySteps.swift; sourceTree = "<group>"; };
-		EECC6390476865D859E65C36 /* Pods-XCTest-Gherkin_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.release.xcconfig"; sourceTree = "<group>"; };
 		F457A887D15F95B9CFB0E298 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		F70C193AEED15FB2794C0430 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C8B279D4534F8C6E00882E7B /* Pods_XCTest_Gherkin_Example.framework in Frameworks */,
+				DECAC73D7389FA6DBB085AF4 /* Pods_XCTest_Gherkin_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,22 +71,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E32EE4406C7ED0B180CA6A9 /* Pods_XCTest_Gherkin_Tests.framework in Frameworks */,
+				AE7D6C386C4DAF0C1292DE0B /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4933222B1A644251273FF71B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */,
-				4E785CC0B7D5748A8F8019F5 /* Pods_XCTest_Gherkin_Tests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -94,8 +85,8 @@
 				607FACD21AFB9204008FA782 /* Example for XCTest-Gherkin */,
 				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
-				6296053F0FE1668094BACDEA /* Pods */,
-				4933222B1A644251273FF71B /* Frameworks */,
+				B25367571932A3EE0742BA05 /* Pods */,
+				7544643F8FED89CB84D0740A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -160,13 +151,22 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
-		6296053F0FE1668094BACDEA /* Pods */ = {
+		7544643F8FED89CB84D0740A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F70C193AEED15FB2794C0430 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */,
-				EECC6390476865D859E65C36 /* Pods-XCTest-Gherkin_Example.release.xcconfig */,
-				8CFFEFB779B08E54A4401F43 /* Pods-XCTest-Gherkin_Tests.debug.xcconfig */,
-				553C0A1CD5DF43CC0F5D1A95 /* Pods-XCTest-Gherkin_Tests.release.xcconfig */,
+				295FB96ECF4E36A80D3B3F04 /* Pods_XCTest_Gherkin_Example.framework */,
+				B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B25367571932A3EE0742BA05 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E1D9F2B14D731F99318CB6E8 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */,
+				50D5C85A0E0130261BB017CF /* Pods-XCTest-Gherkin_Example.release.xcconfig */,
+				3797209CB013F3B503E75F1E /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig */,
+				7150CEEAA1CD24EB97D789AC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -196,12 +196,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "XCTest-Gherkin_Example" */;
 			buildPhases = (
-				FB8C2C822A68DB336CB0AAB5 /* Check Pods Manifest.lock */,
+				74838514CFDDA2EF113D8F9A /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				46EDA9F2D746642EE6FBBE1D /* Embed Pods Frameworks */,
-				0DEFA6E3BD7F36A8AB4EAFDD /* Copy Pods Resources */,
+				E3EE48093A99A7D1045B0538 /* [CP] Embed Pods Frameworks */,
+				5BFCF2BF3B69F633EB93C52A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -216,12 +216,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "XCTest-Gherkin_Tests" */;
 			buildPhases = (
-				A55474194DC788B7A2A69624 /* Check Pods Manifest.lock */,
+				9A2012920830D2ACDF750CA6 /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
-				77A161AD109E26FCA5564DD6 /* Embed Pods Frameworks */,
-				B4D885BD737A59CB26C6639F /* Copy Pods Resources */,
+				4D95D4948B5658415A7124FA /* [CP] Embed Pods Frameworks */,
+				D53CAEA359A32ECE007409F9 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -293,14 +293,29 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0DEFA6E3BD7F36A8AB4EAFDD /* Copy Pods Resources */ = {
+		4D95D4948B5658415A7124FA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5BFCF2BF3B69F633EB93C52A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -308,79 +323,64 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		46EDA9F2D746642EE6FBBE1D /* Embed Pods Frameworks */ = {
+		74838514CFDDA2EF113D8F9A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9A2012920830D2ACDF750CA6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D53CAEA359A32ECE007409F9 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E3EE48093A99A7D1045B0538 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		77A161AD109E26FCA5564DD6 /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A55474194DC788B7A2A69624 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		B4D885BD737A59CB26C6639F /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		FB8C2C822A68DB336CB0AAB5 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -521,7 +521,7 @@
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F70C193AEED15FB2794C0430 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */;
+			baseConfigurationReference = E1D9F2B14D731F99318CB6E8 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "XCTest-Gherkin/Info.plist";
@@ -533,7 +533,7 @@
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EECC6390476865D859E65C36 /* Pods-XCTest-Gherkin_Example.release.xcconfig */;
+			baseConfigurationReference = 50D5C85A0E0130261BB017CF /* Pods-XCTest-Gherkin_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = "XCTest-Gherkin/Info.plist";
@@ -545,7 +545,7 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8CFFEFB779B08E54A4401F43 /* Pods-XCTest-Gherkin_Tests.debug.xcconfig */;
+			baseConfigurationReference = 3797209CB013F3B503E75F1E /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -565,7 +565,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 553C0A1CD5DF43CC0F5D1A95 /* Pods-XCTest-Gherkin_Tests.release.xcconfig */;
+			baseConfigurationReference = 7150CEEAA1CD24EB97D789AC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (

@@ -1,6 +1,6 @@
 PODS:
-  - XCTest-Gherkin/Core (0.1.0)
-  - XCTest-Gherkin/Native (0.1.0):
+  - XCTest-Gherkin/Core (0.4.4)
+  - XCTest-Gherkin/Native (0.4.4):
     - XCTest-Gherkin/Core
 
 DEPENDENCIES:
@@ -8,9 +8,11 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   XCTest-Gherkin:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  XCTest-Gherkin: cd1024eccd50a5daab267b010e2884066898d2b8
+  XCTest-Gherkin: 2da5dc80f4e5cacc101232f867c721374830d871
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: edf9cbc581bcae22da1177389af191780b3bb195
+
+COCOAPODS: 1.0.1
