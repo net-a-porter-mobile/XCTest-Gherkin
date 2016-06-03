@@ -23,6 +23,8 @@ Adds Gherkin syntax to XCTestCase
   s.requires_arc = true
 
   s.default_subspec = 'Core'
+  s.ios.deployment_target = '8.0'
+  s.osx.deployment_target = '10.10.0'
 
   s.subspec 'Core' do |ss|
     ss.source_files = 'Pod/Core/**/*'
