@@ -5,6 +5,7 @@ target 'XCTest-Gherkin_Example' do
   pod "XCTest-Gherkin/Native", :path => "../"
   
   target 'XCTest-Gherkin_Tests'
+  target 'XCTest-Gherkin_ExampleUITests'
 end
 
 post_install do |installer|

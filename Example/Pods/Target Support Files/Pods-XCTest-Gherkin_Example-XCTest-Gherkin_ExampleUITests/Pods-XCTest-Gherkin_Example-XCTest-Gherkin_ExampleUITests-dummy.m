@@ -1,0 +1,5 @@
+#import <Foundation/Foundation.h>
+@interface PodsDummy_Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests : NSObject
+@end
+@implementation PodsDummy_Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests
+@end
