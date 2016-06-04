@@ -16,7 +16,6 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		C8B279D4534F8C6E00882E7B /* Pods_XCTest_Gherkin_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */; };
 		E54130981BEBE06600E92975 /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
-		E568C3CE1C1068CF00270E6F /* CHANGELOG.md in Sources */ = {isa = PBXBuildFile; fileRef = E568C3CD1C1068CF00270E6F /* CHANGELOG.md */; };
 		E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */; };
 		E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */; };
 		E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */; };
@@ -392,7 +391,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
-				E568C3CE1C1068CF00270E6F /* CHANGELOG.md in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
