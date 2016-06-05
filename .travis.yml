@@ -13,6 +13,6 @@ env:
 
 script:
 - set -o pipefail
-- xctool -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test -only XCTest-Gherkin_Tests
-- if [ $UI ]; then; xctool -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test -only XCTest-Gherkin_ExampleUITests; fi
+- xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test
+- if [ $UI ]; then; xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test; fi
 - pod lib lint
