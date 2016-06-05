@@ -333,6 +333,7 @@
 				E53F47D01D020EB80077CCCD /* Resources */,
 				E532EBF31D0FF57200E8DAC7 /* [CP] Embed Pods Frameworks */,
 				AF545F02B6D704D170D6C5CA /* [CP] Copy Pods Resources */,
+				E53F47E71D040B100077CCCD /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -506,7 +507,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E532EBF31D0FF57200E8DAC7 /* [CP] Embed Pods Frameworks */ = {
+		E53F47E71D040B100077CCCD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
