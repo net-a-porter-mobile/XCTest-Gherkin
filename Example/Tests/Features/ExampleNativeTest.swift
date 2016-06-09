@@ -14,7 +14,10 @@ class ExampleNativeTest : NativeTestCase {
     override func setUp() {
         super.setUp()
         
-        self.path = NSBundle.mainBundle().resourceURL?.URLByAppendingPathComponent("NativeFeatures")
+        let bundle = NSBundle(forClass: self.dynamicType)
+        self.path = bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures")
+        
+        XCTAssertNotNil(self.path)
     }
     
 }

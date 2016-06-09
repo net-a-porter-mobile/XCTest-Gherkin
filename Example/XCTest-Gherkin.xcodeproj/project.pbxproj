@@ -15,9 +15,9 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		C8B279D4534F8C6E00882E7B /* Pods_XCTest_Gherkin_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6434B634DC50ED56BD201F5C /* Pods_XCTest_Gherkin_Example.framework */; };
-		E54130981BEBE06600E92975 /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
 		E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */; };
 		E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */; };
+		E5B911FE1D0961DA0030AD1D /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
 		E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -276,7 +276,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E54130981BEBE06600E92975 /* NativeFeatures in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
@@ -287,6 +286,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B911FE1D0961DA0030AD1D /* NativeFeatures in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
