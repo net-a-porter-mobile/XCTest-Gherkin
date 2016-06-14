@@ -1,12 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
-target 'XCTest-Gherkin_Example', :exclusive => true do
+target 'XCTest-Gherkin_Example' do
   pod "XCTest-Gherkin/Native", :path => "../"
-end
-
-target 'XCTest-Gherkin_Tests', :exclusive => true do
-  pod "XCTest-Gherkin/Native", :path => "../"
+  
+  target 'XCTest-Gherkin_Tests'
 end
 
 post_install do |installer|
