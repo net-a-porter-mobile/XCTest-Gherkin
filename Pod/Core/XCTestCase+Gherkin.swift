@@ -17,7 +17,7 @@ UITestCase - a subclass wouldn't work with both of them.
 It's nicer code IMHO to have the state as a single associated property beacuse of the grossness of setting/getting it.
 This means that anytime I want to access my extra properties I just do `state.{propertyName}`
 */
-private class GherkinState {
+public class GherkinState {
     // The list of all steps the system knows about
     var steps = Set<Step>()
     
@@ -43,7 +43,7 @@ public extension XCTestCase {
         static var State = "AssociatedStateKey"
     }
     
-    private var state: GherkinState {
+    var state: GherkinState {
         get {
             guard let s = objc_getAssociatedObject(self, &AssociatedKeys.State) else {
                 let initialState = GherkinState()
@@ -58,7 +58,7 @@ public extension XCTestCase {
     /**
      This will populate the steps array if it's empty.
      */
-    private func loadAllStepsIfNeeded() {
+    func loadAllStepsIfNeeded() {
         guard state.steps.count == 0 else { return }
 
         // Create an instance of each step definer and call it's defineSteps method
@@ -77,11 +77,11 @@ public extension XCTestCase {
     class func printStepDefinitions() {
         let instance = self.init()
         instance.loadAllStepsIfNeeded()
-
-        NSLog("Defined steps")
-        NSLog("-------------")
-        NSLog(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
-        NSLog("-------------")
+        print("-------------")
+        print(ColorLog.darkGreen("Defined steps"))
+        print("-------------")
+        print(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
+        print("-------------")
     }
     
     /**
@@ -219,50 +219,39 @@ extension XCTestCase {
                 return nil
             }
         }.flatMap { $0! }
-        
-        switch matches.count {
-            
-        case 0:
-            self.dynamicType.printStepDefinitions()
-            XCTFail("Step definition not found for '\(ColorLog.red(expression))'")
-            
-        case 1:
-            // Get the step and the matches inside it
-            let (step, match) = matches.first!
-            
-            // Covert them to strings to pass back into the step function
-            // TODO: This should really only need to be a map function :(
-            var matchStrings = Array<String>()
-            for i in 1..<match.numberOfRanges {
-                let range = match.rangeAtIndex(i)
-                let string = range.location != NSNotFound ? (expression as NSString).substringWithRange(range) : ""
-                matchStrings.append(string)
-            }
-            
-            // If this the first step, debug the test name as well
-            if state.currentStepDepth == 0 {
-                let rawName = String(self.invocation!.selector)
-                let testName = rawName.hasPrefix("test") ? (rawName as NSString).substringFromIndex(4) : rawName
-                if testName != state.currentTestName {
-                    NSLog("steps from \(ColorLog.darkGreen(testName.humanReadableString))")
-                    state.currentTestName = testName
-                }
-            }
-            
-            // Debug the step name
-            let coloredExpression = state.currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
-            NSLog("step \(currentStepDepthString())\(coloredExpression)")
-            
-            // Run the step
-            state.currentStepDepth += 1
-            step.function(matchStrings)
-            state.currentStepDepth -= 1
-            
-        default:
-            // Dump out all the steps found which match so we can work out why
-            matches.forEach { NSLog("Matching step : \(String(reflecting: $0.step))") }
-            XCTFail("Multiple step definitions found for : '\(ColorLog.red(expression))'")
+
+        // Get the step and the matches inside it
+        guard let (step, match) = matches.first else {
+            fatalError("match not found for step expression: \(ColorLog.red(expression))")
         }
+        
+        // Covert them to strings to pass back into the step function
+        // TODO: This should really only need to be a map function :(
+        var matchStrings = Array<String>()
+        for i in 1..<match.numberOfRanges {
+            let range = match.rangeAtIndex(i)
+            let string = range.location != NSNotFound ? (expression as NSString).substringWithRange(range) : ""
+            matchStrings.append(string)
+        }
+        
+        // If this the first step, debug the test name as well
+        if state.currentStepDepth == 0 {
+            let rawName = String(self.invocation!.selector)
+            let testName = rawName.hasPrefix("test") ? (rawName as NSString).substringFromIndex(4) : rawName
+            if testName != state.currentTestName {
+                NSLog("steps from \(ColorLog.darkGreen(testName.humanReadableString))")
+                state.currentTestName = testName
+            }
+        }
+        
+        // Debug the step name
+        let coloredExpression = state.currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
+        NSLog("step \(currentStepDepthString())\(coloredExpression)")
+        
+        // Run the step
+        state.currentStepDepth += 1
+        step.function(matchStrings)
+        state.currentStepDepth -= 1
         
         return self
     }

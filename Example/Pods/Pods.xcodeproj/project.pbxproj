@@ -32,6 +32,7 @@
 		E263A4611D7443A7B81AF0EE1D583EFF /* NativeScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797F51BB058B8D9B398B2F63C0A18AF0 /* NativeScenario.swift */; };
 		E399A7A48175B84F25AD815AD03CF0BC /* XCTest-Gherkin-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 37541B2F3EA654D2B0941A1A3F03CBFD /* XCTest-Gherkin-dummy.m */; };
 		FBB014E3D45EDEE6D7BF1DEBCD406B24 /* StringGherkinExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4913AA91A59F35F1BD1FDA5021D2B8B /* StringGherkinExtension.swift */; };
+
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,6 +159,7 @@
 			children = (
 				E6E43EAD4D634C9F4494E0C83C0F6266 /* NativeExample.swift */,
 				8ACF7F6708823E9D73A70C8D4A71F1BD /* NativeFeature.swift */,
+				1CF49E4A1D0B051F006856C9 /* GherkinStepsChecker.swift */,
 				797F51BB058B8D9B398B2F63C0A18AF0 /* NativeScenario.swift */,
 				856F6DD3258B844A7976F574E87743A8 /* NativeTestCase.swift */,
 				D30C51B2CC7305E1EF8D5DC05EBE89EA /* ParseState.swift */,
