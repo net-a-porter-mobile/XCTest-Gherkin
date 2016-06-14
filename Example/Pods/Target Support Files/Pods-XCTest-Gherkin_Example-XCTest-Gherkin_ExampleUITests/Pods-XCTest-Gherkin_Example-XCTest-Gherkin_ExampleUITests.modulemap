@@ -1,0 +1,6 @@
+framework module Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests {
+  umbrella header "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

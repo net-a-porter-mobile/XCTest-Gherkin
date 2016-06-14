@@ -21,11 +21,11 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForTesting = "NO"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
@@ -35,11 +35,11 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "NO"
+            buildForTesting = "YES"
+            buildForRunning = "YES"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
+            buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E53F47D11D020EB80077CCCD"
@@ -60,9 +60,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "XCTest-Gherkin_Tests.xctest"
-               BlueprintName = "XCTest-Gherkin_Tests"
+               BlueprintIdentifier = "E53F47D11D020EB80077CCCD"
+               BuildableName = "XCTest-Gherkin_ExampleUITests.xctest"
+               BlueprintName = "XCTest-Gherkin_ExampleUITests"
                ReferencedContainer = "container:XCTest-Gherkin.xcodeproj">
             </BuildableReference>
          </TestableReference>
