@@ -222,7 +222,10 @@ extension XCTestCase {
 
         // Get the step and the matches inside it
         guard let (step, match) = matches.first else {
-            fatalError("match not found for step expression: \(ColorLog.red(expression))")
+            let stepChecker = GherkinStepsChecker()
+            stepChecker.matchGherkinStepExpressionToStepDefinitions(expression)
+            stepChecker.printTemplateCodeForAllMissingSteps()
+            fatalError()
         }
         
         // Covert them to strings to pass back into the step function
