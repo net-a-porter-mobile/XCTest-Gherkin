@@ -8,7 +8,6 @@
 
 import Foundation
 import XCTest
-import XCTest_Gherkin
 
 class GherkinStepsChecker: XCTestCase {
     
