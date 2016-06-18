@@ -17,7 +17,7 @@ UITestCase - a subclass wouldn't work with both of them.
 It's nicer code IMHO to have the state as a single associated property beacuse of the grossness of setting/getting it.
 This means that anytime I want to access my extra properties I just do `state.{propertyName}`
 */
-public class GherkinState {
+class GherkinState {
     // The list of all steps the system knows about
     var steps = Set<Step>()
     
@@ -43,7 +43,7 @@ public extension XCTestCase {
         static var State = "AssociatedStateKey"
     }
     
-    var state: GherkinState {
+    internal var state: GherkinState {
         get {
             guard let s = objc_getAssociatedObject(self, &AssociatedKeys.State) else {
                 let initialState = GherkinState()
