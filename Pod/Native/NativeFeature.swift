@@ -38,7 +38,7 @@ class NativeFeature : CustomStringConvertible {
 
 extension NativeFeature {
     
-    convenience init?(contentsOfURL url: NSURL) {
+    convenience init?(contentsOfURL url: NSURL, stepChecker: GherkinStepsChecker) {
         // Read in the file
         let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
         
@@ -55,6 +55,14 @@ extension NativeFeature {
         let featureDescription = suffix
         
         let scenarios = NativeFeature.parseLines(lines)
+        
+        stepChecker.loadDefinedSteps()
+        
+        scenarios.forEach({
+            $0.stepDescriptions.forEach({
+                stepChecker.matchGherkinStepExpressionToStepDefinitions($0)
+            })
+        })
         
         self.init(description: featureDescription, scenarios: scenarios)
     }
