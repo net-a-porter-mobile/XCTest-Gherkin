@@ -2,6 +2,13 @@
 
 ### Unreleased
 
+## 0.5.0
++ Add better debugging for native feature file migration (thanks to @smaljaar)
++ Remote bitcode from podfile and migrate to pod 1.0.x syntax
++ Add xcode-ui example (and tests)
++ Add OSX as a target in the podspec (thanks to @pat2man)
++ Remove foundation from the strings extensions (thanks to @dfrib)
+
 ### 0.4.4
 + Make debug use NSLog instead of print - get thread safety
 
