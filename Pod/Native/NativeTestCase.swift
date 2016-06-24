@@ -47,6 +47,8 @@ public class NativeTestCase : XCTestCase {
         files.forEach {
             if let feature = NativeFeature(contentsOfURL:($0 as! NSURL), stepChecker:stepChecker){
                 features.append(feature)
+            } else {
+                XCTFail("Could not parse feature at URL \(($0 as! NSURL).description)")
             }
         }
         if !stepChecker.printTemplateCodeForAllMissingSteps() {
