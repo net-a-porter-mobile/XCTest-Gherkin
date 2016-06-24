@@ -42,17 +42,16 @@ extension NativeFeature {
         // Read in the file
         let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
         
-        // Get all the lines in the file
-        let lines = contents.componentsSeparatedByString("\n")
-            .map { $0.stringByTrimmingCharactersInSet(whitespace) }
-        
+        // Get all the lines in the file 
+        var lines = contents.componentsSeparatedByString("\n").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+        // Filter comments (#) and tags (@), also filter white lines
+        lines = lines.filter { $0.characters.first != "#" &&  $0.characters.first != "@" && $0.characters.count > 0}
+
         guard lines.count > 0 else { return nil }
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
         let (_,suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
-        guard let suffix = suffixOption else { return nil }
-
-        let featureDescription = suffix
+        guard let featureDescription = suffixOption else { return nil }
         
         let scenarios = NativeFeature.parseLines(lines)
         

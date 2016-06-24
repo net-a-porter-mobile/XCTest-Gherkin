@@ -1,3 +1,7 @@
+# Comment line 1
+# Comment line 2
+@tag
+
 Feature: Feature file parsing
 
     Scenario: This is a basic happy path example
