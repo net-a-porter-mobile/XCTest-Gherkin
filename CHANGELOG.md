@@ -1,6 +1,7 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
++ Fix for parsing native feature files with comments / whitespace (thanks to @smaljaar)
 
 ## 0.5.0
 + Add better debugging for native feature file migration (thanks to @smaljaar)
