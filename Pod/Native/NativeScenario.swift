@@ -35,3 +35,8 @@ class NativeScenario : CustomStringConvertible {
         }
     }
 }
+
+// The "Background" is a number of steps executed before every scenario, so this can be modelled as another scenario.
+class NativeBackground : NativeScenario {
+    
+}

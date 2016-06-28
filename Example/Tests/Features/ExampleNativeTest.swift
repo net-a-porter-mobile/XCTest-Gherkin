@@ -18,6 +18,8 @@ class ExampleNativeTest : NativeTestCase {
         self.path = bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures")
         
         XCTAssertNotNil(self.path)
+        
+        ColorLog.enabled = true
     }
     
 }

@@ -89,6 +89,8 @@ public class NativeTestCase : XCTestCase {
         success = class_addMethod(testCaseClass, runSel, runImp, strdup("#@:"))
         XCTAssertTrue(success)
         
+        NSLog(feature.description)
+        
         // For each scenario, make an invocation that runs through the steps
         let typeString = strdup("v@:")
         feature.scenarios.forEach { scenario in
@@ -96,6 +98,9 @@ public class NativeTestCase : XCTestCase {
             
             // Create the block representing the test to be run
             let block : @convention(block) (XCTestCase)->() = { innerSelf in
+                if let background = feature.background {
+                    background.stepDescriptions.forEach { innerSelf.performStep($0) }
+                }
                 scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
             }
             
