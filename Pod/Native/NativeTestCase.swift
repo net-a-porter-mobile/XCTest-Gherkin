@@ -33,24 +33,51 @@ public class NativeTestCase : XCTestCase {
             return
         }
         
-        // Get the files from that folder
-        guard let files = NSFileManager.defaultManager().enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) else {
-            XCTFail("Could not open the path '\(path)'")
+        guard let features = self.featuresForPath(path) else {
+            XCTFail("Could not retrieve features from the path '\(path)'")
             return
         }
         
-        parseFeatureFiles(files)
+        self.perform(features)
     }
     
-    func parseFeatureFiles(files: NSDirectoryEnumerator){
-        var features = [NativeFeature]()
-        files.forEach {
-            if let feature = NativeFeature(contentsOfURL:($0 as! NSURL), stepChecker:stepChecker){
-                features.append(feature)
+    func featuresForPath(path: NSURL) -> [NativeFeature]? {
+        let manager = NSFileManager.defaultManager()
+        var isDirectory: ObjCBool = ObjCBool(false)
+        guard manager.fileExistsAtPath(path.path!, isDirectory: &isDirectory) else {
+            XCTFail("The path doesn not exist '\(path)'")
+            return nil
+        }
+        
+        if isDirectory {
+            // Get the files from that folder
+            if let files = manager.enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
+                return self.parseFeatureFiles(files)
             } else {
-                XCTFail("Could not parse feature at URL \(($0 as! NSURL).description)")
+                XCTFail("Could not open the path '\(path)'")
+            }
+            
+        } else {
+            if let feature = self.parseFeatureFile(path) {
+                return [feature]
             }
         }
+        return nil
+    }
+    
+    func parseFeatureFiles(files: NSDirectoryEnumerator) -> [NativeFeature] {
+        return files.map({ return self.parseFeatureFile($0 as! NSURL)!})
+    }
+    
+    func parseFeatureFile(file: NSURL) -> NativeFeature? {
+        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:stepChecker) else {
+            XCTFail("Could not parse feature at URL \(file.description)")
+            return nil
+        }
+        return feature
+    }
+    
+    func perform(features: [NativeFeature]) {
         if !stepChecker.printTemplateCodeForAllMissingSteps() {
             features.forEach({performFeature($0)})
         }
