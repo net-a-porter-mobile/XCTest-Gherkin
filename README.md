@@ -58,6 +58,20 @@ class SomeStepDefinitions : StepDefiner {
 
 These steps match (via regular expressions, using `NSRegularExpression` obvs) and return the capture groups (if there are any). The second step will capture the digits from the end of the test and compare it to the current state of the UI.
 
+There are convenience versions of the step method which extract the first match for you:
+
+```swift
+step("This value should be ([0-9]*)") { (match: String) in
+    XCTAssertEqual(expectedValue, match)
+}
+
+step("This value should be between ([0-9]*) and ([0-9]*)") { (match1: String, match2: String) in
+    let someValue = /* However you want to get this */
+    XCTAssert(someValue > match1)
+    XCTAssert(someValue < match2)
+}
+```
+
 ### Examples and feature outlines
 If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
 
