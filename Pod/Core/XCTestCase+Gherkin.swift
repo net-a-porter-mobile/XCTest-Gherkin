@@ -214,10 +214,12 @@ extension XCTestCase {
         let range = NSMakeRange(0, expression.characters.count)
         let matches = state.steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
             if let match = step.regex.firstMatchInString(expression, options: [], range: range) {
-                return (step:step, match:match)
-            } else {
-                return nil
+                // We don't want the strings to be only partially matching
+                if match.range.length == range.length {
+                    return (step:step, match:match)
+                }
             }
+            return nil
         }.flatMap { $0! }
 
         // Get the step and the matches inside it
