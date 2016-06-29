@@ -20,4 +20,8 @@ class ExampleNativeTest : NativeTestCase {
         XCTAssertNotNil(self.path)
     }
     
+    override func setUpBeforeScenario() {
+        super.setUpBeforeScenario()
+        print("Preparing before scenario")
+    }
 }
