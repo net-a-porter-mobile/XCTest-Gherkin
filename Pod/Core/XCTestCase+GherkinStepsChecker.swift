@@ -22,11 +22,14 @@ class GherkinStepsChecker: XCTestCase {
         // Get the step(s) which match this expression
         let range = NSMakeRange(0, expression.characters.count)
         let matches = state.steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
+            // TODO: consider refactor - code duplication in XCTestCase+Gherkin: 216
             if let match = step.regex.firstMatchInString(expression, options: [], range: range) {
-                return (step:step, match:match)
-            } else {
-                return nil
+                // We don't want the strings to be only partially matching
+                if match.range.length == range.length {
+                    return (step:step, match:match)
+                }
             }
+            return nil
             }.flatMap { $0! }
         
         switch matches.count {
