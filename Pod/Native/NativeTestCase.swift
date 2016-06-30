@@ -86,7 +86,7 @@ public class NativeTestCase : XCTestCase {
     func performFeature(feature: NativeFeature) {
         // Create a test case to contain our tests
         let testClassName = "\(feature.featureDescription.camelCaseify)Tests"
-        let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0)
+        let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0) ?? NSClassFromString(testClassName)
         guard let testCaseClass = testCaseClassOptional else { XCTFail("Could not create test case class"); return }
         
         // Return the correct number of tests
