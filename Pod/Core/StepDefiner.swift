@@ -13,7 +13,7 @@ Classes which extend this class will be queried by the system to
 populate the step definitions before test runs
 */
 public class StepDefiner {
-    public let test:XCTestCase
+    public let test: XCTestCase
     
     required public init(test: XCTestCase) {
         self.test = test
@@ -37,7 +37,7 @@ public class StepDefiner {
      - parameter f0: The step definition to be run
      
      */
-    public func step(expression:String, file:String = #file, line:Int = #line, f0:()->()) {
+    public func step(expression: String, file: String = #file, line: Int = #line, f0: ()->()) {
         self.test.addStep(expression, file: file, line: line) { (ignored:[String]) in f0() }
     }
 
@@ -54,7 +54,7 @@ public class StepDefiner {
      - parameter f1: The step definition to be run, passing in the matches from the expression
      
      */
-    public func step(expression:String, file:String = #file, line:Int = #line, f1:([String])->()) {
+    public func step(expression: String, file: String = #file, line: Int = #line, f1: ([String])->()) {
         self.test.addStep(expression, file: file, line: line, f1)
     }
     
