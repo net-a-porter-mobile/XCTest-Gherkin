@@ -16,6 +16,8 @@ Please write tests for any new functionality you create. This allows us to verif
 
 ### Documentation
 
+Please add a description of your change to the CHANGELOG under the `unreleased` header. This allows us to decide what version number should be next when releasing a new version.
+
 If the new feature includes API changes or additions, you should also edit the readme file to reflect these changes.
 
 ### Backwards compatibility
