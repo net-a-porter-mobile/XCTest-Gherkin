@@ -13,8 +13,16 @@ class SanitySteps : StepDefiner {
     
     override func defineSteps() {
         
-        // Example of defining a step with no capture groups
+        // Examples of defining a step with no capture groups
         step("I have a working Gherkin environment") {
+            XCTAssertTrue(true)
+        }
+        
+        step("I have duplicate steps at the start of every scenario") {
+            XCTAssertTrue(true)
+        }
+        
+        step("I should move these steps to the background section") {
             XCTAssertTrue(true)
         }
         
@@ -47,6 +55,28 @@ class SanitySteps : StepDefiner {
         
         step("The height should be ([0-9]+)") { (matches:[String]) in
             XCTAssertEqual(matches.first!, "170", "Alice and Bob are both 170cm tall, making this test pretty easy.")
+        }
+        
+        // Example of convenience form for the step method, extracting a single match for you
+        step("I have a step which has a single match: ([0-9])") { (match: String) in
+            XCTAssertEqual(match, "1")
+        }
+        
+        // Example of convenience form for the step method, extracting two string matches for you
+        step("I have a step with two matches: ([0-9]) ([0-9])") { (match1: String, match2: String) in
+            XCTAssertEqual(match1, "1")
+            XCTAssertEqual(match2, "2")
+        }
+        
+        // Example of convenience form for the step method, extracting a single integer match for you
+        step("Some value should be ([0-9])") { (match: Int) in
+            XCTAssertEqual(match, 6)
+        }
+        
+        // Example of convenience form for the step method, extracting two integer matches for you
+        step("Some value should be between ([0-9]) and ([0-9])") { (match1: Int, match2: Int) in
+            XCTAssertEqual(match1, 5)
+            XCTAssertEqual(match2, 7)
         }
     }
     
