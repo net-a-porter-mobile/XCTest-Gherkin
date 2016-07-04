@@ -4,6 +4,10 @@
 
 Feature: Feature file parsing
 
+    Background:
+        Given I have duplicate steps at the start of every scenario
+        Then I should move these steps to the background section
+
     Scenario: This is a basic happy path example
         Given I have a working Gherkin environment
         Then this test should not fail

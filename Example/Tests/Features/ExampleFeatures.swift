@@ -63,4 +63,11 @@ class ExampleFeatures: XCTestCase {
         }
     }
 
+    func testMatchHelpers() {
+        Given("I have a step which has a single match: 1")
+        And("I have a step with two matches: 1 2")
+        Then("Some value should be 6")
+        And("Some value should be between 5 and 7")
+    }
+    
 }

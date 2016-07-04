@@ -35,24 +35,51 @@ public class NativeTestCase : XCTestCase {
             return
         }
         
-        // Get the files from that folder
-        guard let files = NSFileManager.defaultManager().enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) else {
-            XCTFail("Could not open the path '\(path)'")
+        guard let features = self.featuresForPath(path) else {
+            XCTFail("Could not retrieve features from the path '\(path)'")
             return
         }
         
-        parseFeatureFiles(files)
+        self.perform(features)
     }
     
-    func parseFeatureFiles(files: NSDirectoryEnumerator){
-        var features = [NativeFeature]()
-        files.forEach {
-            if let feature = NativeFeature(contentsOfURL:($0 as! NSURL), stepChecker:stepChecker){
-                features.append(feature)
+    func featuresForPath(path: NSURL) -> [NativeFeature]? {
+        let manager = NSFileManager.defaultManager()
+        var isDirectory: ObjCBool = ObjCBool(false)
+        guard manager.fileExistsAtPath(path.path!, isDirectory: &isDirectory) else {
+            XCTFail("The path doesn not exist '\(path)'")
+            return nil
+        }
+        
+        if isDirectory {
+            // Get the files from that folder
+            if let files = manager.enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
+                return self.parseFeatureFiles(files)
             } else {
-                XCTFail("Could not parse feature at URL \(($0 as! NSURL).description)")
+                XCTFail("Could not open the path '\(path)'")
+            }
+            
+        } else {
+            if let feature = self.parseFeatureFile(path) {
+                return [feature]
             }
         }
+        return nil
+    }
+    
+    func parseFeatureFiles(files: NSDirectoryEnumerator) -> [NativeFeature] {
+        return files.map({ return self.parseFeatureFile($0 as! NSURL)!})
+    }
+    
+    func parseFeatureFile(file: NSURL) -> NativeFeature? {
+        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:stepChecker) else {
+            XCTFail("Could not parse feature at URL \(file.description)")
+            return nil
+        }
+        return feature
+    }
+    
+    func perform(features: [NativeFeature]) {
         if !stepChecker.printTemplateCodeForAllMissingSteps() {
             features.forEach({performFeature($0)})
         }
@@ -61,6 +88,12 @@ public class NativeTestCase : XCTestCase {
     func performFeature(feature: NativeFeature) {
         // Create a test case to contain our tests
         let testClassName = "\(feature.featureDescription.camelCaseify)Tests"
+        
+        // If the class already exists means the feature could have been performed in other TestCases
+        if NSClassFromString(testClassName) != nil {
+            return
+        }
+        
         let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0)
         guard let testCaseClass = testCaseClassOptional else { XCTFail("Could not create test case class"); return }
         self.testCaseClass = testCaseClass
@@ -92,8 +125,10 @@ public class NativeTestCase : XCTestCase {
         success = class_addMethod(testCaseClass, runSel, runImp, strdup("#@:"))
         XCTAssertTrue(success)
         
+        NSLog(feature.description)
+        
         // For each scenario, make an invocation that runs through the steps
-        feature.scenarios.forEach(self.prepareScenarioInvocation)
+        feature.scenarios.forEach { self.prepareScenarioInvocation($0, inFeature: feature) }
         
         // The test class is constructed, register it
         objc_registerClassPair(testCaseClass)
@@ -105,12 +140,15 @@ public class NativeTestCase : XCTestCase {
         }
     }
     
-    func prepareScenarioInvocation(scenario: NativeScenario) {
+    func prepareScenarioInvocation(scenario: NativeScenario, inFeature feature: NativeFeature) {
         NSLog(scenario.description)
         
         // Create the block representing the test to be run
         let block : @convention(block) (XCTestCase)->() = { innerSelf in
             self.setUpBeforeScenario()
+            if let background = feature.background {
+                background.stepDescriptions.forEach { innerSelf.performStep($0) }
+            }
             scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
         }
         

@@ -23,6 +23,7 @@
 		E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */; };
 		E5B911FE1D0961DA0030AD1D /* NativeFeatures in Resources */ = {isa = PBXBuildFile; fileRef = E54130971BEBE06600E92975 /* NativeFeatures */; };
 		E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */; };
+		E8C172641D25197C006A99DF /* ExampleNativeFeatureTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C172631D25197C006A99DF /* ExampleNativeFeatureTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		E568C3CD1C1068CF00270E6F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleFeatures.swift; sourceTree = "<group>"; };
 		E5805C021BEA93E900D3ECD5 /* SanitySteps.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SanitySteps.swift; sourceTree = "<group>"; };
+		E8C172631D25197C006A99DF /* ExampleNativeFeatureTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeFeatureTest.swift; sourceTree = "<group>"; };
 		EDB29E18271BDB43E3F11348 /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F457A887D15F95B9CFB0E298 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -246,6 +248,7 @@
 				E54130971BEBE06600E92975 /* NativeFeatures */,
 				E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */,
 				E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */,
+				E8C172631D25197C006A99DF /* ExampleNativeFeatureTest.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8C172641D25197C006A99DF /* ExampleNativeFeatureTest.swift in Sources */,
 				E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */,
 				27D846191C59282A002C835B /* StringGherkinExtensionTests.swift in Sources */,
 				E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */,
