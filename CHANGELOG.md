@@ -1,6 +1,7 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
++ Added forms of the step definition method with single and double string match parameters
 
 ### 0.5.1
 + Fix for parsing native feature files with comments / whitespace (thanks to @smaljaar)
