@@ -14,15 +14,17 @@ class ParseState {
     var description: String?
     var steps: [String]
     var exampleLines: [ (lineNumber:Int, line:String) ]
-    
+    var parsingBackground: Bool
+
     convenience init() {
         self.init(description: nil)
     }
     
-    required init(description: String?) {
+    required init(description: String?, parsingBackground: Bool = false) {
         self.description = description
         steps = []
         exampleLines = []
+        self.parsingBackground = parsingBackground
     }
     
     private var examples:[NativeExample] {
@@ -55,9 +57,14 @@ class ParseState {
         }
     }
     
+    func background() -> NativeBackground? {
+        guard parsingBackground, let description = self.description where self.steps.count > 0 else { return nil }
+        
+        return NativeBackground(description, steps: self.steps)
+    }
+    
     func scenarios() -> [NativeScenario]? {
-        guard let d = self.description else { return nil }
-        guard self.steps.count > 0 else { return nil }
+        guard let description = self.description where self.steps.count > 0 else { return nil }
         
         var scenarios = Array<NativeScenario>()
         
@@ -66,8 +73,8 @@ class ParseState {
             // Replace each matching placeholder in each line with the example data
             self.examples.forEach { example in
                 
-                // This hoop is beacuse the compiler doesn't seem to
-                // recognize mapdirectly on the state.steps object
+                // This hoop is because the compiler doesn't seem to
+                // recognize map directly on the state.steps object
                 var steps = self.steps
                 steps = self.steps.map { originalStep in
                     var step = originalStep
@@ -80,12 +87,12 @@ class ParseState {
                 }
                 
                 // The scenario description must be unique
-                let description = "\(d)_line\(example.lineNumber)"
+                let description = "\(description)_line\(example.lineNumber)"
                 scenarios.append(NativeScenario(description, steps: steps))
                 
             }
         } else {
-            scenarios.append(NativeScenario(d, steps: self.steps))
+            scenarios.append(NativeScenario(description, steps: self.steps))
         }
         
         self.description = nil

@@ -13,8 +13,16 @@ class SanitySteps : StepDefiner {
     
     override func defineSteps() {
         
-        // Example of defining a step with no capture groups
+        // Examples of defining a step with no capture groups
         step("I have a working Gherkin environment") {
+            XCTAssertTrue(true)
+        }
+        
+        step("I have duplicate steps at the start of every scenario") {
+            XCTAssertTrue(true)
+        }
+        
+        step("I should move these steps to the background section") {
             XCTAssertTrue(true)
         }
         

@@ -10,6 +10,7 @@ import Foundation
 
 private struct FileTags {
     static let Feature = "Feature:"
+    static let Background = "Background:"
     static let Scenario = "Scenario:"
     static let Outline = "Scenario Outline:"
     static let Examples = "Examples:"
@@ -23,15 +24,21 @@ private struct FileTags {
 class NativeFeature : CustomStringConvertible {
     let featureDescription: String
     let scenarios: [NativeScenario]
+    let background: NativeBackground?
     
-    required init(description: String, scenarios:[NativeScenario]) {
+    required init(description: String, scenarios:[NativeScenario], background: NativeBackground?) {
         self.featureDescription = description
         self.scenarios = scenarios
+        self.background = background
     }
     
     var description: String {
         get {
-            return "<\(self.dynamicType) \(self.featureDescription) \(self.scenarios.count) scenario(s)"
+            var backgroundDescription = "No background"
+            if let myBackground = self.background {
+                backgroundDescription = myBackground.description
+            }
+            return "<\(self.dynamicType) \(self.featureDescription) Background: \(backgroundDescription). \(self.scenarios.count) scenario(s)>"
         }
     }
 }
@@ -53,23 +60,37 @@ extension NativeFeature {
         let (_,suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
         guard let featureDescription = suffixOption else { return nil }
         
-        let scenarios = NativeFeature.parseLines(lines)
+        let feature = NativeFeature.parseLines(lines)
         
         stepChecker.loadDefinedSteps()
         
-        scenarios.forEach({
+        feature.scenarios.forEach({
             $0.stepDescriptions.forEach({
                 stepChecker.matchGherkinStepExpressionToStepDefinitions($0)
             })
         })
         
-        self.init(description: featureDescription, scenarios: scenarios)
+        feature.background?.stepDescriptions.forEach({
+            stepChecker.matchGherkinStepExpressionToStepDefinitions($0)
+        })
+        
+        self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
     }
     
-    private class func parseLines(lines: [String]) -> [NativeScenario] {
+    private class func parseLines(lines: [String]) -> (background: NativeBackground?, scenarios:[NativeScenario]) {
         
         var state = ParseState()
         var scenarios = Array<NativeScenario>()
+        var background: NativeBackground?
+        
+        func saveBackgroundOrScenarioAndUpdateParseState(lineSuffix: String){
+            if let aBackground = state.background() {
+                background = aBackground
+            } else if let newScenarios = state.scenarios() {
+                scenarios.appendContentsOf(newScenarios)
+            }
+            state = ParseState(description: lineSuffix)
+        }
         
         // Go through each line in turn
         for (lineIndex,line) in lines.enumerate() {
@@ -79,20 +100,18 @@ extension NativeFeature {
                 if let (linePrefix, lineSuffix) = line.lineComponents() {
                     
                     switch(linePrefix) {
-                    case FileTags.Scenario:
-                        if let newScenarios = state.scenarios() {
-                            scenarios.appendContentsOf(newScenarios)
-                        }
-                        state = ParseState(description: lineSuffix)
+                        
+                    case FileTags.Background :
+                        state = ParseState(description: lineSuffix, parsingBackground: true)
+                        
+                    case FileTags.Scenario :
+                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
                         
                     case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
                         state.steps.append(lineSuffix)
                         
                     case FileTags.Outline:
-                        if let newScenarios = state.scenarios() {
-                            scenarios.appendContentsOf(newScenarios)
-                        }
-                        state = ParseState(description: lineSuffix)
+                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
                         
                     case FileTags.Examples:
                         // Prep the examples array for examples
@@ -120,7 +139,7 @@ extension NativeFeature {
             scenarios.appendContentsOf(newScenarios)
         }
     
-        return scenarios
+        return (background, scenarios)
     }
 
 }
@@ -138,7 +157,7 @@ extension String {
     }
     
     func lineComponents() -> (String, String)? {
-        let prefixes = [ FileTags.Scenario, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline, FileTags.Examples, FileTags.ExampleLine ]
+        let prefixes = [ FileTags.Scenario, FileTags.Background, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline, FileTags.Examples, FileTags.ExampleLine ]
         
         func first(a: [String]) -> (String, String)? {
             if a.count == 0 { return nil }
