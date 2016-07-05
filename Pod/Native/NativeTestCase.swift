@@ -14,12 +14,14 @@ import XCTest
 public class NativeTestCase : XCTestCase {
     
     public var path:NSURL?
+    public func setUpBeforeScenario() {}
     
     /*
      The Gherkin Steps Checker checks if all Gherkin steps have been implemented in a StepDefiner subclass.
      */
     let stepChecker = GherkinStepsChecker()
-
+    var testCaseClass: AnyClass!
+    
     /**
      This method will dynamically create tests from the files in the folder specified by setting the path property on this instance.
     */
@@ -94,6 +96,7 @@ public class NativeTestCase : XCTestCase {
         
         let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0)
         guard let testCaseClass = testCaseClassOptional else { XCTFail("Could not create test case class"); return }
+        self.testCaseClass = testCaseClass
         
         // Return the correct number of tests
         let countBlock : @convention(block) (AnyObject) -> UInt = { _ in
@@ -125,26 +128,7 @@ public class NativeTestCase : XCTestCase {
         NSLog(feature.description)
         
         // For each scenario, make an invocation that runs through the steps
-        let typeString = strdup("v@:")
-        feature.scenarios.forEach { scenario in
-            NSLog(scenario.description)
-            
-            // Create the block representing the test to be run
-            let block : @convention(block) (XCTestCase)->() = { innerSelf in
-                if let background = feature.background {
-                    background.stepDescriptions.forEach { innerSelf.performStep($0) }
-                }
-                scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
-            }
-            
-            // Create the Method and selector
-            let imp = imp_implementationWithBlock(unsafeBitCast(block, AnyObject.self))
-            let sel = sel_registerName(scenario.selectorCString)
-            
-            // Add this selector to ourselves
-            let success = class_addMethod(testCaseClass, sel, imp, typeString)
-            XCTAssertTrue(success, "Failed to add class method \(sel)")
-        }
+        feature.scenarios.forEach { self.prepareScenarioInvocation($0, inFeature: feature) }
         
         // The test class is constructed, register it
         objc_registerClassPair(testCaseClass)
@@ -154,6 +138,28 @@ public class NativeTestCase : XCTestCase {
             let testCase = (testCaseClass as! XCTestCase.Type).init(invocation: invocation)
             testCase.runTest()
         }
-        
     }
+    
+    func prepareScenarioInvocation(scenario: NativeScenario, inFeature feature: NativeFeature) {
+        NSLog(scenario.description)
+        
+        // Create the block representing the test to be run
+        let block : @convention(block) (XCTestCase)->() = { innerSelf in
+            self.setUpBeforeScenario()
+            if let background = feature.background {
+                background.stepDescriptions.forEach { innerSelf.performStep($0) }
+            }
+            scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
+        }
+        
+        // Create the Method and selector
+        let imp = imp_implementationWithBlock(unsafeBitCast(block, AnyObject.self))
+        let sel = sel_registerName(scenario.selectorCString)
+        
+        // Add this selector to ourselves
+        let typeString = strdup("v@:")
+        let success = class_addMethod(self.testCaseClass, sel, imp, typeString)
+        XCTAssertTrue(success, "Failed to add class method \(sel)")
+    }
+    
 }

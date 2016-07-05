@@ -22,4 +22,8 @@ class ExampleNativeTest : NativeTestCase {
         ColorLog.enabled = true
     }
     
+    override func setUpBeforeScenario() {
+        super.setUpBeforeScenario()
+        print("Preparing before scenario")
+    }
 }
