@@ -1,9 +1,12 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
+
+## 0.6
 + Added forms of the step definition method with single and double string match parameters
 + Added ability to parse Background gherkin keyword (thanks to @smaljaar)
 + Added ability to create a native test case from a file instead of a directory (thanks @Rabursky)
++ Add ability to specify set up code for native tests (thanks @Rabursky)
 
 ### 0.5.1
 + Fix for parsing native feature files with comments / whitespace (thanks to @smaljaar)
