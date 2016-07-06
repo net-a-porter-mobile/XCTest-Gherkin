@@ -8,7 +8,7 @@ Keep your Pull Requests small. Small pull requests are easier to reason about wh
 
 ### Issues before features
 
-If you want to add a feature, please file an [Issue](issues) first. An Issue gives us the opportunity to discuss the requirements and implications of a feature with you before you start writing code.
+If you want to add a feature, please file an [Issue](https://github.com/net-a-porter-mobile/XCTest-Gherkin/issues) first. An Issue gives us the opportunity to discuss the requirements and implications of a feature with you before you start writing code.
 
 ### Tests
 
