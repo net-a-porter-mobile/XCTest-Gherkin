@@ -21,6 +21,9 @@
   },
   "requires_arc": true,
   "default_subspecs": "Core",
+  "pod_target_xcconfig": {
+    "ENABLE_BITCODE": "NO"
+  },
   "frameworks": "XCTest",
   "subspecs": [
     {

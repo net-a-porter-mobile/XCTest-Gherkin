@@ -8,10 +8,10 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   XCTest-Gherkin:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  XCTest-Gherkin: 95c68059ae1b6a84bc4e30958df6cdbc11d3e456
+  XCTest-Gherkin: 4ddd5e4622d38c008b3bfccdb0f219599bf8a5eb
 
 PODFILE CHECKSUM: 29eeb372a2c534a57f580591626e9a43ee478b17
 
