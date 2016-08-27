@@ -49,8 +49,12 @@ extension NativeFeature {
         // Read in the file
         let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
         
-        // Get all the lines in the file 
-        var lines = contents.componentsSeparatedByString("\n").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+        // Replace new line character that is sometimes used if the Gherkin files have been written on a Windows machine.
+        let contentsFixedWindowsNewLineCharacters = contents.stringByReplacingOccurrencesOfString("\r\n", withString: "\n")
+        
+        // Get all the lines in the file
+        var lines = contentsFixedWindowsNewLineCharacters.componentsSeparatedByString("\n").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+
         // Filter comments (#) and tags (@), also filter white lines
         lines = lines.filter { $0.characters.first != "#" &&  $0.characters.first != "@" && $0.characters.count > 0}
 
