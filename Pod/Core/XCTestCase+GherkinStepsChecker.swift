@@ -47,7 +47,7 @@ class GherkinStepsChecker: XCTestCase {
         
     }
     
-    func printTemplateCodeForAllMissingSteps() -> Bool {
+    func shouldPrintTemplateCodeForAllMissingSteps() -> Bool {
         guard missingStepsImplementations.count > 0 else {
             ColorLog.lightGreen("All Gherkin steps have been defined in a StepDefiner subclass")
             return false
