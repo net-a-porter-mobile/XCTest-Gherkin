@@ -9,7 +9,7 @@
 import XCTest
 import XCTest_Gherkin
 
-class ExampleNativeFeatureTest: NativeTestCase {
+class RunSingleFeatureFileTest: NativeTestCase {
 
     override func setUp() {
         super.setUp()
@@ -19,7 +19,15 @@ class ExampleNativeFeatureTest: NativeTestCase {
         // In case you want to use only one feature file instead of the whole folder
         // Just provide the URL to the file
         self.path = bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures/native_example.feature")
+    }
+}
+
+class RunMultipleFeatureFilesTest: NativeTestCase {
+    
+    override func setUp() {
+        super.setUp()
         
-        XCTAssertNotNil(self.path)
+        let bundle = NSBundle(forClass: self.dynamicType)
+        self.path = bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures/")
     }
 }

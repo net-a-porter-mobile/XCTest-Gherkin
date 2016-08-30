@@ -16,10 +16,6 @@ public class NativeTestCase : XCTestCase {
     public var path:NSURL?
     public func setUpBeforeScenario() {}
     
-    /*
-     The Gherkin Steps Checker checks if all Gherkin steps have been implemented in a StepDefiner subclass.
-     */
-    let stepChecker = GherkinStepsChecker()
     var testCaseClass: AnyClass!
     
     /**
@@ -72,7 +68,7 @@ public class NativeTestCase : XCTestCase {
     }
     
     func parseFeatureFile(file: NSURL) -> NativeFeature? {
-        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:stepChecker) else {
+        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:state.stepChecker) else {
             XCTFail("Could not parse feature at URL \(file.description)")
             return nil
         }
@@ -80,7 +76,7 @@ public class NativeTestCase : XCTestCase {
     }
     
     func perform(features: [NativeFeature]) {
-        if !stepChecker.printTemplateCodeForAllMissingSteps() {
+        if !state.stepChecker.shouldPrintTemplateCodeForAllMissingSteps() {
             features.forEach({performFeature($0)})
         }
     }
