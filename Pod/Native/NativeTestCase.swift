@@ -46,7 +46,7 @@ public class NativeTestCase : XCTestCase {
             return testSuite
         }
         
-        guard let features = self.featuresForPath(path) else {
+        guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
             assertionFailure("Could not retrieve features from the path '\(path)'")
             return testSuite
         }
@@ -67,43 +67,8 @@ public class NativeTestCase : XCTestCase {
             }
 
         }
-
+        
         return testSuite
     }
     
-    class func featuresForPath(path: NSURL) -> [NativeFeature]? {
-        let manager = NSFileManager.defaultManager()
-        var isDirectory: ObjCBool = ObjCBool(false)
-        guard manager.fileExistsAtPath(path.path!, isDirectory: &isDirectory) else {
-            XCTFail("The path doesn not exist '\(path)'")
-            return nil
-        }
-        
-        if isDirectory {
-            // Get the files from that folder
-            if let files = manager.enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
-                return self.parseFeatureFiles(files)
-            } else {
-                XCTFail("Could not open the path '\(path)'")
-            }
-            
-        } else {
-            if let feature = self.parseFeatureFile(path) {
-                return [feature]
-            }
-        }
-        return nil
-    }
-    
-    class func parseFeatureFiles(files: NSDirectoryEnumerator) -> [NativeFeature] {
-        return files.map({ return self.parseFeatureFile($0 as! NSURL)!})
-    }
-    
-    class func parseFeatureFile(file: NSURL) -> NativeFeature? {
-        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:GherkinStepsChecker()) else {
-            XCTFail("Could not parse feature at URL \(file.description)")
-            return nil
-        }
-        return feature
-    }
 }

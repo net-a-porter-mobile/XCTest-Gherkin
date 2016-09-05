@@ -33,6 +33,7 @@
 		DCE7A9658F5E70721D0B5F699DE8E402 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC405455F8E20BD0434D9D3E3D2879A /* Foundation.framework */; };
 		DED7FBE4FC3F96EA438A93E1613C4F5C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAC405455F8E20BD0434D9D3E3D2879A /* Foundation.framework */; };
 		E86E4C08BDC160B4DD94EAF45D845DCB /* StepDefiner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F581E2C2F6BE66B51311FAB0C2B70003 /* StepDefiner.swift */; };
+		E8F874891D7D7CF3006F24F1 /* NativeFeatureParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8F874871D7D7C66006F24F1 /* NativeFeatureParser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		D30C51B2CC7305E1EF8D5DC05EBE89EA /* ParseState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ParseState.swift; sourceTree = "<group>"; };
 		E326D40896C53E3008ACD662D43211CF /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-dummy.m"; sourceTree = "<group>"; };
 		E6E43EAD4D634C9F4494E0C83C0F6266 /* NativeExample.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NativeExample.swift; sourceTree = "<group>"; };
+		E8F874871D7D7C66006F24F1 /* NativeFeatureParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeFeatureParser.swift; sourceTree = "<group>"; };
 		F581E2C2F6BE66B51311FAB0C2B70003 /* StepDefiner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StepDefiner.swift; sourceTree = "<group>"; };
 		F973A82432BA78F7218B67A72EA67660 /* XCTest-Gherkin.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "XCTest-Gherkin.xcconfig"; sourceTree = "<group>"; };
 		FDBBC44174316E15927146CBD8FFAF23 /* StringGherkinExtension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StringGherkinExtension.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				797F51BB058B8D9B398B2F63C0A18AF0 /* NativeScenario.swift */,
 				856F6DD3258B844A7976F574E87743A8 /* NativeTestCase.swift */,
 				D30C51B2CC7305E1EF8D5DC05EBE89EA /* ParseState.swift */,
+				E8F874871D7D7C66006F24F1 /* NativeFeatureParser.swift */,
 			);
 			path = Native;
 			sourceTree = "<group>";
@@ -517,6 +520,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8F874891D7D7CF3006F24F1 /* NativeFeatureParser.swift in Sources */,
 				AD553C04127F6895F6D266214CEAF0A1 /* ClassHelperMethods.swift in Sources */,
 				4986EFD4B8EDC771D491968E40312B06 /* ColorLog.swift in Sources */,
 				24696F2F6F99B32698D3DCE5B5FE44DA /* Example.swift in Sources */,
@@ -630,6 +634,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CAA3796B92E5A32F2035E8DA6507759E /* Pods-XCTest-Gherkin_Example.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -797,6 +802,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7153B019BA00AED2AC2594193AB33FC0 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
