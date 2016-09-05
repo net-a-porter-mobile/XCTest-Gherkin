@@ -13,6 +13,12 @@ import XCTest
 
 public class NativeTestCase : XCTestCase {
     
+    // if you want to subclass this class without implementing any scenarios
+    // you can use this flag to skip path check
+    class public func shouldForcePathCheck() -> Bool {
+        return true
+    }
+    
     class public func path() -> NSURL? {
         return nil
     }
@@ -42,7 +48,9 @@ public class NativeTestCase : XCTestCase {
         }
         
         guard let path = self.path() else {
-            assertionFailure("You must set the path for this test to run")
+            if self.shouldForcePathCheck() {
+                assertionFailure("You must set the path for this test to run")
+            }
             return testSuite
         }
         
