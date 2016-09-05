@@ -12,7 +12,7 @@ import XCTest_Gherkin
 class ExampleNativeTest : NativeTestCase {
     override class func path() -> NSURL? {
         let bundle = NSBundle(forClass: self)
-        return bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures")
+        return bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures/native_example.feature")
     }
     
     override func setUp() {

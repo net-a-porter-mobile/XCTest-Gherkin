@@ -55,8 +55,8 @@ public class NativeTestCase : XCTestCase {
             for scenario in feature.scenarios {
                 
                 let selector = sel_registerName(scenario.selectorCString)
-                let method = class_getInstanceMethod(NativeTestCase.classForCoder(), #selector(featureScenarioTest))
-                let success = class_addMethod(NativeTestCase.classForCoder(), selector, method_getImplementation(method), method_getTypeEncoding(method))
+                let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
+                let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
                 
                 let testCase = super.init(selector: selector) as! NativeTestCase
                 
