@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+## 0.7
++ Explicitly disable bitcode (thanks @kerrmarin)
++ Better newline handling for features created on other systems (thanks @smaljaar)
+
 ## 0.6
 + Added forms of the step definition method with single and double string match parameters
 + Added ability to parse Background gherkin keyword (thanks to @smaljaar)
