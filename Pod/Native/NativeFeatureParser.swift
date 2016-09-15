@@ -9,22 +9,22 @@
 import Foundation
 
 class NativeFeatureParser {
-    let path: NSURL
-    init(path: NSURL) {
+    let path: URL
+    init(path: URL) {
         self.path = path
     }
     
     func parsedFeatures() -> [NativeFeature]? {
-        let manager = NSFileManager.defaultManager()
+        let manager = FileManager.default
         var isDirectory: ObjCBool = ObjCBool(false)
-        guard manager.fileExistsAtPath(self.path.path!, isDirectory: &isDirectory) else {
+        guard manager.fileExists(atPath: self.path.path, isDirectory: &isDirectory) else {
             assertionFailure("The path doesn not exist '\(path)'")
             return nil
         }
         
-        if isDirectory {
+        if isDirectory.boolValue {
             // Get the files from that folder
-            if let files = manager.enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
+            if let files = manager.enumerator(at: path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
                 return self.parseFeatureFiles(files)
             } else {
                 assertionFailure("Could not open the path '\(path)'")
@@ -38,12 +38,12 @@ class NativeFeatureParser {
         return nil
     }
     
-    func parseFeatureFiles(files: NSDirectoryEnumerator) -> [NativeFeature] {
-        return files.map({ return self.parseFeatureFile($0 as! NSURL)!})
+    func parseFeatureFiles(_ files: FileManager.DirectoryEnumerator) -> [NativeFeature] {
+        return files.map({ return self.parseFeatureFile($0 as! URL)!})
     }
     
-    func parseFeatureFile(file: NSURL) -> NativeFeature? {
-        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:GherkinStepsChecker()) else {
+    func parseFeatureFile(_ file: URL) -> NativeFeature? {
+        guard let feature = NativeFeature(contentsOfURL:file) else {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil
         }

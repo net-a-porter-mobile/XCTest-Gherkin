@@ -11,35 +11,91 @@ import ObjectiveC
 
 import XCTest
 
-public class NativeTestCase : XCTestCase {
+open class NativeTestCase : XCTestCase {
+    
+    // MARK: Config and properties
     
     // if you want to subclass this class without implementing any scenarios
     // you can use this flag to skip path check
-    class public func shouldForcePathCheck() -> Bool {
+    class open func shouldForcePathCheck() -> Bool {
         return true
     }
     
-    class public func path() -> NSURL? {
+    class open func path() -> URL? {
         return nil
     }
     
-    internal var feature: NativeFeature?
-    internal var scenario: NativeScenario?
-    
-    func featureScenarioTest() {
-        if self.state.stepChecker.shouldPrintTemplateCodeForAllMissingSteps() {
-            return
+    static var _features: [NativeFeature]?
+    class func features() -> [NativeFeature] {
+        if let features = _features {
+            return features
         }
         
-        if let background = self.feature?.background {
-            background.stepDescriptions.forEach { self.performStep($0) }
+        guard let path = self.path() else {
+            if self.shouldForcePathCheck() {
+                assertionFailure("You must set the path for this test to run")
+            }
+            return []
         }
-        if let scenario = self.scenario {
-            scenario.stepDescriptions.forEach { self.performStep($0) }
+        
+        guard let features = NativeFeatureParser(path: path as URL).parsedFeatures() else {
+            assertionFailure("Could not retrieve features from the path '\(path)'")
+            return []
+        }
+        
+        return features
+    }
+    
+    // MARK: setUp and tearDown
+    
+    open override func setUp() {
+        super.setUp()
+        self.state.loadAllStepsIfNeeded()
+    }
+    
+    override open class func setUp() {
+        super.setUp()
+        // Setup missing methods here
+    }
+    
+    // Displays all the missing steps accumulated during performing scenarios in this TestCase
+    override open class func tearDown() {
+        super.tearDown()
+        if self.state.shouldPrintTemplateCodeForAllMissingSteps() {
+            self.state.printStepDefinitions()
+            self.state.printTemplatedCodeForAllMissingSteps()
+            self.state.resetMissingSteps()
         }
     }
     
-    override public class func defaultTestSuite() -> XCTestSuite {
+    // MARK: Test template method
+    
+    func featureScenarioTest() {
+        guard let (feature, scenario) = type(of: self).featureScenarioData(self.invocation!.selector) else {
+            return
+        }
+        
+        let allScenarioStepsDefined = scenario.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
+        var allFeatureBackgroundStepsDefined = true
+        
+        if let defined = feature.background?.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
+            allFeatureBackgroundStepsDefined = defined
+        }
+        
+        guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
+            XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
+            return
+        }
+        
+        if let background = feature.background {
+            background.stepDescriptions.forEach { self.performStep($0) }
+        }
+        scenario.stepDescriptions.forEach { self.performStep($0) }
+    }
+    
+    // MARK: Dynamic test suite
+    
+    override open class func defaultTestSuite() -> XCTestSuite {
         let testSuite = XCTestSuite(name: NSStringFromClass(self))
         
         // This class must by subclassed in order to specify the path
@@ -47,36 +103,35 @@ public class NativeTestCase : XCTestCase {
             return testSuite
         }
         
-        guard let path = self.path() else {
-            if self.shouldForcePathCheck() {
-                assertionFailure("You must set the path for this test to run")
-            }
-            return testSuite
-        }
-        
-        guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
-            assertionFailure("Could not retrieve features from the path '\(path)'")
-            return testSuite
-        }
-        
-        for feature in features {
+        for feature in self.features() {
             for scenario in feature.scenarios {
                 
-                let selector = sel_registerName(scenario.selectorCString)
-                let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
-                let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
-                
+                let selector = self.registerTestMethod(forScenario: scenario)
                 let testCase = super.init(selector: selector) as! NativeTestCase
-                
-                testCase.feature = feature
-                testCase.scenario = scenario
-            
                 testSuite.addTest(testCase)
+                
             }
-
         }
         
         return testSuite
+    }
+    
+    // MARK: Auxiliary
+    
+    class func featureScenarioData(_ forSelector: Selector) -> (NativeFeature, NativeScenario)? {
+        for feature in self.features() {
+            if let scenario = feature.scenarios.filter({ $0.selectorString == NSStringFromSelector(forSelector) }).first {
+                return (feature, scenario)
+            }
+        }
+        return nil
+    }
+    
+    class func registerTestMethod(forScenario scenario: NativeScenario) -> Selector {
+        let selector = sel_registerName(scenario.selectorCString)
+        let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
+        let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
+        return selector!
     }
     
 }

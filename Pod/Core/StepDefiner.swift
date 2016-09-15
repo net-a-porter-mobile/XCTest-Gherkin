@@ -12,8 +12,8 @@ import XCTest
 Classes which extend this class will be queried by the system to
 populate the step definitions before test runs
 */
-public class StepDefiner {
-    public let test: XCTestCase
+open class StepDefiner {
+    open let test: XCTestCase
     
     required public init(test: XCTestCase) {
         self.test = test
@@ -22,7 +22,7 @@ public class StepDefiner {
     /**
       Override this to create your own step definitions
      */
-    public func defineSteps() -> Void { }
+    open func defineSteps() -> Void { }
 
     /**
      Create a new step with an expression that contains no matching groups.
@@ -37,7 +37,7 @@ public class StepDefiner {
      - parameter f0: The step definition to be run
      
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f0: ()->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f0: @escaping ()->()) {
         self.test.addStep(expression, file: file, line: line) { (ignored:[String]) in f0() }
     }
 
@@ -54,7 +54,7 @@ public class StepDefiner {
      - parameter f1: The step definition to be run, passing in the matches from the expression
      
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f1: ([String])->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping ([String])->()) {
         self.test.addStep(expression, file: file, line: line, f1)
     }
     
@@ -70,7 +70,7 @@ public class StepDefiner {
      - parameter expression: The expression to match against
      - parameter f1s: The step definition to be run, passing in the first capture group from the expression
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f1s: (String)->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f1s: @escaping (String)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             guard let match = matches.first else {
                 XCTFail("Expected single match not found in \"\(expression)\"")
@@ -93,7 +93,7 @@ public class StepDefiner {
      - parameter expression: The expression to match against
      - parameter f1s: The step definition to be run, passing in the first capture group from the expression
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f1i: (Int)->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f1i: @escaping (Int)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             guard let match = matches.first else {
                 XCTFail("Expected single match not found in \"\(expression)\"")
@@ -121,7 +121,7 @@ public class StepDefiner {
      - parameter expression: The expression to match against
      - parameter f2s: The step definition to be run, passing in the first two capture groups from the expression
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f2s: (String, String)->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f2s: @escaping (String, String)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             
             guard matches.count >= 2 else {
@@ -145,7 +145,7 @@ public class StepDefiner {
      - parameter expression: The expression to match against
      - parameter f2i: The step definition to be run, passing in the first two capture groups from the expression
      */
-    public func step(expression: String, file: String = #file, line: Int = #line, f2i: (Int, Int)->()) {
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f2i: @escaping (Int, Int)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             
             guard matches.count >= 2 else {
@@ -173,7 +173,7 @@ public class StepDefiner {
      - parameter expression: A string which should match another step definition's regular expression
 
      */
-    public func step(expression: String) {
+    open func step(_ expression: String) {
         self.test.performStep(expression)
     }
 }

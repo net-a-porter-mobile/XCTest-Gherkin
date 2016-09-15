@@ -10,18 +10,14 @@ import XCTest
 import XCTest_Gherkin
 
 class ExampleNativeTest : NativeTestCase {
-    override class func path() -> NSURL? {
-        let bundle = NSBundle(forClass: self)
-        return bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures/native_example.feature")
+    override class func path() -> URL? {
+        let bundle = Bundle(for: self)
+        return bundle.resourceURL?.appendingPathComponent("NativeFeatures/native_example.feature")
     }
     
     override func setUp() {
         super.setUp()
         print("Default setup method works before each native scenario")
         ColorLog.enabled = true
-    }
-    
-    func testCanSpecifyRegularTestAsWell() {
-        XCTAssert(true)
     }
 }
