@@ -143,22 +143,22 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String) -> Self { return performStep(expression) }
+    func Given(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String) -> Self { return performStep(expression) }
+    func When(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String) -> Self { return performStep(expression) }
+    func Then(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String) -> Self { return performStep(expression) }
+    func And(_ expression: String) { self.performStep(expression) }
     
     /**
      Supply a set of example data to the test. This must be done before calling `Outline`.
@@ -250,7 +250,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String) -> Self {
+    func performStep(_ initialExpression: String) {
         // Get a mutable copy - if we are in an outline we might be changing this
         var expression = initialExpression
         
@@ -298,8 +298,6 @@ extension XCTestCase {
         state.currentStepDepth += 1
         step.function(matchStrings)
         state.currentStepDepth -= 1
-        
-        return self
     }
     
     /**
