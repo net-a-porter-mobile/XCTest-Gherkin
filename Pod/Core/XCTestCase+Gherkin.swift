@@ -268,6 +268,7 @@ extension XCTestCase {
         
         // Get the step and the matches inside it
         guard let (step, match) = self.state.gherkinStepsAndMatchesMatchingExpression(expression).first else {
+            self.state.printTemplatedCodeForAllMissingSteps()
             fatalError("failed to find a match for a step")
         }
         

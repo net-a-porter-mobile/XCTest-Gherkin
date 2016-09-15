@@ -83,14 +83,15 @@ open class NativeTestCase : XCTestCase {
         }
         
         guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
+            self.state.printTemplatedCodeForAllMissingSteps()
             XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
             return
         }
         
         if let background = feature.background {
-            background.stepDescriptions.forEach { self.performStep($0) }
+            background.stepDescriptions.forEach(self.performStep)
         }
-        scenario.stepDescriptions.forEach { self.performStep($0) }
+        scenario.stepDescriptions.forEach(self.performStep)
     }
     
     // MARK: Dynamic test suite
@@ -107,7 +108,7 @@ open class NativeTestCase : XCTestCase {
             for scenario in feature.scenarios {
                 
                 let selector = self.registerTestMethod(forScenario: scenario)
-                let testCase = super.init(selector: selector) as! NativeTestCase
+                let testCase = (self as XCTestCase.Type).init(selector: selector)
                 testSuite.addTest(testCase)
                 
             }
