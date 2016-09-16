@@ -18,7 +18,7 @@ class NativeFeatureParser {
         let manager = FileManager.default
         var isDirectory: ObjCBool = ObjCBool(false)
         guard manager.fileExists(atPath: self.path.path, isDirectory: &isDirectory) else {
-            assertionFailure("The path doesn not exist '\(path)'")
+            assertionFailure("The path does not exist '\(path)'")
             return nil
         }
         

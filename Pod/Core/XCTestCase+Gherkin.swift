@@ -35,9 +35,6 @@ class GherkinState {
     // Store the name of the current test to help debugging output
     var currentTestName:String = "NO TESTS RUN YET"
     
-    // The Gherkin Steps Checker checks if all Gherkin steps have been implemented in a StepDefiner subclass.
-//    let stepChecker = GherkinStepsChecker()
-    
     fileprivate var missingStepsImplementations = [String]()
     
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step:Step, match:NSTextCheckingResult)] {
