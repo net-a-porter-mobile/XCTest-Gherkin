@@ -17,7 +17,7 @@ Feature: Feature file parsing
         Then this test should not fail
 
     Scenario Outline: Demonstrate that examples work
-        Given I use the example name2 <name>
+        Given I use the example name <name>
         Then the age should be <age>
 
         Examples:

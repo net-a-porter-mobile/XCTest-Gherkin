@@ -56,6 +56,7 @@ class GherkinState {
         return self.gherkinStepsAndMatchesMatchingExpression(expression).map { $0.step }
     }
     
+    // TODO: This needs to be refactored since function has a side effect (appends to missingStepsImplementations)
     func matchingGherkinStepExpressionFound(_ expression: String) -> Bool {
         let matches = self.gherkinStepsMatchingExpression(expression)
         switch matches.count {
@@ -268,7 +269,11 @@ extension XCTestCase {
         
         // Get the step and the matches inside it
         guard let (step, match) = self.state.gherkinStepsAndMatchesMatchingExpression(expression).first else {
-            self.state.printTemplatedCodeForAllMissingSteps()
+            if !self.state.matchingGherkinStepExpressionFound(expression) && self.state.shouldPrintTemplateCodeForAllMissingSteps() {
+                self.state.printStepDefinitions()
+                self.state.printTemplatedCodeForAllMissingSteps()
+                self.state.resetMissingSteps()
+            }
             fatalError("failed to find a match for a step")
         }
         

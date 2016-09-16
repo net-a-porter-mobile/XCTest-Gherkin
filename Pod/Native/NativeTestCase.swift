@@ -13,6 +13,20 @@ import XCTest
 
 open class NativeTestCase : XCTestCase {
     
+    open override class func initialize() {
+        super.initialize()
+        
+        // This class must by subclassed in order to specify the path
+        guard self != NativeTestCase.self else {
+            return
+        }
+        
+        // Register all the scenario test methods for defined features
+        for feature in self.features() {
+            feature.scenarios.forEach(self.registerTestMethod)
+        }
+    }
+    
     // MARK: Config and properties
     
     // if you want to subclass this class without implementing any scenarios
@@ -38,7 +52,7 @@ open class NativeTestCase : XCTestCase {
             return []
         }
         
-        guard let features = NativeFeatureParser(path: path as URL).parsedFeatures() else {
+        guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
             assertionFailure("Could not retrieve features from the path '\(path)'")
             return []
         }
@@ -51,11 +65,6 @@ open class NativeTestCase : XCTestCase {
     open override func setUp() {
         super.setUp()
         self.state.loadAllStepsIfNeeded()
-    }
-    
-    override open class func setUp() {
-        super.setUp()
-        // Setup missing methods here
     }
     
     // Displays all the missing steps accumulated during performing scenarios in this TestCase
@@ -83,7 +92,6 @@ open class NativeTestCase : XCTestCase {
         }
         
         guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
-            self.state.printTemplatedCodeForAllMissingSteps()
             XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
             return
         }
@@ -92,29 +100,6 @@ open class NativeTestCase : XCTestCase {
             background.stepDescriptions.forEach(self.performStep)
         }
         scenario.stepDescriptions.forEach(self.performStep)
-    }
-    
-    // MARK: Dynamic test suite
-    
-    override open class func defaultTestSuite() -> XCTestSuite {
-        let testSuite = XCTestSuite(name: NSStringFromClass(self))
-        
-        // This class must by subclassed in order to specify the path
-        guard self != NativeTestCase.self else {
-            return testSuite
-        }
-        
-        for feature in self.features() {
-            for scenario in feature.scenarios {
-                
-                let selector = self.registerTestMethod(forScenario: scenario)
-                let testCase = (self as XCTestCase.Type).init(selector: selector)
-                testSuite.addTest(testCase)
-                
-            }
-        }
-        
-        return testSuite
     }
     
     // MARK: Auxiliary
@@ -128,11 +113,10 @@ open class NativeTestCase : XCTestCase {
         return nil
     }
     
-    class func registerTestMethod(forScenario scenario: NativeScenario) -> Selector {
+    class func registerTestMethod(forScenario scenario: NativeScenario) {
         let selector = sel_registerName(scenario.selectorCString)
         let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
         let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
-        return selector!
     }
     
 }
