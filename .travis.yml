@@ -5,11 +5,14 @@
 language: objective-c
 osx_image: xcode8
 
+before_install:
+  - gem install cocoapods --version 1.1.0.rc1
+
 env:
   - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=9.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=8.4'
+  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.0' UI=true
   - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=9.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=8.4'
+  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=10.0' UI=true
 
 script:
 - set -o pipefail
