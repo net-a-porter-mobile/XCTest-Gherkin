@@ -104,7 +104,7 @@ class GherkinState {
         guard self.steps.count == 0 else { return }
         
         // Create an instance of each step definer and call it's defineSteps method
-        allSubclassesOf(StepDefiner).forEach { subclass in
+        allSubclassesOf(StepDefiner.self).forEach { subclass in
             subclass.init(test: self.test!).defineSteps()
         }
         
