@@ -8,11 +8,8 @@
 
 import Foundation
 
-class NativeFeatureParser {
+struct NativeFeatureParser {
     let path: URL
-    init(path: URL) {
-        self.path = path
-    }
     
     func parsedFeatures() -> [NativeFeature]? {
         let manager = FileManager.default
@@ -38,11 +35,11 @@ class NativeFeatureParser {
         return nil
     }
     
-    func parseFeatureFiles(_ files: FileManager.DirectoryEnumerator) -> [NativeFeature] {
+    private func parseFeatureFiles(_ files: FileManager.DirectoryEnumerator) -> [NativeFeature] {
         return files.map({ return self.parseFeatureFile($0 as! URL)!})
     }
     
-    func parseFeatureFile(_ file: URL) -> NativeFeature? {
+    private func parseFeatureFile(_ file: URL) -> NativeFeature? {
         guard let feature = NativeFeature(contentsOfURL:file) else {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil
