@@ -2,6 +2,11 @@
 
 ### Unreleased
 
+## 0.7
++ Added Swift 3 and Xcode 8 support
++ XCTestCase setUp and tearDown methods support for NativeTestCase scenarios
++ Improved integration with Xcode Test Navigator
+
 ## 0.6
 + Added forms of the step definition method with single and double string match parameters
 + Added ability to parse Background gherkin keyword (thanks to @smaljaar)
