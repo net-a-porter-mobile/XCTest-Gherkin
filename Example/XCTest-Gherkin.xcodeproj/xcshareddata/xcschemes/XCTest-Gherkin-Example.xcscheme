@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0630"
+   LastUpgradeVersion = "0800"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -35,7 +35,7 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "NO"
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
@@ -63,6 +63,16 @@
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
                BuildableName = "XCTest-Gherkin_Tests.xctest"
                BlueprintName = "XCTest-Gherkin_Tests"
+               ReferencedContainer = "container:XCTest-Gherkin.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E53F47D11D020EB80077CCCD"
+               BuildableName = "XCTest-Gherkin_ExampleUITests.xctest"
+               BlueprintName = "XCTest-Gherkin_ExampleUITests"
                ReferencedContainer = "container:XCTest-Gherkin.xcodeproj">
             </BuildableReference>
          </TestableReference>

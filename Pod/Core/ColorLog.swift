@@ -21,29 +21,29 @@ public struct ColorLog {
      */
     public static var enabled = false
     
-    private static let ESCAPE = "\u{001b}["
+    fileprivate static let ESCAPE = "\u{001b}["
     
-    private static let RESET_FG = ESCAPE + "fg;" // Clear any foreground color
-    private static let RESET_BG = ESCAPE + "bg;" // Clear any background color
-    private static let RESET = ESCAPE + ";"   // Clear any foreground or background color
+    fileprivate static let RESET_FG = ESCAPE + "fg;" // Clear any foreground color
+    fileprivate static let RESET_BG = ESCAPE + "bg;" // Clear any background color
+    fileprivate static let RESET = ESCAPE + ";"   // Clear any foreground or background color
     
-    static func red<T>(object: T) -> String {
+    static func red<T>(_ object: T) -> String {
         return enabled ? "\(ESCAPE)fg200,0,0;\(object)\(RESET)" : "\(object)"
     }
     
-    static func green<T>(object: T) -> String {
+    static func green<T>(_ object: T) -> String {
         return enabled ? "\(ESCAPE)fg0,127,0;\(object)\(RESET)" : "\(object)"
     }
     
-    static func darkGreen<T>(object: T) -> String {
+    static func darkGreen<T>(_ object: T) -> String {
         return enabled ? "\(ESCAPE)fg0,96,0;\(object)\(RESET)" : "\(object)"
     }
     
-    static func lightGreen<T>(object: T) -> String {
+    static func lightGreen<T>(_ object: T) -> String {
         return enabled ? "\(ESCAPE)fg64,127,64;\(object)\(RESET)" : "\(object)"
     }
     
-    static func gray<T>(object: T) -> String {
+    static func gray<T>(_ object: T) -> String {
         return enabled ? "\(ESCAPE)fg127,127,127;\(object)\(RESET)" : "\(object)"
     }
 }

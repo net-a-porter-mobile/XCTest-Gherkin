@@ -10,20 +10,14 @@ import XCTest
 import XCTest_Gherkin
 
 class ExampleNativeTest : NativeTestCase {
-
-    override func setUp() {
-        super.setUp()
-        
-        let bundle = NSBundle(forClass: self.dynamicType)
-        self.path = bundle.resourceURL?.URLByAppendingPathComponent("NativeFeatures")
-        
-        XCTAssertNotNil(self.path)
-        
-        ColorLog.enabled = true
+    override class func path() -> URL? {
+        let bundle = Bundle(for: self)
+        return bundle.resourceURL?.appendingPathComponent("NativeFeatures/native_example.feature")
     }
     
-    override func setUpBeforeScenario() {
-        super.setUpBeforeScenario()
-        print("Preparing before scenario")
+    override func setUp() {
+        super.setUp()
+        print("Default setup method works before each native scenario")
+        ColorLog.enabled = true
     }
 }

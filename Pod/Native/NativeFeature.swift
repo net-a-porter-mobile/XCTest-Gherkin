@@ -38,22 +38,22 @@ class NativeFeature : CustomStringConvertible {
             if let myBackground = self.background {
                 backgroundDescription = myBackground.description
             }
-            return "<\(self.dynamicType) \(self.featureDescription) Background: \(backgroundDescription). \(self.scenarios.count) scenario(s)>"
+            return "<\(type(of: self)) \(self.featureDescription) Background: \(backgroundDescription). \(self.scenarios.count) scenario(s)>"
         }
     }
 }
 
 extension NativeFeature {
     
-    convenience init?(contentsOfURL url: NSURL, stepChecker: GherkinStepsChecker) {
+    convenience init?(contentsOfURL url: URL) {
         // Read in the file
-        let contents = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
+        let contents = try! NSString(contentsOf: url, encoding: String.Encoding.utf8.rawValue)
         
         // Replace new line character that is sometimes used if the Gherkin files have been written on a Windows machine.
-        let contentsFixedWindowsNewLineCharacters = contents.stringByReplacingOccurrencesOfString("\r\n", withString: "\n")
+        let contentsFixedWindowsNewLineCharacters = contents.replacingOccurrences(of: "\r\n", with: "\n")
         
         // Get all the lines in the file
-        var lines = contentsFixedWindowsNewLineCharacters.componentsSeparatedByString("\n").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+        var lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n").map { $0.trimmingCharacters(in: whitespace) }
 
         // Filter comments (#) and tags (@), also filter white lines
         lines = lines.filter { $0.characters.first != "#" &&  $0.characters.first != "@" && $0.characters.count > 0}
@@ -66,38 +66,26 @@ extension NativeFeature {
         
         let feature = NativeFeature.parseLines(lines)
         
-        stepChecker.loadDefinedSteps()
-        
-        feature.scenarios.forEach({
-            $0.stepDescriptions.forEach({
-                stepChecker.matchGherkinStepExpressionToStepDefinitions($0)
-            })
-        })
-        
-        feature.background?.stepDescriptions.forEach({
-            stepChecker.matchGherkinStepExpressionToStepDefinitions($0)
-        })
-        
         self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
     }
     
-    private class func parseLines(lines: [String]) -> (background: NativeBackground?, scenarios:[NativeScenario]) {
+    fileprivate class func parseLines(_ lines: [String]) -> (background: NativeBackground?, scenarios:[NativeScenario]) {
         
         var state = ParseState()
         var scenarios = Array<NativeScenario>()
         var background: NativeBackground?
         
-        func saveBackgroundOrScenarioAndUpdateParseState(lineSuffix: String){
+        func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
             if let aBackground = state.background() {
                 background = aBackground
             } else if let newScenarios = state.scenarios() {
-                scenarios.appendContentsOf(newScenarios)
+                scenarios.append(contentsOf: newScenarios)
             }
             state = ParseState(description: lineSuffix)
         }
         
         // Go through each line in turn
-        for (lineIndex,line) in lines.enumerate() {
+        for (lineIndex,line) in lines.enumerated() {
             
             if !line.isEmpty {
                 // What kind of line is it?
@@ -140,7 +128,7 @@ extension NativeFeature {
         // If we hit the end of the file, we need to make sure we have dealt with
         // the last scenarios
         if let newScenarios = state.scenarios() {
-            scenarios.appendContentsOf(newScenarios)
+            scenarios.append(contentsOf: newScenarios)
         }
     
         return (background, scenarios)
@@ -148,22 +136,22 @@ extension NativeFeature {
 
 }
 
-private let whitespace = NSCharacterSet.whitespaceCharacterSet()
+private let whitespace = CharacterSet.whitespaces
 
 extension String {
     
-    func componentsWithPrefix(prefix: String) -> (String, String?) {
+    func componentsWithPrefix(_ prefix: String) -> (String, String?) {
         guard self.hasPrefix(prefix) else { return (self,nil) }
         
         let index = (prefix as NSString).length
-        let suffix = (self as NSString).substringFromIndex(index).stringByTrimmingCharactersInSet(whitespace)
+        let suffix = (self as NSString).substring(from: index).trimmingCharacters(in: whitespace)
         return (prefix, suffix)
     }
     
     func lineComponents() -> (String, String)? {
         let prefixes = [ FileTags.Scenario, FileTags.Background, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline, FileTags.Examples, FileTags.ExampleLine ]
         
-        func first(a: [String]) -> (String, String)? {
+        func first(_ a: [String]) -> (String, String)? {
             if a.count == 0 { return nil }
             let string = a.first!
             let (prefix, suffix) = self.componentsWithPrefix(string)

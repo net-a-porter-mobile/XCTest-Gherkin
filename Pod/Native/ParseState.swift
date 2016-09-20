@@ -8,7 +8,7 @@
 
 import Foundation
 
-private let whitespace = NSCharacterSet.whitespaceCharacterSet()
+private let whitespace = CharacterSet.whitespaces
 
 class ParseState {
     var description: String?
@@ -27,18 +27,18 @@ class ParseState {
         self.parsingBackground = parsingBackground
     }
     
-    private var examples:[NativeExample] {
+    fileprivate var examples:[NativeExample] {
         get {
             if self.exampleLines.count < 2 { return [] }
             
             var examples:[NativeExample] = []
             
             // The first line is the titles
-            let titles = self.exampleLines.first!.line.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+            let titles = self.exampleLines.first!.line.components(separatedBy: "|").map { $0.trimmingCharacters(in: whitespace) }
             
             // The other lines are the examples themselves
-            self.exampleLines.dropFirst(1).forEach { rawLine in
-                let line = rawLine.line.componentsSeparatedByString("|").map { $0.stringByTrimmingCharactersInSet(whitespace) }
+            self.exampleLines.dropFirst().forEach { rawLine in
+                let line = rawLine.line.components(separatedBy: "|").map { $0.trimmingCharacters(in: whitespace) }
                 
                 var pairs:[String:String] = Dictionary()
                 
@@ -58,13 +58,13 @@ class ParseState {
     }
     
     func background() -> NativeBackground? {
-        guard parsingBackground, let description = self.description where self.steps.count > 0 else { return nil }
+        guard parsingBackground, let description = self.description , self.steps.count > 0 else { return nil }
         
         return NativeBackground(description, steps: self.steps)
     }
     
     func scenarios() -> [NativeScenario]? {
-        guard let description = self.description where self.steps.count > 0 else { return nil }
+        guard let description = self.description , self.steps.count > 0 else { return nil }
         
         var scenarios = Array<NativeScenario>()
         
@@ -80,7 +80,7 @@ class ParseState {
                     var step = originalStep
                     
                     example.pairs.forEach { (title, value) in
-                        step = step.stringByReplacingOccurrencesOfString("<\(title)>", withString: value)
+                        step = step.replacingOccurrences(of: "<\(title)>", with: value)
                     }
                     
                     return step

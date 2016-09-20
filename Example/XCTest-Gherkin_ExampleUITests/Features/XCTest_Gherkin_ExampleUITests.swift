@@ -10,7 +10,7 @@ import XCTest
 import XCTest_Gherkin
 
 class XCTest_Gherkin_ExampleUITests: XCTestCase {
-        
+    
     func testWorksWithUITests() {
         Given("I have launched the app")
         When("I tap the PushMe button")

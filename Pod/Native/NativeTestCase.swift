@@ -11,151 +11,113 @@ import ObjectiveC
 
 import XCTest
 
-public class NativeTestCase : XCTestCase {
+open class NativeTestCase : XCTestCase {
     
-    public var path:NSURL?
-    public func setUpBeforeScenario() {}
-    
-    var testCaseClass: AnyClass!
-    
-    /**
-     This method will dynamically create tests from the files in the folder specified by setting the path property on this instance.
-    */
-    func testRunNativeTests() {
-        // If this hasn't been subclassed, just return
-        guard self.dynamicType != NativeTestCase.self else { return }
+    open override class func initialize() {
+        super.initialize()
         
-        // Sanity
-        guard let path = self.path else {
-            XCTAssertNotNil(self.path, "You must set the path for this test to run")
+        // This class must by subclassed in order to specify the path
+        guard self != NativeTestCase.self else {
             return
         }
         
-        guard let features = self.featuresForPath(path) else {
-            XCTFail("Could not retrieve features from the path '\(path)'")
-            return
+        // Register all the scenario test methods for defined features
+        for feature in self.features() {
+            feature.scenarios.forEach(self.registerTestMethod)
         }
-        
-        self.perform(features)
     }
     
-    func featuresForPath(path: NSURL) -> [NativeFeature]? {
-        let manager = NSFileManager.defaultManager()
-        var isDirectory: ObjCBool = ObjCBool(false)
-        guard manager.fileExistsAtPath(path.path!, isDirectory: &isDirectory) else {
-            XCTFail("The path doesn not exist '\(path)'")
-            return nil
+    // MARK: Config and properties
+    
+    // if you want to subclass this class without implementing any scenarios
+    // you can use this flag to skip path check
+    class open func shouldForcePathCheck() -> Bool {
+        return true
+    }
+    
+    class open func path() -> URL? {
+        return nil
+    }
+    
+    static var _features: [NativeFeature]?
+    class func features() -> [NativeFeature] {
+        if let features = _features {
+            return features
         }
         
-        if isDirectory {
-            // Get the files from that folder
-            if let files = manager.enumeratorAtURL(path, includingPropertiesForKeys: nil, options: [], errorHandler: nil) {
-                return self.parseFeatureFiles(files)
-            } else {
-                XCTFail("Could not open the path '\(path)'")
+        guard let path = self.path() else {
+            if self.shouldForcePathCheck() {
+                assertionFailure("You must set the path for this test to run")
             }
-            
-        } else {
-            if let feature = self.parseFeatureFile(path) {
-                return [feature]
+            return []
+        }
+        
+        guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
+            assertionFailure("Could not retrieve features from the path '\(path)'")
+            return []
+        }
+        
+        return features
+    }
+    
+    // MARK: setUp and tearDown
+    
+    open override func setUp() {
+        super.setUp()
+        self.state.loadAllStepsIfNeeded()
+    }
+    
+    // Displays all the missing steps accumulated during performing scenarios in this TestCase
+    override open class func tearDown() {
+        super.tearDown()
+        if self.state.shouldPrintTemplateCodeForAllMissingSteps() {
+            self.state.printStepDefinitions()
+            self.state.printTemplatedCodeForAllMissingSteps()
+            self.state.resetMissingSteps()
+        }
+    }
+    
+    // MARK: Test template method
+    
+    func featureScenarioTest() {
+        guard let (feature, scenario) = type(of: self).featureScenarioData(self.invocation!.selector) else {
+            return
+        }
+        
+        let allScenarioStepsDefined = scenario.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
+        var allFeatureBackgroundStepsDefined = true
+        
+        if let defined = feature.background?.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
+            allFeatureBackgroundStepsDefined = defined
+        }
+        
+        guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
+            XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
+            return
+        }
+        
+        if let background = feature.background {
+            background.stepDescriptions.forEach(self.performStep)
+        }
+        scenario.stepDescriptions.forEach(self.performStep)
+    }
+    
+    // MARK: Auxiliary
+    
+    class func featureScenarioData(_ forSelector: Selector) -> (NativeFeature, NativeScenario)? {
+        for feature in self.features() {
+            if let scenario = feature.scenarios.filter({ $0.selectorString == NSStringFromSelector(forSelector) }).first {
+                return (feature, scenario)
             }
         }
         return nil
     }
     
-    func parseFeatureFiles(files: NSDirectoryEnumerator) -> [NativeFeature] {
-        return files.map({ return self.parseFeatureFile($0 as! NSURL)!})
-    }
-    
-    func parseFeatureFile(file: NSURL) -> NativeFeature? {
-        guard let feature = NativeFeature(contentsOfURL:file, stepChecker:state.stepChecker) else {
-            XCTFail("Could not parse feature at URL \(file.description)")
-            return nil
-        }
-        return feature
-    }
-    
-    func perform(features: [NativeFeature]) {
-        if !state.stepChecker.shouldPrintTemplateCodeForAllMissingSteps() {
-            features.forEach({performFeature($0)})
-        }
-    }
-    
-    func performFeature(feature: NativeFeature) {
-        // Create a test case to contain our tests
-        let testClassName = "\(feature.featureDescription.camelCaseify)Tests"
-        
-        // If the class already exists means the feature could have been performed in other TestCases
-        if NSClassFromString(testClassName) != nil {
-            return
-        }
-        
-        let testCaseClassOptional:AnyClass? = objc_allocateClassPair(XCTestCase.self, testClassName, 0)
-        guard let testCaseClass = testCaseClassOptional else { XCTFail("Could not create test case class"); return }
-        self.testCaseClass = testCaseClass
-        
-        // Return the correct number of tests
-        let countBlock : @convention(block) (AnyObject) -> UInt = { _ in
-            return UInt(feature.scenarios.count)
-        }
-        let imp = imp_implementationWithBlock(unsafeBitCast(countBlock, AnyObject.self))
-        let sel = sel_registerName(strdup("testCaseCount"))
-        var success = class_addMethod(testCaseClass, sel, imp, strdup("I@:"))
-        XCTAssertTrue(success)
-        
-        // Return a name
-        let nameBlock : @convention(block) (AnyObject) -> String = { _ in
-            return feature.featureDescription.camelCaseify
-        }
-        let nameImp = imp_implementationWithBlock(unsafeBitCast(nameBlock, AnyObject.self))
-        let nameSel = sel_registerName(strdup("name"))
-        success = class_addMethod(testCaseClass, nameSel, nameImp, strdup("@@:"))
-        XCTAssertTrue(success)
-        
-        // Return a test run class - make it the same as the current run
-        let runBlock : @convention(block) (AnyObject) -> AnyObject! = { _ in
-            return self.testRun!.dynamicType
-        }
-        let runImp = imp_implementationWithBlock(unsafeBitCast(runBlock, AnyObject.self))
-        let runSel = sel_registerName(strdup("testRunClass"))
-        success = class_addMethod(testCaseClass, runSel, runImp, strdup("#@:"))
-        XCTAssertTrue(success)
-        
-        NSLog(feature.description)
-        
-        // For each scenario, make an invocation that runs through the steps
-        feature.scenarios.forEach { self.prepareScenarioInvocation($0, inFeature: feature) }
-        
-        // The test class is constructed, register it
-        objc_registerClassPair(testCaseClass)
-        
-        // Add the test to our test suite
-        testCaseClass.testInvocations().sort { (a,b) in NSStringFromSelector(a.selector) > NSStringFromSelector(b.selector) }.forEach { invocation in
-            let testCase = (testCaseClass as! XCTestCase.Type).init(invocation: invocation)
-            testCase.runTest()
-        }
-    }
-    
-    func prepareScenarioInvocation(scenario: NativeScenario, inFeature feature: NativeFeature) {
-        NSLog(scenario.description)
-        
-        // Create the block representing the test to be run
-        let block : @convention(block) (XCTestCase)->() = { innerSelf in
-            self.setUpBeforeScenario()
-            if let background = feature.background {
-                background.stepDescriptions.forEach { innerSelf.performStep($0) }
-            }
-            scenario.stepDescriptions.forEach { innerSelf.performStep($0) }
-        }
-        
-        // Create the Method and selector
-        let imp = imp_implementationWithBlock(unsafeBitCast(block, AnyObject.self))
-        let sel = sel_registerName(scenario.selectorCString)
-        
-        // Add this selector to ourselves
-        let typeString = strdup("v@:")
-        let success = class_addMethod(self.testCaseClass, sel, imp, typeString)
-        XCTAssertTrue(success, "Failed to add class method \(sel)")
+    class func registerTestMethod(forScenario scenario: NativeScenario) {
+        let selector = sel_registerName(scenario.selectorCString)
+        let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
+        let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
+        assert(success, "Could not swizzle feature test method!")
     }
     
 }

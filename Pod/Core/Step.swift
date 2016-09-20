@@ -16,8 +16,8 @@ class Step : Hashable, Equatable, CustomDebugStringConvertible {
     let expression:String
     let function:([String])->()
     
-    private let file: String
-    private let line: Int
+    fileprivate let file: String
+    fileprivate let line: Int
     
     // Compute this as part of init
     let regex:NSRegularExpression
@@ -29,14 +29,14 @@ class Step : Hashable, Equatable, CustomDebugStringConvertible {
      The `file` and `line` parameters are for debugging; they should show where the step was
      initially defined.
      */
-    init(_ expression: String, file: String, line: Int, _ function: ([String])->() ) {
+    init(_ expression: String, file: String, line: Int, _ function: @escaping ([String])->() ) {
         self.expression = expression
         self.function = function
         self.file = file
         self.line = line
         
         // Just throw here; the test will fail :)
-        self.regex = try! NSRegularExpression(pattern: expression, options: NSRegularExpressionOptions.CaseInsensitive)
+        self.regex = try! NSRegularExpression(pattern: expression, options: NSRegularExpression.Options.caseInsensitive)
     }
     
     var hashValue: Int {

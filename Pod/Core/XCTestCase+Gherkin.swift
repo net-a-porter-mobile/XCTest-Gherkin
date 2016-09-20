@@ -18,6 +18,8 @@ It's nicer code IMHO to have the state as a single associated property beacuse o
 This means that anytime I want to access my extra properties I just do `state.{propertyName}`
 */
 class GherkinState {
+    var test: XCTestCase?
+    
     // The list of all steps the system knows about
     var steps = Set<Step>()
     
@@ -33,8 +35,81 @@ class GherkinState {
     // Store the name of the current test to help debugging output
     var currentTestName:String = "NO TESTS RUN YET"
     
-    // The Gherkin Steps Checker checks if all Gherkin steps have been implemented in a StepDefiner subclass.
-    let stepChecker = GherkinStepsChecker()
+    fileprivate var missingStepsImplementations = [String]()
+    
+    func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step:Step, match:NSTextCheckingResult)] {
+        let range = NSMakeRange(0, expression.characters.count)
+        let matches = self.steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
+            if let match = step.regex.firstMatch(in: expression, options: [], range: range) {
+                return (step:step, match:match)
+            } else {
+                return nil
+            }
+        }.flatMap { $0! }
+        return matches
+    }
+    
+    func gherkinStepsMatchingExpression(_ expression: String) -> [Step] {
+        return self.gherkinStepsAndMatchesMatchingExpression(expression).map { $0.step }
+    }
+    
+    // TODO: This needs to be refactored since function has a side effect (appends to missingStepsImplementations)
+    func matchingGherkinStepExpressionFound(_ expression: String) -> Bool {
+        let matches = self.gherkinStepsMatchingExpression(expression)
+        switch matches.count {
+            
+        case 0:
+            print("Step definition not found for '\(ColorLog.red(expression))'")
+            let stepImplementation = "step(\"\(expression)"+"\") {XCTAssertTrue(true)}"
+            self.missingStepsImplementations.append(stepImplementation)
+            
+        case 1:
+            //no issues, so proceed
+            return true
+            
+        default:
+            matches.forEach { NSLog("Matching step : \(String(reflecting: $0))") }
+            print("Multiple step definitions found for : '\(ColorLog.red(expression))'")
+        }
+        return false
+    }
+    
+    func shouldPrintTemplateCodeForAllMissingSteps() -> Bool {
+        return self.missingStepsImplementations.count > 0
+    }
+    
+    func resetMissingSteps() {
+        self.missingStepsImplementations = []
+    }
+    
+    func printTemplatedCodeForAllMissingSteps() {
+        print(ColorLog.red("Copy paste these steps in a StepDefiner subclass:"))
+        print("-------------")
+        self.missingStepsImplementations.forEach({
+            print($0)
+        })
+        print("-------------")
+    }
+    
+    func printStepDefinitions() {
+        self.loadAllStepsIfNeeded()
+        print("-------------")
+        print(ColorLog.darkGreen("Defined steps"))
+        print("-------------")
+        print(self.steps.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
+        print("-------------")
+    }
+    
+    func loadAllStepsIfNeeded() {
+        guard self.steps.count == 0 else { return }
+        
+        // Create an instance of each step definer and call it's defineSteps method
+        allSubclassesOf(StepDefiner.self).forEach { subclass in
+            subclass.init(test: self.test!).defineSteps()
+        }
+        
+        assert(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
+    }
 }
 
 /**
@@ -42,11 +117,16 @@ class GherkinState {
 */
 public extension XCTestCase {
     
-    private struct AssociatedKeys {
+    fileprivate struct AssociatedKeys {
         static var State = "AssociatedStateKey"
     }
     
     internal var state: GherkinState {
+        type(of: self).state.test = self
+        return type(of: self).state
+    }
+    
+    internal static var state: GherkinState {
         get {
             guard let s = objc_getAssociatedObject(self, &AssociatedKeys.State) else {
                 let initialState = GherkinState()
@@ -57,55 +137,26 @@ public extension XCTestCase {
             return s as! GherkinState
         }
     }
-
-    /**
-     This will populate the steps array if it's empty.
-     */
-    func loadAllStepsIfNeeded() {
-        guard state.steps.count == 0 else { return }
-
-        // Create an instance of each step definer and call it's defineSteps method
-        allSubclassesOf(StepDefiner).forEach { subclass in
-            subclass.init(test: self).defineSteps()
-        }
-        
-        XCTAssert(state.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
-    }
-    
-    // MARK: Debugging methods
-
-    /**
-     Dumps out a list of all the steps currently known, including the file and line they were defined on.
-     */
-    class func printStepDefinitions() {
-        let instance = self.init()
-        instance.loadAllStepsIfNeeded()
-        print("-------------")
-        print(ColorLog.darkGreen("Defined steps"))
-        print("-------------")
-        print(instance.state.steps.map { String(reflecting: $0) }.sort { $0.lowercaseString < $1.lowercaseString }.joinWithSeparator("\n"))
-        print("-------------")
-    }
     
     /**
      Run the step matching the specified expression
      */
-    func Given(expression: String) -> Self { return performStep(expression) }
+    func Given(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func When(expression: String) -> Self { return performStep(expression) }
+    func When(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(expression: String) -> Self { return performStep(expression) }
+    func Then(_ expression: String) { self.performStep(expression) }
     
     /**
      Run the step matching the specified expression
      */
-    func And(expression: String) -> Self { return performStep(expression) }
+    func And(_ expression: String) { self.performStep(expression) }
     
     /**
      Supply a set of example data to the test. This must be done before calling `Outline`.
@@ -115,9 +166,9 @@ public extension XCTestCase {
      - parameter titles: The titles for each column; these are the keys used to replace the placeholders in each step
      - parameter allValues: This is an array of columns - each array will be used as a single test
      */
-    func Examples(titles: [String], _ allValues: [String]...) {
+    func Examples(_ titles: [String], _ allValues: [String]...) {
         var all = [titles]
-        all.appendContentsOf(allValues)
+        all.append(contentsOf: allValues)
         Examples(all)
     }
     
@@ -135,7 +186,7 @@ public extension XCTestCase {
          Examples(examples)
      
      */
-    func Examples(values: [[String]]) {
+    func Examples(_ values: [[String]]) {
         XCTAssert(values.count > 1, "You must pass at least one set of example data")
         
         // Split out the titles and the example data
@@ -166,7 +217,7 @@ public extension XCTestCase {
      
      - parameter routine: A block containing your Given/When/Then which will be run once per example
      */
-    func Outline( @noescape routine:()->() ) {
+    func Outline( _ routine: ()->() ) {
         
         XCTAssertNotNil(state.examples, "You need to define examples before running an Outline block - use Examples(...)");
         XCTAssert(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
@@ -189,7 +240,7 @@ extension XCTestCase {
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(expression: String, file: String, line: Int, _ function: ([String])->()) {
+    func addStep(_ expression: String, file: String, line: Int, _ function: @escaping ([String])->()) {
         let step = Step(expression, file: file, line: line, function)
         state.steps.insert(step);
     }
@@ -197,36 +248,29 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(initialExpression: String) -> Self {
+    func performStep(_ initialExpression: String) {
         // Get a mutable copy - if we are in an outline we might be changing this
         var expression = initialExpression
         
         // Make sure that we have created our steps
-        loadAllStepsIfNeeded()
+        self.state.loadAllStepsIfNeeded()
         
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
             example.forEach { (key, value) in
                 let needle = "<\(key)>"
-                expression = (expression as NSString).stringByReplacingOccurrencesOfString(needle, withString: value)
+                expression = (expression as NSString).replacingOccurrences(of: needle, with: value)
             }
         }
         
-        // Get the step(s) which match this expression
-        let range = NSMakeRange(0, expression.characters.count)
-        let matches = state.steps.map { (step: Step) -> (step:Step, match:NSTextCheckingResult)? in
-            if let match = step.regex.firstMatchInString(expression, options: [], range: range) {
-                return (step:step, match:match)
-            } else {
-                return nil
-            }
-        }.flatMap { $0! }
-
         // Get the step and the matches inside it
-        guard let (step, match) = matches.first else {
-            state.stepChecker.matchGherkinStepExpressionToStepDefinitions(expression)
-            state.stepChecker.shouldPrintTemplateCodeForAllMissingSteps()
+        guard let (step, match) = self.state.gherkinStepsAndMatchesMatchingExpression(expression).first else {
+            if !self.state.matchingGherkinStepExpressionFound(expression) && self.state.shouldPrintTemplateCodeForAllMissingSteps() {
+                self.state.printStepDefinitions()
+                self.state.printTemplatedCodeForAllMissingSteps()
+                self.state.resetMissingSteps()
+            }
             fatalError("failed to find a match for a step")
         }
         
@@ -234,15 +278,15 @@ extension XCTestCase {
         // TODO: This should really only need to be a map function :(
         var matchStrings = Array<String>()
         for i in 1..<match.numberOfRanges {
-            let range = match.rangeAtIndex(i)
-            let string = range.location != NSNotFound ? (expression as NSString).substringWithRange(range) : ""
+            let range = match.rangeAt(i)
+            let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
             matchStrings.append(string)
         }
         
         // If this the first step, debug the test name as well
         if state.currentStepDepth == 0 {
-            let rawName = String(self.invocation!.selector)
-            let testName = rawName.hasPrefix("test") ? (rawName as NSString).substringFromIndex(4) : rawName
+            let rawName = String(describing: self.invocation!.selector)
+            let testName = rawName.hasPrefix("test") ? (rawName as NSString).substring(from: 4) : rawName
             if testName != state.currentTestName {
                 NSLog("steps from \(ColorLog.darkGreen(testName.humanReadableString))")
                 state.currentTestName = testName
@@ -257,8 +301,6 @@ extension XCTestCase {
         state.currentStepDepth += 1
         step.function(matchStrings)
         state.currentStepDepth -= 1
-        
-        return self
     }
     
     /**
@@ -266,7 +308,7 @@ extension XCTestCase {
      
      - returns: A String of spaces equal to the current step depth
      */
-    private func currentStepDepthString() -> String {
-        return Repeat<String>(count: state.currentStepDepth, repeatedValue: " ").joinWithSeparator("")
+    fileprivate func currentStepDepthString() -> String {
+        return repeatElement(" ", count: state.currentStepDepth).joined(separator: "")
     }
 }
