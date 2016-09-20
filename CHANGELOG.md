@@ -2,10 +2,12 @@
 
 ### Unreleased
 
-## 0.7
+## 0.8
 + Added Swift 3 and Xcode 8 support
 + XCTestCase setUp and tearDown methods support for NativeTestCase scenarios
 + Improved integration with Xcode Test Navigator
+
+## 0.7
 + Explicitly disable bitcode (thanks @kerrmarin)
 + Better newline handling for features created on other systems (thanks @smaljaar)
 
