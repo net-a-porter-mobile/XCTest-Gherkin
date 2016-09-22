@@ -16,7 +16,7 @@ env:
 
 script:
 - set -o pipefail
-- [ ! -e "ERROR_Example/Pods/Pods.xcodeproj/xcshareddata/xcschemes/XCTest-Gherkin.xcscheme" ] && echo "Missing XCTest-Gherkin shared scheme" || exit(1)
+- [ ! -e "ERROR_Example/Pods/Pods.xcodeproj/xcshareddata/xcschemes/XCTest-Gherkin.xcscheme" ] && echo "Missing XCTest-Gherkin shared scheme" && exit 1
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty; fi
 - pod lib lint
