@@ -37,8 +37,6 @@ open class NativeRunner {
                     return
                 }
                 
-                NSLog("Scenario: \(scenario.scenarioDescription)")
-                
                 if let background = feature.background {
                     background.stepDescriptions.forEach(testCase.performStep)
                 }
