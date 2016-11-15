@@ -8,6 +8,7 @@
 
 import Foundation
 import XCTest
+@testable import XCTest_Gherkin
 
 //Gives us the ability to run features or scenarios directly by specifying file and name
 open class NativeRunner {
@@ -18,7 +19,7 @@ open class NativeRunner {
         let features = loadFeatures(path: path)
         
         for feature in features {
-            let scenarios = feature.scenarios.filter({ scenario == nil || $0.scenarioDescription == scenario });
+            let scenarios = feature.scenarios.filter({ scenario == nil || $0.scenarioDescription.hasPrefix(scenario!)});
             if scenarios.count < 1{
                 XCTFail("No scenario found with name: \(scenario)")
             }
@@ -35,6 +36,8 @@ open class NativeRunner {
                     XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
                     return
                 }
+                
+                NSLog("Scenario: \(scenario.scenarioDescription)")
                 
                 if let background = feature.background {
                     background.stepDescriptions.forEach(testCase.performStep)
