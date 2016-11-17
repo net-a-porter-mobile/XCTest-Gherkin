@@ -8,7 +8,6 @@
 
 import Foundation
 import XCTest
-@testable import XCTest_Gherkin
 
 //Gives us the ability to run features or scenarios directly by specifying file and name
 open class NativeRunner {
