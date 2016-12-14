@@ -45,7 +45,7 @@ class GherkinState {
             } else {
                 return nil
             }
-        }.flatMap { $0! }
+        }.flatMap { $0 }
         return matches
     }
     
