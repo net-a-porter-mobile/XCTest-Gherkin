@@ -58,13 +58,13 @@ class ParseState {
     }
     
     func background() -> NativeBackground? {
-        guard parsingBackground, let description = self.description , self.steps.count > 0 else { return nil }
+        guard parsingBackground, let description = self.description, self.steps.count > 0 else { return nil }
         
         return NativeBackground(description, steps: self.steps)
     }
     
     func scenarios() -> [NativeScenario]? {
-        guard let description = self.description , self.steps.count > 0 else { return nil }
+        guard let description = self.description, self.steps.count > 0 else { return nil }
         
         var scenarios = Array<NativeScenario>()
         

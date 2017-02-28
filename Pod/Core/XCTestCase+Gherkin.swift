@@ -35,6 +35,9 @@ class GherkinState {
     // Store the name of the current test to help debugging output
     var currentTestName:String = "NO TESTS RUN YET"
     
+    // Store the name of the current step to help debugging output
+    var currentStepName:String = "NO CURRENT STEP YET"
+    
     fileprivate var missingStepsImplementations = [String]()
     
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step:Step, match:NSTextCheckingResult)] {
@@ -296,6 +299,7 @@ extension XCTestCase {
         // Debug the step name
         let coloredExpression = state.currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
         NSLog("step \(currentStepDepthString())\(coloredExpression)")
+        state.currentStepName = expression
         
         // Run the step
         state.currentStepDepth += 1
