@@ -50,7 +50,7 @@ class Step : Hashable, Equatable, CustomDebugStringConvertible {
             // We only want the output the final filename part of `file`
             let name = (file as NSString).lastPathComponent
             
-            return ColorLog.green("/\(expression)/") + ColorLog.gray("  (\(name):\(line))")
+            return "/\(expression)/  (\(name):\(line))"
         }
     }
 }
