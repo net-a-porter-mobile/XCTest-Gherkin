@@ -20,7 +20,7 @@ class NativeScenario : CustomStringConvertible {
         get { return "test\(self.scenarioDescription.camelCaseify)" }
     }
     
-    var selectorCString:UnsafeMutablePointer<Int8> {
+    var selectorCString: UnsafeMutablePointer<Int8> {
         get { return strdup(self.selectorString) }
     }
     

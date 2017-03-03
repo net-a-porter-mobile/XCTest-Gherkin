@@ -13,7 +13,7 @@ private let whitespace = CharacterSet.whitespaces
 class ParseState {
     var description: String?
     var steps: [String]
-    var exampleLines: [ (lineNumber:Int, line:String) ]
+    var exampleLines: [(lineNumber: Int, line: String)]
     var parsingBackground: Bool
 
     convenience init() {
@@ -27,7 +27,7 @@ class ParseState {
         self.parsingBackground = parsingBackground
     }
     
-    fileprivate var examples:[NativeExample] {
+    private var examples:[NativeExample] {
         get {
             if self.exampleLines.count < 2 { return [] }
             
@@ -68,8 +68,11 @@ class ParseState {
         
         var scenarios = Array<NativeScenario>()
         
-        // If we have examples then we need to make more than one scenario
-        if self.examples.count > 0 {
+        // If we have no examples then we have one scenario.
+        // Otherwise we need to make more than one scenario.
+        if self.examples.isEmpty {
+            scenarios.append(NativeScenario(description, steps: self.steps))
+        } else {
             // Replace each matching placeholder in each line with the example data
             self.examples.forEach { example in
                 
@@ -89,10 +92,7 @@ class ParseState {
                 // The scenario description must be unique
                 let description = "\(description)_line\(example.lineNumber)"
                 scenarios.append(NativeScenario(description, steps: steps))
-                
             }
-        } else {
-            scenarios.append(NativeScenario(description, steps: self.steps))
         }
         
         self.description = nil

@@ -13,14 +13,14 @@ import Foundation
  test to run as a block.
 */
 class Step : Hashable, Equatable, CustomDebugStringConvertible {
-    let expression:String
-    let function:([String])->()
+    let expression: String
+    let function: ([String])->()
     
     fileprivate let file: String
     fileprivate let line: Int
     
     // Compute this as part of init
-    let regex:NSRegularExpression
+    let regex: NSRegularExpression
     
     /**
      Create a new Step definition with an expression to match against and a function to be
@@ -36,7 +36,7 @@ class Step : Hashable, Equatable, CustomDebugStringConvertible {
         self.line = line
         
         // Just throw here; the test will fail :)
-        self.regex = try! NSRegularExpression(pattern: expression, options: NSRegularExpression.Options.caseInsensitive)
+        self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
     }
     
     var hashValue: Int {
