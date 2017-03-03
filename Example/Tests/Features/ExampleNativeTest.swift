@@ -18,6 +18,5 @@ class ExampleNativeTest : NativeTestCase {
     override func setUp() {
         super.setUp()
         print("Default setup method works before each native scenario")
-        ColorLog.enabled = true
     }
 }
