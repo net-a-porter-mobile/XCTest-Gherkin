@@ -26,7 +26,7 @@ class NativeFeature : CustomStringConvertible {
     let scenarios: [NativeScenario]
     let background: NativeBackground?
     
-    required init(description: String, scenarios:[NativeScenario], background: NativeBackground?) {
+    required init(description: String, scenarios: [NativeScenario], background: NativeBackground?) {
         self.featureDescription = description
         self.scenarios = scenarios
         self.background = background
