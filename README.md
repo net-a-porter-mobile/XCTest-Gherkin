@@ -134,20 +134,7 @@ and run `pod install`
 
 ## Configuration
 
-
-#### Colors
-There is only one place where configuration is needed - by default the extension will output debug information with colour enabled, which only works if you have the [XcodeColors](https://github.com/robbiehanson/XcodeColors) plugin installed.
-We have it installed (via [Alcatraz](http://alcatraz.io/)) but we get that you might not want it!
-
-If you run this before your tests start (i.e. in `setUp()`) you will get more readable output;
-
-```swift
-    override func setUp() {
-        super.setUp()
-        
-        ColorLog.enabled = false
-    }
-```
+No configuration is needed.
 
 ## Examples
 There are working examples in the pod's Example project - just run the tests and see what happens!

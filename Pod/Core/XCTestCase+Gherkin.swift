@@ -35,6 +35,9 @@ class GherkinState {
     // Store the name of the current test to help debugging output
     var currentTestName:String = "NO TESTS RUN YET"
     
+    // Store the name of the current step to help debugging output
+    var currentStepName:String = "NO CURRENT STEP YET"
+    
     fileprivate var missingStepsImplementations = [String]()
     
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step:Step, match:NSTextCheckingResult)] {
@@ -45,7 +48,7 @@ class GherkinState {
             } else {
                 return nil
             }
-        }.flatMap { $0! }
+        }.flatMap { $0 }
         return matches
     }
     
@@ -59,7 +62,7 @@ class GherkinState {
         switch matches.count {
             
         case 0:
-            print("Step definition not found for '\(ColorLog.red(expression))'")
+            print("Step definition not found for '\(expression)'")
             let stepImplementation = "step(\"\(expression)"+"\") {XCTAssertTrue(true)}"
             self.missingStepsImplementations.append(stepImplementation)
             
@@ -69,7 +72,7 @@ class GherkinState {
             
         default:
             matches.forEach { NSLog("Matching step : \(String(reflecting: $0))") }
-            print("Multiple step definitions found for : '\(ColorLog.red(expression))'")
+            print("Multiple step definitions found for : '\(expression)'")
         }
         return false
     }
@@ -83,7 +86,7 @@ class GherkinState {
     }
     
     func printTemplatedCodeForAllMissingSteps() {
-        print(ColorLog.red("Copy paste these steps in a StepDefiner subclass:"))
+        print("Copy paste these steps in a StepDefiner subclass:")
         print("-------------")
         self.missingStepsImplementations.forEach({
             print($0)
@@ -94,7 +97,7 @@ class GherkinState {
     func printStepDefinitions() {
         self.loadAllStepsIfNeeded()
         print("-------------")
-        print(ColorLog.darkGreen("Defined steps"))
+        print("Defined steps")
         print("-------------")
         print(self.steps.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
         print("-------------")
@@ -288,14 +291,14 @@ extension XCTestCase {
             let rawName = String(describing: self.invocation!.selector)
             let testName = rawName.hasPrefix("test") ? (rawName as NSString).substring(from: 4) : rawName
             if testName != state.currentTestName {
-                NSLog("steps from \(ColorLog.darkGreen(testName.humanReadableString))")
+                NSLog("steps from \(testName.humanReadableString)")
                 state.currentTestName = testName
             }
         }
         
         // Debug the step name
-        let coloredExpression = state.currentStepDepth == 0 ? ColorLog.green(expression) : ColorLog.lightGreen(expression)
-        NSLog("step \(currentStepDepthString())\(coloredExpression)")
+        NSLog("step \(currentStepDepthString())\(expression)")
+        state.currentStepName = expression
         
         // Run the step
         state.currentStepDepth += 1

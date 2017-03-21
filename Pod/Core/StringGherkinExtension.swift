@@ -18,12 +18,10 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            guard case let c = (self.characters.split { $0 == " " || $0 == "-" })
-                , c.count > 1 else {
+            guard case let characters = (self.characters.split { $0 == " " || $0 == "-" }), characters.count > 1 else {
                 return self.uppercaseFirstLetterString
             }
-            return c.map { String($0).lowercased().uppercaseFirstLetterString }
-                .joined(separator: "")
+            return characters.map { String($0).lowercased().uppercaseFirstLetterString }.joined(separator: "")
         }
     }
 
@@ -35,9 +33,8 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            guard case let c = self.characters,
-                let c1 = c.first else { return self }
-            return String(c1).uppercased() + String(c.dropFirst())
+            guard case let characters = self.characters, let firstCharacter = characters.first else { return self }
+            return String(firstCharacter).uppercased() + String(characters.dropFirst())
         }
     }
     
@@ -48,15 +45,14 @@ public extension String {
      */
     var humanReadableString: String {
         get {
-            guard case let c = self.characters , c.count > 1,
-                let c1 = c.first else { return self }
-            return String(c1) + c.dropFirst().reduce("") { (sum, c) in
-                let s = String(c)
-                if s == s.uppercased() {
-                    return sum + " " + s
+            guard case let characters = self.characters, characters.count > 1, let firstCharacter = characters.first else { return self }
+            return String(firstCharacter) + characters.dropFirst().reduce("") { (word, character) in
+                let letter = String(character)
+                if letter == letter.uppercased() {
+                    return word + " " + letter
                 }
                 else {
-                    return sum + s
+                    return word + letter
                 }
             }
         }

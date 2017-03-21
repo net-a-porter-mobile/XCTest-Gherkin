@@ -21,7 +21,7 @@ import Foundation
  - returns: An array of T, where T is a subclass of `baseClass`
 */
 public func allSubclassesOf<T>(_ baseClass: T) -> [T] {
-    var matches:[T] = []
+    var matches: [T] = []
     
     // Get all the classes which implement 'baseClass' and return them
     // Helped by code from https://gist.github.com/bnickel/410a1bdc02f12fbd9b5e

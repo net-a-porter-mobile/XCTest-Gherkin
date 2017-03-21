@@ -26,7 +26,7 @@ class NativeFeature : CustomStringConvertible {
     let scenarios: [NativeScenario]
     let background: NativeBackground?
     
-    required init(description: String, scenarios:[NativeScenario], background: NativeBackground?) {
+    required init(description: String, scenarios: [NativeScenario], background: NativeBackground?) {
         self.featureDescription = description
         self.scenarios = scenarios
         self.background = background
@@ -61,7 +61,7 @@ extension NativeFeature {
         guard lines.count > 0 else { return nil }
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
-        let (_,suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
+        let (_, suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
         guard let featureDescription = suffixOption else { return nil }
         
         let feature = NativeFeature.parseLines(lines)
@@ -85,7 +85,7 @@ extension NativeFeature {
         }
         
         // Go through each line in turn
-        for (lineIndex,line) in lines.enumerated() {
+        for (lineIndex, line) in lines.enumerated() {
             
             if !line.isEmpty {
                 // What kind of line is it?
@@ -141,7 +141,7 @@ private let whitespace = CharacterSet.whitespaces
 extension String {
     
     func componentsWithPrefix(_ prefix: String) -> (String, String?) {
-        guard self.hasPrefix(prefix) else { return (self,nil) }
+        guard self.hasPrefix(prefix) else { return (self, nil) }
         
         let index = (prefix as NSString).length
         let suffix = (self as NSString).substring(from: index).trimmingCharacters(in: whitespace)

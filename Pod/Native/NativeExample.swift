@@ -8,4 +8,4 @@
 
 import Foundation
 
-typealias NativeExample = (lineNumber:Int, pairs:[String:String])
+typealias NativeExample = (lineNumber: Int, pairs: [String:String])

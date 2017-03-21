@@ -13,7 +13,6 @@ class ExampleFeatures: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        ColorLog.enabled = true
     }
 
     func testBasicSteps() {

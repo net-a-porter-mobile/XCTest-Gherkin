@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.9
++ Fix for Xcode 8.2
+
 ## 0.8
 + Added Swift 3 and Xcode 8 support
 + XCTestCase setUp and tearDown methods support for NativeTestCase scenarios
