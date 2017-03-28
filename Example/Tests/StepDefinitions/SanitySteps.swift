@@ -9,7 +9,7 @@
 import XCTest
 import XCTest_Gherkin
 
-class SanitySteps : StepDefiner {
+final class SanitySteps: StepDefiner {
     
     override func defineSteps() {
         
