@@ -7,8 +7,8 @@
 //
 
 import Foundation
-
 import XCTest
+import WebKit
 
 /**
 I wanted this to work with both KIFTestCase and UITestCase which meant extending
@@ -107,7 +107,7 @@ class GherkinState {
         guard self.steps.count == 0 else { return }
         
         // Create an instance of each step definer and call it's defineSteps method
-        allSubclassesOf(StepDefiner.self).forEach { subclass in
+        allSubclassesOf(StepDefiner.self, excludingBundles: [ Bundle(for: WKWebView.self) ]).forEach { subclass in
             subclass.init(test: self.test!).defineSteps()
         }
         

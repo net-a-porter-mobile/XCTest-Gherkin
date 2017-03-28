@@ -23,12 +23,12 @@ open class NativeRunner {
         let features = loadFeatures(path: path)
         
         for feature in features {
-            let scenarios = feature.scenarios.filter({
+            let scenarios = feature.scenarios.filter {
                 scenario == nil || $0.scenarioDescription.hasPrefix(scenario!)
-            })
+            }
             
             if scenarios.count < 1 {
-                XCTFail("No scenario found with name: \(scenario)")
+                XCTFail("No scenario found with name: \(scenario ?? "<no scenario provided>")")
             }
             
             for scenario in scenarios {

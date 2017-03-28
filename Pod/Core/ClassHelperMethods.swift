@@ -20,24 +20,35 @@ import Foundation
  - parameter baseClass: The base type to match against
  - returns: An array of T, where T is a subclass of `baseClass`
 */
-public func allSubclassesOf<T>(_ baseClass: T) -> [T] {
+public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bundle]) -> [T] {
     var matches: [T] = []
-    
+
     // Get all the classes which implement 'baseClass' and return them
     // Helped by code from https://gist.github.com/bnickel/410a1bdc02f12fbd9b5e
     let expectedClassCount = objc_getClassList(nil, 0)
     let allClasses = UnsafeMutablePointer<AnyClass?>.allocate(capacity: Int(expectedClassCount))
     let autoreleasingAllClasses = AutoreleasingUnsafeMutablePointer<AnyClass?>(allClasses) // Huh? We should have gotten this for free.
     let actualClassCount = objc_getClassList(autoreleasingAllClasses, expectedClassCount)
-    
-    (0..<actualClassCount).forEach { i in
-        if let currentClass = allClasses[Int(i)] {
-            if class_getSuperclass(currentClass) is T {
-                matches.append(currentClass as! T)
-            }
+
+    for i in 0..<actualClassCount {
+
+        guard let currentClass = allClasses[Int(i)] else {
+            continue
+        }
+
+        guard class_getSuperclass(currentClass) != nil else {
+            continue
+        }
+
+        guard !blackList.contains(Bundle(for: currentClass)) else {
+            continue
+        }
+
+        if currentClass is T {
+            matches.append(currentClass as! T)
         }
     }
-    
+
     allClasses.deallocate(capacity: Int(expectedClassCount))
     
     return matches

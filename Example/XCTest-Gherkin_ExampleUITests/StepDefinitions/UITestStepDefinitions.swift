@@ -11,7 +11,7 @@ import Foundation
 import XCTest
 import XCTest_Gherkin
 
-class UIStepDefiner: StepDefiner {
+final class UIStepDefiner: StepDefiner {
     
     override func defineSteps() {
         

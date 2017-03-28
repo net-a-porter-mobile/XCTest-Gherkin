@@ -12,7 +12,7 @@ import XCTest
 Classes which extend this class will be queried by the system to
 populate the step definitions before test runs
 */
-open class StepDefiner {
+open class StepDefiner: NSObject {
     open let test: XCTestCase
     
     required public init(test: XCTestCase) {

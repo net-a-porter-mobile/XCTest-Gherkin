@@ -11,7 +11,7 @@ import ObjectiveC
 
 import XCTest
 
-open class NativeTestCase : XCTestCase {
+open class NativeTestCase: XCTestCase {
     
     open override class func initialize() {
         super.initialize()
