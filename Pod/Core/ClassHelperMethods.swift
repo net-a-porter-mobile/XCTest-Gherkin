@@ -37,7 +37,6 @@ public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bund
         }
 
         guard class_getSuperclass(currentClass) != nil else {
-            print("\(currentClass) has no superclass")
             continue
         }
 
@@ -47,7 +46,6 @@ public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bund
 
         if currentClass is T {
             matches.append(currentClass as! T)
-            print("Found \(currentClass)")
         }
     }
 
