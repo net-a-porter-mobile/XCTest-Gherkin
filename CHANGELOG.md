@@ -1,6 +1,7 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
++ Update .travis.yml to Xcode 8.3
 
 ## 0.9
 + Fix for Xcode 8.2
