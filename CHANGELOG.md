@@ -2,6 +2,7 @@
 
 ### Unreleased
 + Update .travis.yml to Xcode 8.3
++ Update CocoaPods version in .travis.yml to 1.2.0
 
 ## 0.9
 + Fix for Xcode 8.2
