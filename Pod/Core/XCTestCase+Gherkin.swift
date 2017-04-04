@@ -274,7 +274,8 @@ extension XCTestCase {
                 self.state.printTemplatedCodeForAllMissingSteps()
                 self.state.resetMissingSteps()
             }
-            fatalError("failed to find a match for a step")
+            XCTFail("Failed to find a match for a step: \(expression)")
+            return
         }
         
         // Covert them to strings to pass back into the step function

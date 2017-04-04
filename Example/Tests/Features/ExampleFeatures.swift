@@ -68,5 +68,12 @@ class ExampleFeatures: XCTestCase {
         Then("Some value should be 6")
         And("Some value should be between 5 and 7")
     }
-    
+
+    func testGenericMatchHelpers() {
+        Given("I have a string hello")
+        And("I have an integer 1")
+        And("I have a boolean FaLsE")
+        And("I have a double 1.2")
+        And("I have a double which looks like an int 1")
+    }
 }
