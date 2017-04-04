@@ -98,5 +98,10 @@ final class SanitySteps: StepDefiner {
         step("I have a double which looks like an int (.*)") { (match: Double) in
             XCTAssertEqual(match, 1)
         }
+
+        step("I have a mixture of types ([0-9\\.]*) (.*)") { (d: Double, s: String) in
+            XCTAssertEqual(d, 1.1)
+            XCTAssertEqual(s, "hello")
+        }
     }
 }

@@ -75,5 +75,6 @@ class ExampleFeatures: XCTestCase {
         And("I have a boolean FaLsE")
         And("I have a double 1.2")
         And("I have a double which looks like an int 1")
+        And("I have a mixture of types 1.1 hello")
     }
 }
