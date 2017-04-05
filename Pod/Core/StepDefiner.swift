@@ -51,11 +51,25 @@ open class StepDefiner: NSObject {
          }
      
      - parameter expression: The expression to match against
-     - parameter f1: The step definition to be run, passing in the matches from the expression
+     - parameter f: The step definition to be run, passing in the matches from the expression
      
      */
-    open func step(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping ([String])->()) {
-        self.test.addStep(expression, file: file, line: line, f1)
+    open func step<T: FromStringable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ([T])->()) {
+        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
+
+            // Convert the matches to the correct type
+            var converted = [T]()
+            for match in matches {
+                guard let convert = T.fromString(match) else {
+                    XCTFail("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
+                    return
+                }
+
+                converted.append(convert)
+            }
+
+            f(converted)
+        }
     }
     
     /**
