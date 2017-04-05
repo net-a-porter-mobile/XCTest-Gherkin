@@ -105,11 +105,15 @@ open class StepDefiner: NSObject {
                 XCTFail("Expected at least 2 matches, found \(matches.count) instead, from \"\(expression)\"")
                 return
             }
-            
-            guard let i1 = T.fromString(matches[0]),
-                let i2 = U.fromString(matches[1]) else {
-                    XCTFail("Could not convert matches (\(matches[0]) and \(matches[1])) to integers, from \"\(expression)\"")
-                    return
+
+            guard let i1 = T.fromString(matches[0]) else {
+                XCTFail("Could not convert '\(matches[0])' to \(T.self), from \"\(expression)\"")
+                return
+            }
+
+            guard let i2 = U.fromString(matches[1]) else {
+                XCTFail("Could not convert '\(matches[1])' to \(U.self), from \"\(expression)\"")
+                return
             }
             
             f2(i1, i2)
