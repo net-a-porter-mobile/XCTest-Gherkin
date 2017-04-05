@@ -10,9 +10,9 @@ before_install:
 
 env:
   - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=9.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.0' UI=true
+  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3' UI=true
   - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=9.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=10.0' UI=true
+  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=10.3' UI=true
 
 script:
 - set -o pipefail
