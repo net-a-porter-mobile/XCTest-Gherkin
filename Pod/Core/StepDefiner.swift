@@ -54,13 +54,13 @@ open class StepDefiner: NSObject {
      - parameter f: The step definition to be run, passing in the matches from the expression
      
      */
-    open func step<T: FromStringable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ([T])->()) {
+    open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ([T])->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
 
             // Convert the matches to the correct type
             var converted = [T]()
             for match in matches {
-                guard let convert = T.fromString(match) else {
+                guard let convert = T.init(fromMatch: match) else {
                     XCTFail("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
                     return
                 }
@@ -84,14 +84,14 @@ open class StepDefiner: NSObject {
      - parameter expression: The expression to match against
      - parameter f1: The step definition to be run, passing in the first capture group from the expression
      */
-    open func step<T: FromStringable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (T)->()) {
+    open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (T)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             guard let match = matches.first else {
                 XCTFail("Expected single match not found in \"\(expression)\"")
                 return
             }
 
-            guard let integer = T.fromString(match) else {
+            guard let integer = T.init(fromMatch: match) else {
                 XCTFail("Could not convert \"\(match)\" to \(T.self)")
                 return
             }
@@ -112,7 +112,7 @@ open class StepDefiner: NSObject {
      - parameter expression: The expression to match against
      - parameter f2: The step definition to be run, passing in the first two capture groups from the expression
      */
-    open func step<T: FromStringable, U: FromStringable>(_ expression: String, file: String = #file, line: Int = #line, f2: @escaping (T, U)->()) {
+    open func step<T: MatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f2: @escaping (T, U)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             
             guard matches.count >= 2 else {
@@ -120,12 +120,12 @@ open class StepDefiner: NSObject {
                 return
             }
 
-            guard let i1 = T.fromString(matches[0]) else {
+            guard let i1 = T.init(fromMatch: matches[0]) else {
                 XCTFail("Could not convert '\(matches[0])' to \(T.self), from \"\(expression)\"")
                 return
             }
 
-            guard let i2 = U.fromString(matches[1]) else {
+            guard let i2 = U.init(fromMatch: matches[1]) else {
                 XCTFail("Could not convert '\(matches[1])' to \(U.self), from \"\(expression)\"")
                 return
             }
@@ -133,7 +133,7 @@ open class StepDefiner: NSObject {
             f2(i1, i2)
         }
     }
-    
+
     /**
      Run other steps from inside your overridden defineSteps() method.
      
