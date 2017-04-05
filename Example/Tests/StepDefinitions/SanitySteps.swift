@@ -11,6 +11,8 @@ import XCTest_Gherkin
 
 final class SanitySteps: StepDefiner {
     
+    private var hasExecutedBeforeStep = false
+    
     override func defineSteps() {
         
         // Examples of defining a step with no capture groups
@@ -77,6 +79,15 @@ final class SanitySteps: StepDefiner {
         step("Some value should be between ([0-9]) and ([0-9])") { (match1: Int, match2: Int) in
             XCTAssertEqual(match1, 5)
             XCTAssertEqual(match2, 7)
+        }
+        
+        step("This should be executed before") {
+            XCTAssertFalse(self.hasExecutedBeforeStep)
+            self.hasExecutedBeforeStep = true
+        }
+        
+        step("This should be executed after") {
+            XCTAssertTrue(self.hasExecutedBeforeStep)
         }
     }
     

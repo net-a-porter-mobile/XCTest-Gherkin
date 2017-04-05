@@ -63,7 +63,7 @@ class ParseState {
         return NativeBackground(description, steps: self.steps)
     }
     
-    func scenarios() -> [NativeScenario]? {
+    func scenarios(at index: Int) -> [NativeScenario]? {
         guard let description = self.description, self.steps.count > 0 else { return nil }
         
         var scenarios = Array<NativeScenario>()
@@ -71,11 +71,10 @@ class ParseState {
         // If we have no examples then we have one scenario.
         // Otherwise we need to make more than one scenario.
         if self.examples.isEmpty {
-            scenarios.append(NativeScenario(description, steps: self.steps))
+            scenarios.append(NativeScenario(description, steps: self.steps, index: index))
         } else {
             // Replace each matching placeholder in each line with the example data
-            self.examples.forEach { example in
-                
+            for (exampleIndex, example) in self.examples.enumerated() {
                 // This hoop is because the compiler doesn't seem to
                 // recognize map directly on the state.steps object
                 var steps = self.steps
@@ -91,7 +90,7 @@ class ParseState {
                 
                 // The scenario description must be unique
                 let description = "\(description)_line\(example.lineNumber)"
-                scenarios.append(NativeScenario(description, steps: steps))
+                scenarios.append(NativeScenario(description, steps: steps, index: index + exampleIndex))
             }
         }
         

@@ -10,6 +10,7 @@
 		15CF04C3896FB4DA1D7B5DEC /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3AC2FD70988184EBE408E62 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */; };
 		27D846191C59282A002C835B /* StringGherkinExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D846181C59282A002C835B /* StringGherkinExtensionTests.swift */; };
 		4192DCBF36495401CB2EB045 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF7CD93ACD3376C1634DE7 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */; };
+		578212291E94B1610048D25F /* ExampleNativeOrderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578212281E94B1610048D25F /* ExampleNativeOrderTest.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -53,6 +54,7 @@
 		42EF7CD93ACD3376C1634DE7 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		462BCEBFB190DCBC13EEB207 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		50D5C85A0E0130261BB017CF /* Pods-XCTest-Gherkin_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.release.xcconfig"; sourceTree = "<group>"; };
+		578212281E94B1610048D25F /* ExampleNativeOrderTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeOrderTest.swift; sourceTree = "<group>"; };
 		58C4996252B2FCDA30E1A382 /* XCTest-Gherkin.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "XCTest-Gherkin.podspec"; path = "../XCTest-Gherkin.podspec"; sourceTree = "<group>"; };
 		5B3A3F15B04E49E181011C20 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* XCTest-Gherkin_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "XCTest-Gherkin_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,6 +253,7 @@
 				E5805BFE1BEA939000D3ECD5 /* ExampleFeatures.swift */,
 				E54130991BEBE11B00E92975 /* ExampleNativeTest.swift */,
 				E8C172631D25197C006A99DF /* ExampleNativeFeatureTest.swift */,
+				578212281E94B1610048D25F /* ExampleNativeOrderTest.swift */,
 				9B9DF95E1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift */,
 			);
 			path = Features;
@@ -581,6 +584,7 @@
 				9B9DF95F1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift in Sources */,
 				E5805C011BEA93CE00D3ECD5 /* ExampleFeatures.swift in Sources */,
 				27D846191C59282A002C835B /* StringGherkinExtensionTests.swift in Sources */,
+				578212291E94B1610048D25F /* ExampleNativeOrderTest.swift in Sources */,
 				E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */,
 				E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */,
 			);
