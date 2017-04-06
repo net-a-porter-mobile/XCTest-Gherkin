@@ -60,7 +60,7 @@ open class StepDefiner: NSObject {
             // Convert the matches to the correct type
             var converted = [T]()
             for match in matches {
-                guard let convert = T.init(fromMatch: match) else {
+                guard let convert = T(fromMatch: match) else {
                     XCTFail("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
                     return
                 }
@@ -91,7 +91,7 @@ open class StepDefiner: NSObject {
                 return
             }
 
-            guard let integer = T.init(fromMatch: match) else {
+            guard let integer = T(fromMatch: match) else {
                 XCTFail("Could not convert \"\(match)\" to \(T.self)")
                 return
             }
@@ -120,12 +120,12 @@ open class StepDefiner: NSObject {
                 return
             }
 
-            guard let i1 = T.init(fromMatch: matches[0]) else {
+            guard let i1 = T(fromMatch: matches[0]) else {
                 XCTFail("Could not convert '\(matches[0])' to \(T.self), from \"\(expression)\"")
                 return
             }
 
-            guard let i2 = U.init(fromMatch: matches[1]) else {
+            guard let i2 = U(fromMatch: matches[1]) else {
                 XCTFail("Could not convert '\(matches[1])' to \(U.self), from \"\(expression)\"")
                 return
             }
