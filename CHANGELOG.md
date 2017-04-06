@@ -1,8 +1,14 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
+
+### 0.10.2
 + Update .travis.yml to Xcode 8.3
 + Update CocoaPods version in .travis.yml to 1.2.0
+
+### 0.10.1
+## 0.10
+Please prefer 0.10.2
 
 ## 0.9
 + Fix for Xcode 8.2
