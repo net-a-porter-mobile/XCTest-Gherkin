@@ -13,19 +13,11 @@ import XCTest
 
 open class NativeTestCase: XCTestCase {
     
-    open override class func initialize() {
-        super.initialize()
-        
-        // This class must by subclassed in order to specify the path
-        guard self != NativeTestCase.self else {
-            return
+    static let initialize: Void = {
+        for feature in NativeTestCase.features() {
+            feature.scenarios.forEach(NativeTestCase.registerTestMethod)
         }
-        
-        // Register all the scenario test methods for defined features
-        for feature in self.features() {
-            feature.scenarios.forEach(self.registerTestMethod)
-        }
-    }
+    }()
     
     // MARK: Config and properties
     
