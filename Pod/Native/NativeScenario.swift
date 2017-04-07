@@ -18,7 +18,7 @@ class NativeScenario : CustomStringConvertible {
      `selectorName` would be `testTestFunnyThingsAreFunny`
      */
     var selectorString: String {
-        get { return "test\(index)\(self.scenarioDescription.camelCaseify)" }
+        get { return "test\(self.leftPad(index))\(self.scenarioDescription.camelCaseify)" }
     }
     
     var selectorCString: UnsafeMutablePointer<Int8> {
@@ -35,6 +35,18 @@ class NativeScenario : CustomStringConvertible {
         get {
             return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
         }
+    }
+    
+    private func leftPad(_ index: Int) -> String {
+        guard index > 9 else {
+            return "00\(index)"
+        }
+        
+        guard index > 99 else {
+            return "0\(index)"
+        }
+        
+        return "\(index)"
     }
 }
 
