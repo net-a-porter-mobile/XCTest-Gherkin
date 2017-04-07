@@ -1,6 +1,9 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
++ Clearer failure message when step isn't found
++ Allow Double and Bool as closure types in step definitions
++ Allow mix of closure parameter types in step definitions with two matches
 
 ### 0.10.2
 + Update .travis.yml to Xcode 8.3

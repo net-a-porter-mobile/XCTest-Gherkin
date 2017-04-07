@@ -78,6 +78,30 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(match1, 5)
             XCTAssertEqual(match2, 7)
         }
+
+        step("I have a string (.*)") { (match: String) in
+            XCTAssertEqual(match, "hello")
+        }
+
+        step("I have an integer ([0-9]*)") { (match: Int) in
+            XCTAssertEqual(match, 1)
+        }
+
+        step("I have a boolean (.*)") { (match: Bool) in
+            XCTAssertFalse(match)
+        }
+
+        step("I have a double (.*)") { (match: Double) in
+            XCTAssertEqual(match, 1.2)
+        }
+
+        step("I have a double which looks like an int (.*)") { (match: Double) in
+            XCTAssertEqual(match, 1)
+        }
+
+        step("I have a mixture of types ([0-9\\.]*) (.*)") { (d: Double, s: String) in
+            XCTAssertEqual(d, 1.1)
+            XCTAssertEqual(s, "hello")
+        }
     }
-    
 }
