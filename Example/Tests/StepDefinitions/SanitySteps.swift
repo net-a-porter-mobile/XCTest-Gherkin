@@ -11,7 +11,7 @@ import XCTest_Gherkin
 
 final class SanitySteps: StepDefiner {
     
-    private var hasExecutedBeforeStep = false
+    private var numberOfExamplesExecutedInOrder = 1
     
     override func defineSteps() {
         
@@ -81,13 +81,13 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(match2, 7)
         }
         
-        step("This should be executed before") {
-            XCTAssertFalse(self.hasExecutedBeforeStep)
-            self.hasExecutedBeforeStep = true
+        step("Given this should be executed before A with example value [0-9]") { (count: Int) in
+            XCTAssertEqual(count, self.numberOfExamplesExecutedInOrder)
+            self.numberOfExamplesExecutedInOrder += 1
         }
         
         step("This should be executed after") {
-            XCTAssertTrue(self.hasExecutedBeforeStep)
+            XCTAssertEqual( self.numberOfExamplesExecutedInOrder, 4)
         }
     }
     

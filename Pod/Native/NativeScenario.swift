@@ -37,16 +37,8 @@ class NativeScenario : CustomStringConvertible {
         }
     }
     
-    private func leftPad(_ index: Int) -> String {
-        guard index > 9 else {
-            return "00\(index)"
-        }
-        
-        guard index > 99 else {
-            return "0\(index)"
-        }
-        
-        return "\(index)"
+    private func leftPad(_ index: Int) -> NSString {
+        return NSString(format: "%03i", index)
     }
 }
 
