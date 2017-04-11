@@ -20,7 +20,7 @@ import Foundation
  - parameter baseClass: The base type to match against
  - returns: An array of T, where T is a subclass of `baseClass`
 */
-public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bundle]) -> [T] {
+public func allSubclassesOf<T>(_ baseClass: T) -> [T] {
     var matches: [T] = []
 
     // Get all the classes which implement 'baseClass' and return them
@@ -36,11 +36,7 @@ public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bund
             continue
         }
 
-        guard class_getSuperclass(currentClass) != nil else {
-            continue
-        }
-
-        guard !blackList.contains(Bundle(for: currentClass)) else {
+        guard class_getRootSuperclass(currentClass) == NSObject.self else {
             continue
         }
 
@@ -52,4 +48,10 @@ public func allSubclassesOf<T>(_ baseClass: T, excludingBundles blackList: [Bund
     allClasses.deallocate(capacity: Int(expectedClassCount))
     
     return matches
+}
+
+fileprivate func class_getRootSuperclass(_ type: AnyObject.Type) -> AnyObject.Type {
+    guard let superclass = class_getSuperclass(type) else { return type }
+
+    return class_getRootSuperclass(superclass)
 }
