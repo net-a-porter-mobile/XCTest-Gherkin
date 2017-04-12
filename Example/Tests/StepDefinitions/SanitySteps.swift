@@ -11,6 +11,8 @@ import XCTest_Gherkin
 
 final class SanitySteps: StepDefiner {
     
+    private var numberOfExamplesExecutedInOrder = 1
+    
     override func defineSteps() {
         
         // Examples of defining a step with no capture groups
@@ -77,6 +79,15 @@ final class SanitySteps: StepDefiner {
         step("Some value should be between ([0-9]) and ([0-9])") { (match1: Int, match2: Int) in
             XCTAssertEqual(match1, 5)
             XCTAssertEqual(match2, 7)
+        }
+        
+        step("This should be executed before A with example value ([0-9])") { (count: Int) in
+            XCTAssertEqual(count, self.numberOfExamplesExecutedInOrder)
+            self.numberOfExamplesExecutedInOrder += 1
+        }
+        
+        step("This should be executed after") {
+            XCTAssertEqual( self.numberOfExamplesExecutedInOrder, 4)
         }
 
         step("I have a string (.*)") { (match: String) in
