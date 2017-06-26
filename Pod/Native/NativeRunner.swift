@@ -37,11 +37,9 @@ open class NativeRunner {
         }
     }
     
-    
     public class func runFeature(featureFile: String, testCase: XCTestCase) {
         NativeRunner.runScenario(featureFile: featureFile, scenario: nil, testCase: testCase)
     }
-
     
     private class func loadFeatures(path : URL) -> [NativeFeature] {
         guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
@@ -51,5 +49,4 @@ open class NativeRunner {
         
         return features
     }
-
 }
