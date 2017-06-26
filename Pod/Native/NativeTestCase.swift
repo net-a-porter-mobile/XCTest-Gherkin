@@ -97,9 +97,17 @@ open class NativeTestCase: XCTestCase {
         }
         
         if let background = feature.background {
-            background.stepDescriptions.forEach(self.performStep)
+            background.stepDescriptions.forEach { (stepDescription: String) in
+                XCTContext.runActivity(named: stepDescription, block: { (activity) in
+                    self.performStep(stepDescription)
+                })
+            }
         }
-        scenario.stepDescriptions.forEach(self.performStep)
+        scenario.stepDescriptions.forEach { (stepDescription: String) in
+            XCTContext.runActivity(named: stepDescription, block: { (activity) in
+                self.performStep(stepDescription)
+            })
+        }
     }
     
     // MARK: Auxiliary
