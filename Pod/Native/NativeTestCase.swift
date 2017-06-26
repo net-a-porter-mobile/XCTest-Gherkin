@@ -83,30 +83,11 @@ open class NativeTestCase: XCTestCase {
         guard let (feature, scenario) = type(of: self).featureScenarioData(self.invocation!.selector) else {
             return
         }
-        NativeTestCase.perform(scenario: scenario, from: feature, in: self)
+        perform(scenario: scenario, from: feature)
     }
     
     // MARK: Auxiliary
-    class func perform(scenario: NativeScenario, from feature: NativeFeature, in testCase: XCTestCase) {
-        let allScenarioStepsDefined = scenario.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
-        var allFeatureBackgroundStepsDefined = true
-        
-        if let defined = feature.background?.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
-            allFeatureBackgroundStepsDefined = defined
-        }
-        
-        guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
-            XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-            return
-        }
-        
-        if let background = feature.background {
-            background.stepDescriptions.forEach(testCase.performStep)
-        }
-        scenario.stepDescriptions.forEach(testCase.performStep)
-    }
-    
-    
+
     class func featureScenarioData(_ forSelector: Selector) -> (NativeFeature, NativeScenario)? {
         for feature in self.features() {
             if let scenario = feature.scenarios.filter({ $0.selectorString == NSStringFromSelector(forSelector) }).first {
@@ -123,4 +104,25 @@ open class NativeTestCase: XCTestCase {
         assert(success, "Could not swizzle feature test method!")
     }
     
+}
+
+extension XCTestCase {
+    func perform(scenario: NativeScenario, from feature: NativeFeature) {
+        let allScenarioStepsDefined = scenario.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
+        var allFeatureBackgroundStepsDefined = true
+        
+        if let defined = feature.background?.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
+            allFeatureBackgroundStepsDefined = defined
+        }
+        
+        guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
+            XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
+            return
+        }
+        
+        if let background = feature.background {
+            background.stepDescriptions.forEach(self.performStep)
+        }
+        scenario.stepDescriptions.forEach(self.performStep)
+    }
 }

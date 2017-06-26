@@ -32,7 +32,7 @@ open class NativeRunner {
             }
             
             for scenario in scenarios {
-                NativeTestCase.perform(scenario: scenario, from: feature, in: testCase)
+                testCase.perform(scenario: scenario, from: feature)
             }
         }
     }
