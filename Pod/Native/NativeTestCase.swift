@@ -83,11 +83,15 @@ open class NativeTestCase: XCTestCase {
         guard let (feature, scenario) = type(of: self).featureScenarioData(self.invocation!.selector) else {
             return
         }
-        
-        let allScenarioStepsDefined = scenario.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
+        NativeTestCase.perform(scenario: scenario, from: feature, in: self)
+    }
+    
+    // MARK: Auxiliary
+    class func perform(scenario: NativeScenario, from feature: NativeFeature, in testCase: XCTestCase) {
+        let allScenarioStepsDefined = scenario.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
         var allFeatureBackgroundStepsDefined = true
         
-        if let defined = feature.background?.stepDescriptions.map(self.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
+        if let defined = feature.background?.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
             allFeatureBackgroundStepsDefined = defined
         }
         
@@ -97,20 +101,11 @@ open class NativeTestCase: XCTestCase {
         }
         
         if let background = feature.background {
-            background.stepDescriptions.forEach { (stepDescription: String) in
-                XCTContext.runActivity(named: stepDescription, block: { (activity) in
-                    self.performStep(stepDescription)
-                })
-            }
+            background.stepDescriptions.forEach(testCase.performStep)
         }
-        scenario.stepDescriptions.forEach { (stepDescription: String) in
-            XCTContext.runActivity(named: stepDescription, block: { (activity) in
-                self.performStep(stepDescription)
-            })
-        }
+        scenario.stepDescriptions.forEach(testCase.performStep)
     }
     
-    // MARK: Auxiliary
     
     class func featureScenarioData(_ forSelector: Selector) -> (NativeFeature, NativeScenario)? {
         for feature in self.features() {

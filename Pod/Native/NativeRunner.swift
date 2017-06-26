@@ -32,22 +32,7 @@ open class NativeRunner {
             }
             
             for scenario in scenarios {
-                let allScenarioStepsDefined = scenario.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
-                var allFeatureBackgroundStepsDefined = true
-                
-                if let defined = feature.background?.stepDescriptions.map(testCase.state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
-                    allFeatureBackgroundStepsDefined = defined
-                }
-                
-                guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
-                    XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-                    return
-                }
-                
-                if let background = feature.background {
-                    background.stepDescriptions.forEach(testCase.performStep)
-                }
-                scenario.stepDescriptions.forEach(testCase.performStep)
+                NativeTestCase.perform(scenario: scenario, from: feature, in: testCase)
             }
         }
     }
