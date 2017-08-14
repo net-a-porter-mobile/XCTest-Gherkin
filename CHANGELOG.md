@@ -1,6 +1,9 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
+
+### 0.10.3
++ Fix for crash enumerating all classes to find steps
 + Clearer failure message when step isn't found
 + Allow Double and Bool as closure types in step definitions
 + Allow mix of closure parameter types in step definitions with two matches
