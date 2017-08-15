@@ -252,8 +252,8 @@ extension XCTestCase {
      Finds and performs a step test based on expression
      */
     func performStep(_ initialExpression: String) {
-        
-        XCTContext.runActivity(named: initialExpression) { (activity) in
+
+        func perform(expression: String) {
             
             // Get a mutable copy - if we are in an outline we might be changing this
             var expression = initialExpression
@@ -308,6 +308,14 @@ extension XCTestCase {
             step.function(matchStrings)
             state.currentStepDepth -= 1
         }
+        
+        #if swift(>=4)
+            XCTContext.runActivity(named: initialExpression) { (_) in
+                perform(expression: initialExpression)
+            }
+        #else
+        perform(expression: initialExpression)
+        #endif
     }
     
     /**
