@@ -309,6 +309,7 @@ extension XCTestCase {
             state.currentStepDepth -= 1
         }
         
+        //TODO: remove this check once we are migrated to Swift 4
         #if swift(>=4)
             XCTContext.runActivity(named: initialExpression) { (_) in
                 perform(expression: initialExpression)
