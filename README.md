@@ -76,18 +76,18 @@ step("This value should be between ([0-9]*) and ([0-9]*)") { (match1: String, ma
 If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
 
 ```swift
-    func testOutlineTests() {
-        Examples(
-            [ "name", "age" ],
-            [ "Alice", "20" ],
-            [ "Bob", "20" ]
-        )
-        
-        Outline {
-            Given("I use the example name <name>")
-            Then("The age should be <age>")
-        }
+func testOutlineTests() {
+    Examples(
+        [ "name", "age" ],
+        [ "Alice", "20" ],
+        [ "Bob", "20" ]
+    )
+    
+    Outline {
+        Given("I use the example name <name>")
+        Then("The age should be <age>")
     }
+}
 ```
 
 This will run the tests twice, once with the values `Alice,20` and once with the values `Bob,20`.
