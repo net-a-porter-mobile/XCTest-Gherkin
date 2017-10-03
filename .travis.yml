@@ -22,5 +22,5 @@ script:
 
 matrix:
   include:
-    - osx_image: xcode8
+    - osx_image: xcode8.3
       env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
