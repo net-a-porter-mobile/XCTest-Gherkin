@@ -20,3 +20,9 @@ script:
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty; fi
 - pod lib lint --allow-warnings
+
+
+matrix:
+  include:
+    - osx_image: xcode8
+      env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
