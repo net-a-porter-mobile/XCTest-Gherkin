@@ -44,13 +44,21 @@ fileprivate func class_getRootSuperclass(_ type: AnyObject.Type) -> AnyObject.Ty
 }
 
 fileprivate func allClasses() -> [AnyClass] {
+    // Get an approximate amount of classes we are going to need space for.
+    // Double it, just to make sure if it returns more we can still accomodate them all
     let expectedClassCount = objc_getClassList(nil, 0) * 2
+
     let allClasses = UnsafeMutablePointer<AnyClass?>.allocate(capacity: Int(expectedClassCount))
     let autoreleasingAllClasses = AutoreleasingUnsafeMutablePointer<AnyClass?>(allClasses)  // Huh? We should have gotten this for free.
     let actualClassCount = objc_getClassList(autoreleasingAllClasses, expectedClassCount)
 
+    // Take care of the stunningly rare situation where we get more classes back than we have allocated,
+    // remembering that we have allocated more than we were told to, to take case of the unexpected case
+    // where we recieve more classes than we were told we were going to three lines previously. #paranoid #safe
+    let count = min(actualClassCount, expectedClassCount)
+
     var classes = [AnyClass]()
-    for i in 0 ..< actualClassCount {
+    for i in 0 ..< count {
         if let currentClass: AnyClass = allClasses[Int(i)] {
             classes.append(currentClass)
         }
