@@ -1,6 +1,8 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
+
+## 0.11
 + Wrap execution of each step in XCTContext's runActivity method so we get better logging within Xcode of native Gherkin.
 
 ### 0.10.3
