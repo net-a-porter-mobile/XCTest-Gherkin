@@ -3,16 +3,14 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 language: objective-c
-osx_image: xcode8.3
+osx_image: xcode9
 
 before_install:
   - gem install cocoapods --version 1.2.0
 
 env:
-  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=9.1' UI=true
+  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.0' UI=true
   - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=9.1' UI=true
-  - DESTINATION='platform=iOS Simulator,name=iPad Air,OS=10.3.1' UI=true
 
 script:
 - set -o pipefail
@@ -20,3 +18,9 @@ script:
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty; fi
 - pod lib lint --allow-warnings
+
+
+matrix:
+  include:
+    - osx_image: xcode8.3
+      env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
