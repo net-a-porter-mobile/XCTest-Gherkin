@@ -2,12 +2,14 @@
 
 ### Unreleased
 
+### 0.10.4
++ Fix for (another) crash enumerating all classes to find steps
+
 ### 0.10.3
 + Fix for crash enumerating all classes to find steps
 + Clearer failure message when step isn't found
 + Allow Double and Bool as closure types in step definitions
 + Allow mix of closure parameter types in step definitions with two matches
-+ Wrap execution of each step in XCTContext's runActivity method so we get better logging within Xcode of native Gherkin.
 
 ### 0.10.2
 + Update .travis.yml to Xcode 8.3
