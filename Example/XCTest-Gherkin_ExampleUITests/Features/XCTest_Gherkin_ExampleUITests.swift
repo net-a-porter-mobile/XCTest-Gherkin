@@ -9,7 +9,7 @@
 import XCTest
 import XCTest_Gherkin
 
-class XCTestGherkinExampleUITests: XCTestCase {
+class XCTest_Gherkin_ExampleUITests: XCTestCase {
     
     func testWorksWithUITests() {
         Given("I have launched the app")

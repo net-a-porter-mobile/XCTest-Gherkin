@@ -110,9 +110,9 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(match, 1)
         }
 
-        step("I have a mixture of types ([0-9\\.]*) (.*)") { (double: Double, string: String) in
-            XCTAssertEqual(double, 1.1)
-            XCTAssertEqual(string, "hello")
+        step("I have a mixture of types ([0-9\\.]*) (.*)") { (d: Double, s: String) in
+            XCTAssertEqual(d, 1.1)
+            XCTAssertEqual(s, "hello")
         }
     }
 }
