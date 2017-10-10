@@ -1,0 +1,30 @@
+disabled_rules:
+  - force_cast
+  - force_try
+  - identifier_name
+  - trailing_whitespace
+  - trailing_newline
+  - colon
+  - line_length
+  - vertical_whitespace
+  - comma
+  - private_over_fileprivate
+  - implicit_getter
+  - operator_whitespace
+  - statement_position
+  - redundant_void_return
+  - unused_closure_parameter
+  - void_return
+  - todo
+  - cyclomatic_complexity
+  - control_statement
+  - for_where
+  - opening_brace
+  - syntactic_sugar
+  - trailing_semicolon
+  - legacy_constructor
+  - redundant_optional_initialization
+  - function_body_length
+
+excluded:
+  - Example/Pods
