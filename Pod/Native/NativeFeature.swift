@@ -21,7 +21,7 @@ private struct FileTags {
     static let And = "And"
 }
 
-class NativeFeature : CustomStringConvertible {
+class NativeFeature: CustomStringConvertible {
     let featureDescription: String
     let scenarios: [NativeScenario]
     let background: NativeBackground?
@@ -69,7 +69,7 @@ extension NativeFeature {
         self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
     }
     
-    fileprivate class func parseLines(_ lines: [String]) -> (background: NativeBackground?, scenarios:[NativeScenario]) {
+    fileprivate class func parseLines(_ lines: [String]) -> (background: NativeBackground?, scenarios: [NativeScenario]) {
         
         var state = ParseState()
         var scenarios = Array<NativeScenario>()

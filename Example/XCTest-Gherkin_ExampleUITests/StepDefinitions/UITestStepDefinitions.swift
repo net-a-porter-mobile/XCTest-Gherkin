@@ -19,7 +19,7 @@ final class UIStepDefiner: StepDefiner {
             XCUIApplication().launch()
         }
         
-        step("I tap the (.*) button") { (matches:[String]) in
+        step("I tap the (.*) button") { (matches: [String]) in
             XCTAssert(matches.count > 0, "Should have been a match")
             
             let identifier = matches.first!

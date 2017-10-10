@@ -16,4 +16,4 @@ typealias ExampleValue = String
 /**
  An Example represents a single row in the Examples(...) block in a test
  */
-typealias Example = [ExampleTitle:ExampleValue]
+typealias Example = [ExampleTitle: ExampleValue]

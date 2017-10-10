@@ -41,7 +41,7 @@ open class NativeRunner {
         NativeRunner.runScenario(featureFile: featureFile, scenario: nil, testCase: testCase)
     }
     
-    private class func loadFeatures(path : URL) -> [NativeFeature] {
+    private class func loadFeatures(path: URL) -> [NativeFeature] {
         guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
             assertionFailure("Could not retrieve features from the path '\(path)'")
             return []
