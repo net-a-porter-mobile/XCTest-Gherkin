@@ -12,6 +12,7 @@
 + (void)initialize {
     [super initialize];
 
+    // We don't want to process any features for this class.
     if (self == [XCGNativeInitializer class]) {
         return;
     }
@@ -20,7 +21,7 @@
 }
 
 + (void)processFeatures {
-    // NO-OP
+    NSAssert(NO, @"This is meant to be overridden by NativeTestCase and should never be called.");
 }
 
 @end

@@ -13,7 +13,11 @@ import XCTest
 
 open class NativeTestCase: XCGNativeInitializer {
 
+    /// Overrides XCGNativeInitializer processFeatures to create the necessary
+    /// test classes and methods. There is no reason to call this method directly.
     override open class func processFeatures() {
+        // We don't want to process any features for this class, all the features
+        // processed should be for subclasses of this class.
         if self == NativeTestCase.self {
             return
         }
