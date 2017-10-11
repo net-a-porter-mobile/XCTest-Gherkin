@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# Lint from the root directory, so we lint the pod and the example project
+pushd "${SRCROOT}/.."
+    "${PODS_ROOT}/SwiftLint/swiftlint" --strict
+    exit $?
+popd

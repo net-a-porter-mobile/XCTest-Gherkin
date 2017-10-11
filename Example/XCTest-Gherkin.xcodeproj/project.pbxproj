@@ -479,7 +479,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Lint from the root directory, so we lint the pod and the example project\npushd \"${SRCROOT}/..\"\n    \"${PODS_ROOT}/SwiftLint/swiftlint\"\npopd";
+			shellScript = "pushd \"${SRCROOT}/..\"\n    ./scripts/lint\n    exit $?\npopd";
 		};
 		4A3C67E5CC96F27175DCF5DB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
