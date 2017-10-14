@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.12
++ Fix for +initialize unavailable in Xcode 9.1 in Swift
+
 ## 0.11
 + Wrap execution of each step in XCTContext's runActivity method so we get better logging within Xcode of native Gherkin.
 
