@@ -2,6 +2,10 @@
 
 # Lint from the root directory, so we lint the pod and the example project
 pushd "${SRCROOT}/.."
+  if [ -z "$TRAVIS" ]; then
     "${PODS_ROOT}/SwiftLint/swiftlint" --strict
-    exit $?
+  else
+    "${PODS_ROOT}/SwiftLint/swiftlint"
+  fi
+  exit $?
 popd
