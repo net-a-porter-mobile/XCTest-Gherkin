@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'XCTest-Gherkin_Example' do
   pod "XCTest-Gherkin/Native", :path => "../"
+  pod 'SwiftLint', '~> 0.23'
   
   target 'XCTest-Gherkin_Tests'
   target 'XCTest-Gherkin_ExampleUITests'

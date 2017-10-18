@@ -306,6 +306,7 @@
 				607FACCE1AFB9204008FA782 /* Resources */,
 				58B3EFCDF1CF40932C170F17 /* [CP] Embed Pods Frameworks */,
 				AFD455FBC48F78010DF458B3 /* [CP] Copy Pods Resources */,
+				3AB2FB161F8C60C6006DA427 /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -465,6 +466,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		3AB2FB161F8C60C6006DA427 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pushd \"${SRCROOT}/..\"\n    ./scripts/lint\n    exit $?\npopd";
 		};
 		4A3C67E5CC96F27175DCF5DB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

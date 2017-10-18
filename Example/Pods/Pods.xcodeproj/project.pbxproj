@@ -192,6 +192,14 @@
 			path = ../..;
 			sourceTree = "<group>";
 		};
+		32A23E08346748F1793F899C5FF672C1 /* SwiftLint */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = SwiftLint;
+			path = SwiftLint;
+			sourceTree = "<group>";
+		};
 		3FB1508C4D981804E7F30FAC78D7FFCE /* Native */ = {
 			isa = PBXGroup;
 			children = (
@@ -265,9 +273,18 @@
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
 				651F35CAE51D4714EE1D82717D06FCB8 /* Development Pods */,
 				433CD3331B6C3787F473C941B61FC68F /* Frameworks */,
+				9758CC519AE2C57A9659FFC01AAD26F9 /* Pods */,
 				79D47770426D0E253C2002B8091ED936 /* Products */,
 				D05B9E066A1BA62CD8D81865B1220309 /* Targets Support Files */,
 			);
+			sourceTree = "<group>";
+		};
+		9758CC519AE2C57A9659FFC01AAD26F9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				32A23E08346748F1793F899C5FF672C1 /* SwiftLint */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		A0E94E5E413E771BF67D7664AA155200 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests */ = {
