@@ -40,7 +40,7 @@ struct NativeFeatureParser {
     }
     
     private func parseFeatureFile(_ file: URL) -> NativeFeature? {
-        guard let feature = NativeFeature(contentsOfURL:file) else {
+        guard let feature = NativeFeature(contentsOfURL: file) else {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil
         }

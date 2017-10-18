@@ -38,7 +38,7 @@ open class StepDefiner: NSObject {
      
      */
     open func step(_ expression: String, file: String = #file, line: Int = #line, f0: @escaping ()->()) {
-        self.test.addStep(expression, file: file, line: line) { (ignored:[String]) in f0() }
+        self.test.addStep(expression, file: file, line: line) { (ignored: [String]) in f0() }
     }
 
     /**

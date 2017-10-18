@@ -4,7 +4,6 @@ disabled_rules:
   - identifier_name
   - trailing_whitespace
   - trailing_newline
-  - colon
   - line_length
   - vertical_whitespace
   - comma
@@ -23,7 +22,6 @@ disabled_rules:
   - syntactic_sugar
   - trailing_semicolon
   - legacy_constructor
-  - redundant_optional_initialization
   - function_body_length
   - type_name
 

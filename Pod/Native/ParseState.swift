@@ -27,11 +27,11 @@ class ParseState {
         self.parsingBackground = parsingBackground
     }
     
-    private var examples:[NativeExample] {
+    private var examples: [NativeExample] {
         get {
             if self.exampleLines.count < 2 { return [] }
             
-            var examples:[NativeExample] = []
+            var examples: [NativeExample] = []
             
             // The first line is the titles
             let titles = self.exampleLines.first!.line.components(separatedBy: "|").map { $0.trimmingCharacters(in: whitespace) }
