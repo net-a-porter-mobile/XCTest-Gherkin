@@ -284,7 +284,7 @@ extension XCTestCase {
             // TODO: This should really only need to be a map function :(
             var matchStrings = Array<String>()
             for i in 1..<match.numberOfRanges {
-                let range = match.rangeAt(i)
+                let range = match.range(at: i)
                 let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
                 matchStrings.append(string)
             }

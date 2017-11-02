@@ -8,7 +8,7 @@
 
 import Foundation
 
-class NativeScenario : CustomStringConvertible {
+class NativeScenario: CustomStringConvertible {
     let scenarioDescription: String
     let stepDescriptions: [String]
     let index: Int

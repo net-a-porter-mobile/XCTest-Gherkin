@@ -40,7 +40,7 @@ class ParseState {
             self.exampleLines.dropFirst().forEach { rawLine in
                 let line = rawLine.line.components(separatedBy: "|").map { $0.trimmingCharacters(in: whitespace) }
                 
-                var pairs:[String:String] = Dictionary()
+                var pairs: [String: String] = Dictionary()
                 
                 (0..<titles.count).forEach { n in
                     // Get the title and value for this column

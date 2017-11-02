@@ -100,7 +100,7 @@ open class NativeTestCase: XCGNativeInitializer {
     class func registerTestMethod(forScenario scenario: NativeScenario) {
         let selector = sel_registerName(scenario.selectorCString)
         let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
-        let success = class_addMethod(self, selector, method_getImplementation(method), method_getTypeEncoding(method))
+        let success = class_addMethod(self, selector, method_getImplementation(method!), method_getTypeEncoding(method!))
         assert(success, "Could not swizzle feature test method!")
     }
     
