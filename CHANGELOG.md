@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.13.1
++ Swift 4
+
 ## 0.12
 + Fix for +initialize unavailable in Xcode 9.1 in Swift
 
