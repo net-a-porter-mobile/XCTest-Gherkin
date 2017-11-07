@@ -18,7 +18,7 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            guard case let characters = (self.characters.split { $0 == " " || $0 == "-" }), characters.count > 1 else {
+            guard case let characters = (self.split { $0 == " " || $0 == "-" }), characters.count > 1 else {
                 return self.uppercaseFirstLetterString
             }
             return characters.map { String($0).lowercased().uppercaseFirstLetterString }.joined(separator: "")
@@ -33,8 +33,8 @@ public extension String {
     */
     var uppercaseFirstLetterString: String {
         get {
-            guard case let characters = self.characters, let firstCharacter = characters.first else { return self }
-            return String(firstCharacter).uppercased() + String(characters.dropFirst())
+            guard let firstCharacter = self.first else { return self }
+            return String(firstCharacter).uppercased() + String(self.dropFirst())
         }
     }
     
@@ -45,8 +45,8 @@ public extension String {
      */
     var humanReadableString: String {
         get {
-            guard case let characters = self.characters, characters.count > 1, let firstCharacter = characters.first else { return self }
-            return String(firstCharacter) + characters.dropFirst().reduce("") { (word, character) in
+            guard self.count > 1, let firstCharacter = self.first else { return self }
+            return String(firstCharacter) + self.dropFirst().reduce("") { (word, character) in
                 let letter = String(character)
                 if letter == letter.uppercased() {
                     return word + " " + letter

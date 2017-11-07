@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+### 0.13.2
++ Fix swift 4 warnings about String.characters
+
 ## 0.13.1
 + Swift 4
 
