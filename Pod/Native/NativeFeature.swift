@@ -56,7 +56,7 @@ extension NativeFeature {
         var lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n").map { $0.trimmingCharacters(in: whitespace) }
 
         // Filter comments (#) and tags (@), also filter white lines
-        lines = lines.filter { $0.characters.first != "#" &&  $0.characters.first != "@" && $0.characters.count > 0}
+        lines = lines.filter { $0.first != "#" &&  $0.first != "@" && $0.count > 0}
 
         guard lines.count > 0 else { return nil }
         
