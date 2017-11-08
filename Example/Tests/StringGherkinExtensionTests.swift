@@ -61,5 +61,4 @@ class StringGherkinExtensionTests: XCTestCase {
         let simpleString = ""
         XCTAssertEqual("", simpleString.camelCaseify)
     }
-    
 }

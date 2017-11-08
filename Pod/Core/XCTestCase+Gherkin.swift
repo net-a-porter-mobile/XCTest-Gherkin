@@ -41,15 +41,14 @@ class GherkinState {
     fileprivate var missingStepsImplementations = [String]()
     
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
-        let range = NSMakeRange(0, expression.characters.count)
-        let matches = self.steps.map { (step: Step) -> (step: Step, match: NSTextCheckingResult)? in
+        let range = NSMakeRange(0, expression.count)
+        return self.steps.flatMap { (step: Step) -> (step: Step, match: NSTextCheckingResult)? in
             if let match = step.regex.firstMatch(in: expression, options: [], range: range) {
                 return (step:step, match:match)
             } else {
                 return nil
             }
-        }.flatMap { $0 }
-        return matches
+        }
     }
     
     func gherkinStepsMatchingExpression(_ expression: String) -> [Step] {
