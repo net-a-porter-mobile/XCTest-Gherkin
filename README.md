@@ -123,6 +123,7 @@ XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures test
 
 ## Installation
 
+### CocoaPods
 XCTest-Gherkin is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
@@ -131,6 +132,14 @@ pod 'XCTest-Gherkin'
 ```
 
 and run `pod install`
+
+### Carthage
+XCTest-Gherkin is also available through [Carthage](https://github.com/Carthage/Carthage). To install it, simply add the following line to your Cartfile:
+```
+github "net-a-porter-mobile/XCTest-Gherkin" == 0.13.2
+```
+
+and run `carthage bootstrap --platform iOS`. The generated framework is named `XCTest_Gherkin.framework`.
 
 ## Configuration
 
