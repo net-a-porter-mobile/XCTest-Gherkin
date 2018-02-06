@@ -96,14 +96,6 @@ NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherki
 
 ### Dealing with errors / debugging tests
 
-#### Duplicate steps:
-
-If there are step definitions which all match a step in your feature then the test will fail with an error something like 
-
-```
--[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Multiple steps found for : I have a working Gherkin environment
-```
-
 #### Missing steps
 
 If there isn't a step definition found for a step in your feature file then the extensions will output a list of all the available steps and then fail the test, something like:
