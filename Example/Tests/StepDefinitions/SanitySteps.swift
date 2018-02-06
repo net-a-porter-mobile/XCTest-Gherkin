@@ -114,5 +114,13 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(d, 1.1)
             XCTAssertEqual(s, "hello")
         }
+
+        step("^a substring$") {
+            XCTFail("This step shouldn't match")
+        }
+
+        step("This is a substring") {
+            // This step should match instead of the one above, even though the other one is defined first
+        }
     }
 }

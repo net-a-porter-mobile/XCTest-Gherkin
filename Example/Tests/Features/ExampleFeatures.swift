@@ -77,4 +77,8 @@ final class ExampleFeatures: XCTestCase {
         And("I have a double which looks like an int 1")
         And("I have a mixture of types 1.1 hello")
     }
+
+    func testStepAnchorMatching() {
+        Given("This is a substring")
+    }
 }
