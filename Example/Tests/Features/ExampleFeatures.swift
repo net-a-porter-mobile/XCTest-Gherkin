@@ -9,7 +9,7 @@
 import XCTest
 import XCTest_Gherkin
 
-class ExampleFeatures: XCTestCase {
+final class ExampleFeatures: XCTestCase {
     
     override func setUp() {
         super.setUp()

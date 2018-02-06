@@ -9,7 +9,7 @@
 import XCTest
 import XCTest_Gherkin
 
-class ExampleNativeRunnerTest: XCTestCase {
+final class ExampleNativeRunnerTest: XCTestCase {
 
     func testNativeExampleWithFeatureRunner() {
         NativeRunner.runFeature(featureFile: "NativeFeatures/native_example.feature", testCase: self)
@@ -18,5 +18,4 @@ class ExampleNativeRunnerTest: XCTestCase {
     func testNativeExampleWithScenarioRunner() {
         NativeRunner.runScenario(featureFile: "NativeFeatures/native_example.feature", scenario: "This is a basic happy path example", testCase: self)
     }
-    
 }

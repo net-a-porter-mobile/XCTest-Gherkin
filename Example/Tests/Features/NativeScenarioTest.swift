@@ -9,7 +9,7 @@
 import XCTest
 @testable import XCTest_Gherkin
 
-class NativeScenarioTest: XCTestCase {
+final class NativeScenarioTest: XCTestCase {
     
     func testNativeScenarioSelectorString() {
         let scenario = NativeScenario("This is a test", steps: [], index: 1)
