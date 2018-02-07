@@ -96,14 +96,6 @@ NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherki
 
 ### Dealing with errors / debugging tests
 
-#### Duplicate steps:
-
-If there are step definitions which all match a step in your feature then the test will fail with an error something like 
-
-```
--[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Multiple steps found for : I have a working Gherkin environment
-```
-
 #### Missing steps
 
 If there isn't a step definition found for a step in your feature file then the extensions will output a list of all the available steps and then fail the test, something like:
@@ -120,6 +112,31 @@ steps
 -------------
 XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : failed - Step definition not found for 'I have a working Pickle environment'
 ```
+
+#### Ambiguous steps
+
+Sometimes, multiple steps might contain the same text. The library will match with what it thinks is the right step, but it might get it wrong. For example if you have these step definitions:
+
+```
+step("email button") { ... }
+step("I tap the email button") { ... }
+```
+
+When you try to run this Given
+```
+func testStepAnchorMatching() {
+    Given("I tap the email button")
+}
+```
+
+it might match against the "email button" step, instead of the "I tap the email button" step. To fix this, you can anchor the regular expression to the start and end of the string using `^` and `$`, like this:
+
+```
+step("^email button$") { ... }
+step("I tap the email button") { ... }
+```
+
+Now, "I tap the email button" doesn't match the first step.
 
 ## Installation
 
