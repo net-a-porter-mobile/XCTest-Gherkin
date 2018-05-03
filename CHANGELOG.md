@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.14.0
++ Update to Swift 4.1, and validate using cocoapods 1.5.0
+
 ### 0.13.2
 + Fix swift 4 warnings about String.characters
 
@@ -72,7 +75,7 @@ Please prefer 0.10.2
 + Add shared examples
 
 ### 0.3.3
-+ Fix crash when steps contain optional matching groups and one of them doesn't match 
++ Fix crash when steps contain optional matching groups and one of them doesn't match
 
 ### 0.3.2
 + printing the steps is case-insensitive order
