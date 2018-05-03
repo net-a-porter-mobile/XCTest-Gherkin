@@ -305,7 +305,6 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				58B3EFCDF1CF40932C170F17 /* [CP] Embed Pods Frameworks */,
-				AFD455FBC48F78010DF458B3 /* [CP] Copy Pods Resources */,
 				3AB2FB161F8C60C6006DA427 /* Swiftlint */,
 			);
 			buildRules = (
@@ -326,7 +325,6 @@
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
 				085D241C95383677E4F58633 /* [CP] Embed Pods Frameworks */,
-				15C827AFDBB4A7100371F48B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -346,7 +344,6 @@
 				E53F47CE1D020EB80077CCCD /* Sources */,
 				E53F47CF1D020EB80077CCCD /* Frameworks */,
 				E53F47D01D020EB80077CCCD /* Resources */,
-				AF545F02B6D704D170D6C5CA /* [CP] Copy Pods Resources */,
 				E53F47E71D040B100077CCCD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -452,21 +449,6 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		15C827AFDBB4A7100371F48B /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3AB2FB161F8C60C6006DA427 /* Swiftlint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -515,36 +497,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AF545F02B6D704D170D6C5CA /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AFD455FBC48F78010DF458B3 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-XCTest-Gherkin_Example/Pods-XCTest-Gherkin_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E53F47E71D040B100077CCCD /* [CP] Embed Pods Frameworks */ = {
@@ -780,7 +732,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5B3A3F15B04E49E181011C20 /* Pods-XCTest-Gherkin_Example.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "XCTest-Gherkin/Info.plist";
@@ -797,7 +748,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 341B7FAE13C5A98236C5A5BF /* Pods-XCTest-Gherkin_Example.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "XCTest-Gherkin/Info.plist";
@@ -814,7 +764,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6B239BDEED48C1DC1299C5E1 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -838,7 +787,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B7D6D77505C82843307F74EC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -858,7 +806,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA536550DE8FDBABA88D3F1E /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
@@ -877,7 +824,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CA8B701E9DF0C2ED4847D00A /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				INFOPLIST_FILE = "XCTest-Gherkin_ExampleUITests/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;

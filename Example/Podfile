@@ -1,5 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
+platform :ios, '8.3'
 
 target 'XCTest-Gherkin_Example' do
   pod "XCTest-Gherkin/Native", :path => "../"
