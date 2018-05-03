@@ -42,12 +42,9 @@ class GherkinState {
     
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
         let range = NSMakeRange(0, expression.count)
-        return self.steps.flatMap { (step: Step) -> (step: Step, match: NSTextCheckingResult)? in
-            if let match = step.regex.firstMatch(in: expression, options: [], range: range) {
-                return (step:step, match:match)
-            } else {
-                return nil
-            }
+
+        return self.steps.compactMap { step in
+            step.regex.firstMatch(in: expression, options: [], range: range).map { (step: step, match: $0) }
         }
     }
     
