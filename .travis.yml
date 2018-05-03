@@ -3,13 +3,13 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 language: objective-c
-osx_image: xcode9
+osx_image: xcode9.3
 
 before_install:
   - gem install cocoapods --version 1.2.0
 
 env:
-  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.0' UI=true
+  - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.3' UI=true
   - DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
 
 script:
