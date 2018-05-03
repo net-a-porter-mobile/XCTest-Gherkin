@@ -63,7 +63,7 @@ fileprivate func allClasses() -> [AnyClass] {
         classes.append(currentClass)
     }
 
-    allClasses.deallocate(capacity: Int(expectedClassCount))
+    allClasses.deallocate()
 
     return classes
 }
