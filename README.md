@@ -194,7 +194,7 @@ We put our calls to KIF inside our step definitions, which happens to closely mi
 
 ## Author
 
-Sam Dean, sam.dean@net-a-porter.com
+Sam Dean, deanWombourne@gmail.com
 
 ## License
 
