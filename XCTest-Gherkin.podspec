@@ -16,11 +16,12 @@ Adds Gherkin syntax to XCTestCase
 
   s.homepage         = "https://github.com/net-a-porter-mobile/XCTest-Gherkin"
   s.license          = { :type => 'Apache', :file => 'LICENSE' }
-  s.author           = { "Sam Dean" => "sam.dean@net-a-porter.com" }
+  s.author           = { "Sam Dean" => "deanWombourne@gmail.com" }
   s.source           = { :git => "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
+  s.swift_version = '4.1'
 
   s.default_subspec = 'Core'
   s.ios.deployment_target = '8.0'
