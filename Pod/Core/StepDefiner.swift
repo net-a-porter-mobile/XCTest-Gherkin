@@ -12,11 +12,23 @@ import XCTest
 Classes which extend this class will be queried by the system to
 populate the step definitions before test runs
 */
-open class StepDefiner: NSObject {
-    open let test: XCTestCase
-    
+open class StepDefiner: NSObject, XCTestObservation {
+    public private(set) var test: XCTestCase
+
     required public init(test: XCTestCase) {
         self.test = test
+
+        super.init()
+
+        XCTestObservationCenter.shared.addTestObserver(self)
+    }
+
+    deinit {
+        XCTestObservationCenter.shared.removeTestObserver(self)
+    }
+
+    public func testCaseWillStart(_ testCase: XCTestCase) {
+        self.test = testCase
     }
     
     /**
