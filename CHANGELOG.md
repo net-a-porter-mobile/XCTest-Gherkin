@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.14.1
++ Fix to point step definitions at the current test instance
+
 ## 0.14.0
 + Update to Swift 4.1, and validate using cocoapods 1.5.0
 
