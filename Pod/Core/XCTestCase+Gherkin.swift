@@ -26,11 +26,8 @@ class GherkinState: NSObject, XCTestObservation {
     // Used to track step nesting i.e. steps calling out to other steps
     var currentStepDepth: Int = 0
     
-    // file from where currently executed step was invoked
-    var file: StaticString!
-
-    // line from where currently executed step was invoked
-    var line: UInt!
+    // file and line from where currently executed step was invoked
+    var currentStepLocation: (file: StaticString, line: UInt)!
 
     // When we are in an Outline block, this defines the examples to loop over
     var examples: [Example]?
@@ -56,9 +53,9 @@ class GherkinState: NSObject, XCTestObservation {
     }
 
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
-        guard let test = self.test else { return }
-        let file = "\(test.state.file!)"
-        let line = Int(test.state.line)
+        guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
+        let file = "\(currentStepLocation.file)"
+        let line = Int(currentStepLocation.line)
         guard filePath != file, lineNumber != line else { return }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
     }
@@ -324,12 +321,10 @@ extension XCTestCase {
             
             // Run the step
             state.currentStepDepth += 1
-            state.file = file
-            state.line = line
+            state.currentStepLocation = (file, line)
             step.function(matchStrings)
+            state.currentStepLocation = nil
             state.currentStepDepth -= 1
-            state.file = nil
-            state.line = nil
         }
         
         XCTContext.runActivity(named: initialExpression) { (_) in

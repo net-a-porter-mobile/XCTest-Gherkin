@@ -15,16 +15,6 @@ populate the step definitions before test runs
 open class StepDefiner: NSObject, XCTestObservation {
     public private(set) var test: XCTestCase
 
-    // file from where the step was invoked
-    public var file: StaticString {
-        return test.state.file
-    }
-
-    // line from where the step was invoked
-    public var line: UInt {
-        return test.state.line
-    }
-
     required public init(test: XCTestCase) {
         self.test = test
 
