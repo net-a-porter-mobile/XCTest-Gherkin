@@ -17,7 +17,7 @@ UITestCase - a subclass wouldn't work with both of them.
 It's nicer code IMHO to have the state as a single associated property beacuse of the grossness of setting/getting it.
 This means that anytime I want to access my extra properties I just do `state.{propertyName}`
 */
-class GherkinState {
+class GherkinState: NSObject, XCTestObservation {
     var test: XCTestCase?
     
     // The list of all steps the system knows about
@@ -26,6 +26,9 @@ class GherkinState {
     // Used to track step nesting i.e. steps calling out to other steps
     var currentStepDepth: Int = 0
     
+    // file and line from where currently executed step was invoked
+    var currentStepLocation: (file: StaticString, line: UInt)!
+
     // When we are in an Outline block, this defines the examples to loop over
     var examples: [Example]?
     
@@ -40,6 +43,23 @@ class GherkinState {
     
     fileprivate var missingStepsImplementations = [String]()
     
+    override init() {
+        super.init()
+        XCTestObservationCenter.shared.addTestObserver(self)
+    }
+
+    deinit {
+        XCTestObservationCenter.shared.removeTestObserver(self)
+    }
+
+    func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
+        guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
+        let file = "\(currentStepLocation.file)"
+        let line = Int(currentStepLocation.line)
+        guard filePath != file, lineNumber != line else { return }
+        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+    }
+
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
         let range = NSMakeRange(0, expression.count)
 
@@ -140,22 +160,22 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String) { self.performStep(expression) }
+    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String) { self.performStep(expression) }
+    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String) { self.performStep(expression) }
+    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String) { self.performStep(expression) }
+    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Supply a set of example data to the test. This must be done before calling `Outline`.
@@ -247,7 +267,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String) {
+    func performStep(_ initialExpression: String, file: StaticString = #file, line: UInt = #line) {
 
         func perform(expression: String) {
             
@@ -301,7 +321,9 @@ extension XCTestCase {
             
             // Run the step
             state.currentStepDepth += 1
+            state.currentStepLocation = (file, line)
             step.function(matchStrings)
+            state.currentStepLocation = nil
             state.currentStepDepth -= 1
         }
         
