@@ -254,7 +254,9 @@ public extension XCTestCase {
     
 }
 
-private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = []
+private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
+private var automaticScreenshotsQuality: XCTAttachment.ImageQuality = .medium
+private var automaticScreenshotsLifetime: XCTAttachment.Lifetime = .deleteOnSuccess
 
 public struct AutomaticScreenshotsBehaviour: OptionSet {
     public let rawValue: Int
@@ -262,20 +264,28 @@ public struct AutomaticScreenshotsBehaviour: OptionSet {
         self.rawValue = rawValue
     }
 
-    public static let onFailure    = AutomaticScreenshotsBehaviour(rawValue: 1 << 0)
-    public static let beforeStep   = AutomaticScreenshotsBehaviour(rawValue: 1 << 1)
-    public static let afterStep    = AutomaticScreenshotsBehaviour(rawValue: 1 << 2)
+    public static let onFailure     = AutomaticScreenshotsBehaviour(rawValue: 1 << 0)
+    public static let beforeStep    = AutomaticScreenshotsBehaviour(rawValue: 1 << 1)
+    public static let afterStep     = AutomaticScreenshotsBehaviour(rawValue: 1 << 2)
+    public static let none: AutomaticScreenshotsBehaviour = []
 }
 
 extension XCTestCase {
-    public static func setAutomaticScreenshotsBehaviour(_ behaviour: AutomaticScreenshotsBehaviour) {
+
+    /// Set behaviour for automatic screenshots (default is `.none`), their quality (default is `.medium`) and lifetime (default is `.deleteOnSuccess`)
+    public static func setAutomaticScreenshotsBehaviour(_ behaviour: AutomaticScreenshotsBehaviour,
+                                                        quality: XCTAttachment.ImageQuality = .medium,
+                                                        lifetime: XCTAttachment.Lifetime = .deleteOnSuccess) {
         automaticScreenshotsBehaviour = behaviour
+        automaticScreenshotsQuality = quality
+        automaticScreenshotsLifetime = lifetime
     }
 
     func attachScreenshot(name: String) {
         let screenshot = XCUIScreen.main.screenshot()
-        let attachment = XCTAttachment(screenshot: screenshot)
+        let attachment = XCTAttachment(screenshot: screenshot, quality: automaticScreenshotsQuality)
         attachment.name = name
+        attachment.lifetime = automaticScreenshotsLifetime
         add(attachment)
     }
 }
