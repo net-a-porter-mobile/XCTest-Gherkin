@@ -2,7 +2,10 @@
 
 ### Unreleased
 
-## 0.14.1
+# 0.14.2
++ Show error step location as well as assertion failure location (thanks @ilyapuchka)
+
+# 0.14.1
 + Fix to point step definitions at the current test instance
 
 ## 0.14.0
