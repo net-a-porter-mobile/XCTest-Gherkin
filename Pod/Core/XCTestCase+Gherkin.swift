@@ -282,6 +282,9 @@ extension XCTestCase {
     }
 
     func attachScreenshot(name: String) {
+        // if tests have no host app there is no point in making screenshots
+        guard Bundle.main.bundlePath.hasSuffix(".app") else { return }
+
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot, quality: automaticScreenshotsQuality)
         attachment.name = name
