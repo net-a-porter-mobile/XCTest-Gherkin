@@ -268,6 +268,7 @@ public struct AutomaticScreenshotsBehaviour: OptionSet {
     public static let beforeStep    = AutomaticScreenshotsBehaviour(rawValue: 1 << 1)
     public static let afterStep     = AutomaticScreenshotsBehaviour(rawValue: 1 << 2)
     public static let none: AutomaticScreenshotsBehaviour = []
+    public static let all: AutomaticScreenshotsBehaviour = [.onFailure, .beforeStep, .afterStep]
 }
 
 extension XCTestCase {
