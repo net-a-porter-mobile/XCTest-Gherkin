@@ -206,7 +206,7 @@ public extension XCTestCase {
      
      */
     func Examples(_ values: [[String]]) {
-        XCTAssert(values.count > 1, "You must pass at least one set of example data")
+        precondition(values.count > 1, "You must pass at least one set of example data")
         
         // Split out the titles and the example data
         let titles = values.first!
@@ -215,7 +215,7 @@ public extension XCTestCase {
         // TODO: Hints at a reduce, but we're going over two arrays at once . . . :|
         var accumulator = Array<Example>()
         allValues.forEach { values in
-            XCTAssertEqual(values.count, titles.count, "Each example must be the same size as the titles (was \(values.count), expected \(titles.count))")
+            precondition(values.count == titles.count, "Each example must be the same size as the titles (was \(values.count), expected \(titles.count))")
             
             // Loop over both titles and values, creating a dictionary (i.e. an Example)
             var example = Example()
@@ -238,8 +238,8 @@ public extension XCTestCase {
      */
     func Outline( _ routine: ()->() ) {
         
-        XCTAssertNotNil(state.examples, "You need to define examples before running an Outline block - use Examples(...)");
-        XCTAssert(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
+        precondition(state.examples != nil, "You need to define examples before running an Outline block - use Examples(...)");
+        precondition(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
         
         state.examples!.forEach { example in
             state.currentExample = example
