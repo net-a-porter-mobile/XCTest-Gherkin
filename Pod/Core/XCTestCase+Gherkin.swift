@@ -58,6 +58,10 @@ class GherkinState: NSObject, XCTestObservation {
         let line = Int(currentStepLocation.line)
         guard filePath != file, lineNumber != line else { return }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+
+        if automaticScreenshotsBehaviour.contains(.onFailure) {
+            test.attachScreenshot(name: "Failed \"\(currentStepName)\"")
+        }
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -250,6 +254,46 @@ public extension XCTestCase {
     
 }
 
+private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
+private var automaticScreenshotsQuality: XCTAttachment.ImageQuality = .medium
+private var automaticScreenshotsLifetime: XCTAttachment.Lifetime = .deleteOnSuccess
+
+public struct AutomaticScreenshotsBehaviour: OptionSet {
+    public let rawValue: Int
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+
+    public static let onFailure     = AutomaticScreenshotsBehaviour(rawValue: 1 << 0)
+    public static let beforeStep    = AutomaticScreenshotsBehaviour(rawValue: 1 << 1)
+    public static let afterStep     = AutomaticScreenshotsBehaviour(rawValue: 1 << 2)
+    public static let none: AutomaticScreenshotsBehaviour = []
+    public static let all: AutomaticScreenshotsBehaviour = [.onFailure, .beforeStep, .afterStep]
+}
+
+extension XCTestCase {
+
+    /// Set behaviour for automatic screenshots (default is `.none`), their quality (default is `.medium`) and lifetime (default is `.deleteOnSuccess`)
+    public static func setAutomaticScreenshotsBehaviour(_ behaviour: AutomaticScreenshotsBehaviour,
+                                                        quality: XCTAttachment.ImageQuality = .medium,
+                                                        lifetime: XCTAttachment.Lifetime = .deleteOnSuccess) {
+        automaticScreenshotsBehaviour = behaviour
+        automaticScreenshotsQuality = quality
+        automaticScreenshotsLifetime = lifetime
+    }
+
+    func attachScreenshot(name: String) {
+        // if tests have no host app there is no point in making screenshots
+        guard Bundle.main.bundlePath.hasSuffix(".app") else { return }
+
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot, quality: automaticScreenshotsQuality)
+        attachment.name = name
+        attachment.lifetime = automaticScreenshotsLifetime
+        add(attachment)
+    }
+}
+
 /**
  Put our package methods into this extension
 */
@@ -322,7 +366,13 @@ extension XCTestCase {
             // Run the step
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
+            if automaticScreenshotsBehaviour.contains(.beforeStep) {
+                attachScreenshot(name: "Before \"\(expression)\"")
+            }
             step.function(matchStrings)
+            if automaticScreenshotsBehaviour.contains(.afterStep) {
+                attachScreenshot(name: "After \"\(expression)\"")
+            }
             state.currentStepLocation = nil
             state.currentStepDepth -= 1
         }
