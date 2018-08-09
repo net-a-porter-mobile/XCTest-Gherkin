@@ -8,7 +8,7 @@
 # XCTest+Gherkin
 At net-a-porter we have traditionally done our UI testing using Cucumber and Appium, which has worked fine and did the job. However, it has a few disadvantages; it requires knowing another language (in our case Ruby), it requires more moving parts on our CI stack (cucumber, node, appium, ruby, gems etc), it ran slowly, and it always seemed to lag a bit behind the latest Xcode tech. None of these by themselves are deal breakers but put together it all adds up to make UI testing more of a chore than we think it should be.
 
-The goals of this project are to 
+The goals of this project are to
 
 1. Increase speed and reduce tech overhead of writing UI tests, with the end goal of developers sitting with testers and writing UI tests when they write unit tests. These tests would be run by our CI on each merge so they have to be fast.
 2. Not lose any of the existing test coverage. We've been using Appium for a while so we've built up a good set of feature files that cover a big chunk of functionality which we don't want to lose.
@@ -46,7 +46,7 @@ class SomeStepDefinitions : StepDefiner {
         step("A situation that I want to start at") {
             // Your setup code here
         }
-        
+
         step("This value should be ([0-9]*)") { (matches: [String]) in
             let expectedValue = matches.first!
             let someValueFromTheUI = /* However you want to get this */
@@ -82,7 +82,7 @@ func testOutlineTests() {
         [ "Alice", "20" ],
         [ "Bob", "20" ]
     )
-    
+
     Outline {
         Given("I use the example name <name>")
         Then("The age should be <age>")
@@ -137,6 +137,16 @@ step("I tap the email button") { ... }
 ```
 
 Now, "I tap the email button" doesn't match the first step.
+
+### Screenshots
+
+It's useful to have screenshots of failing UI tests, and this can be configured with the
+
+```
+XCTestCase.setAutomaticScreenshotsBehaviour([.onFailure, .beforeStep, .afterStep],
+                                            quality: .medium,
+                                            lifetime: .deleteOnSuccess)
+```  
 
 ## Installation
 

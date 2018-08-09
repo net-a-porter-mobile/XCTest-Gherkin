@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.15.0
++ Automatically take screenshots of failing tests (thanks @ilyapuchka)
+
 # 0.14.2
 + Show error step location as well as assertion failure location (thanks @ilyapuchka)
 
