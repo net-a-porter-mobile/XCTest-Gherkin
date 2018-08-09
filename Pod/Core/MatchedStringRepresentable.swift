@@ -38,3 +38,22 @@ extension Int: MatchedStringRepresentable {
         self.init(match, radix: 10)
     }
 }
+
+public protocol CodableMatchedStringRepresentable: Codable, CustomStringConvertible, MatchedStringRepresentable {}
+
+extension CodableMatchedStringRepresentable {
+    public init?(fromMatch match: String) {
+        let decoder = JSONDecoder()
+        guard let data = match.data(using: .utf8),
+            let decoded = try? decoder.decode(Self.self, from: data) else {
+                return nil
+        }
+        self = decoded
+    }
+
+    public var description: String {
+        let encoder = JSONEncoder()
+        let encoded = try! encoder.encode(self)
+        return String(data: encoded, encoding: .utf8)!
+    }
+}

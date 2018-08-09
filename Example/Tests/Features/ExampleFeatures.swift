@@ -81,4 +81,9 @@ final class ExampleFeatures: XCTestCase {
     func testStepAnchorMatching() {
         Given("This is a substring")
     }
+
+    func testCodableMatches() {
+        let person = Person(name: "Nick")
+        Given("This is Nick \(person)")
+    }
 }
