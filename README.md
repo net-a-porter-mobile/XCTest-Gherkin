@@ -72,6 +72,28 @@ step("This value should be between ([0-9]*) and ([0-9]*)") { (match1: String, ma
 }
 ```
 
+### Captured value types
+
+In step definition with captured values you can use any type conforming to `MatchedStringRepresentable`. `String`, `Double`, `Int` and `Bool` types already conform to this protocol. You can also match your custom types by conforming them to `CodableMatchedStringRepresentable`. This requires type to implement only `Codable` protocol methods, `MatchedStringRepresentable` implementation is provided by the library.
+
+```swift
+struct Person: Codable, Equatable {
+  let name: String
+}
+extension Person: CodableMatchedStringRepresentable {
+}
+
+step("User is logged in as (.+)") { (match: Person) in
+    let loggedInUser = ...
+    XCTAssertEqual(loggedInUser, match)
+}
+
+func testLoggedInUser() {
+    let nick = Person(name: "Nick")
+    Given("User is loggeed in as \(nick)")
+}
+```
+
 ### Examples and feature outlines
 If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
 
