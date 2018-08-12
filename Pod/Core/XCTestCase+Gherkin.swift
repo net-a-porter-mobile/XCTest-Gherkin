@@ -109,7 +109,7 @@ class GherkinState: NSObject, XCTestObservation {
             let suggestedSteps = self.suggestedSteps(forStep: $0)
             if !suggestedSteps.isEmpty {
                 print("-------------\nOr maybe you meant one of these steps:\n-------------")
-                suggestedSteps.forEach({ print($0) })
+                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
             }
         })
         print("-------------")

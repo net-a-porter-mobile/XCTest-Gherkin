@@ -41,20 +41,20 @@ extension String {
 }
 
 extension GherkinState {
-    func suggestedSteps(forStep expression: String) -> [String] {
-        let allSteps = steps.map({ $0.expression })
-
-        let stepsWithDistance = allSteps
-            .map({ (expression: $0, distance: $0.levenshteinDistance(expression)) })
+    func suggestedSteps(forStep expression: String) -> [Step] {
+        let stepsWithDistance = steps.sorted(by: { $0.expression < $1.expression })
+            .map({
+                (step: $0, distance: $0.expression.levenshteinDistance(expression))
+            })
             // do not suggest steps which expressions are shorter than the distance
-            .filter({ $0.expression.count > $0.distance })
+            .filter({ $0.step.expression.count > $0.distance })
 
         guard let minDistance = stepsWithDistance.min(by: { $0.distance < $1.distance })?.distance else {
             return []
         }
 
         // suggest all steps with the same distance
-        let suggestedSteps = stepsWithDistance.filter({ $0.distance == minDistance }).map({ $0.expression })
-        return suggestedSteps
+        let suggestedSteps = stepsWithDistance.filter({ $0.distance == minDistance })
+        return suggestedSteps.map({ $0.step })
     }
 }
