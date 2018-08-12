@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+## 0.16.0
++ Pass arbitary object in/out of a step (thanks @ilyapuchka)
+
 ## 0.15.0
 + Automatically take screenshots of failing tests (thanks @ilyapuchka)
 
