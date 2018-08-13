@@ -126,4 +126,18 @@ final class ExampleFeatures: XCTestCase {
             Given("I know \(person)")
         }
     }
+
+    func testDataTable() {
+        Examples(
+            ["persons"],
+            [
+                [Person(name: "Alice", age: 27, height: 170),
+                Person(name: "Bob", age: 27, height: 170)]
+            ]
+        )
+
+        Outline {
+            Given("I know these <persons>")
+        }
+    }
 }

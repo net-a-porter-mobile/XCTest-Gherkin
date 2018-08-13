@@ -57,3 +57,5 @@ extension CodableMatchedStringRepresentable {
         return String(data: encoded, encoding: .utf8)!
     }
 }
+
+extension Array: CodableMatchedStringRepresentable where Element: CodableMatchedStringRepresentable {}

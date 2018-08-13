@@ -126,5 +126,10 @@ final class SanitySteps: StepDefiner {
         step("I know (.+)") { (match: ExampleFeatures.Person) in
             XCTAssertTrue(match.name == "Alice" || match.name == "Bob")
         }
+        
+        step("I know these (.+)") { (match: [ExampleFeatures.Person]) in
+            XCTAssertTrue(match[0].name == "Alice" || match[1].name == "Bob")
+        }
+
     }
 }
