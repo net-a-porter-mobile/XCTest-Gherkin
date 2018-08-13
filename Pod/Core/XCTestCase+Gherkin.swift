@@ -255,7 +255,7 @@ extension XCTestCase {
                 // For each field in the example, go through the step expression and replace the placeholders if needed
                 example.forEach { (key, value) in
                     let needle = "<\(key)>"
-                    expression = (expression as NSString).replacingOccurrences(of: needle, with: value.description)
+                    expression = (expression as NSString).replacingOccurrences(of: needle, with: String(describing: value))
                 }
             }
             

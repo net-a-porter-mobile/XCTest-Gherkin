@@ -12,7 +12,7 @@ import XCTest
 // Yep, turns out that an example is just a dictionary :)
 
 typealias ExampleTitle = String
-typealias ExampleValue = String
+typealias ExampleValue = Any
 
 /**
  An Example represents a single row in the Examples(...) block in a test
@@ -96,6 +96,12 @@ public extension XCTestCase {
     }
 
     func exampleValue<T: ExampleStringRepresentable>(_ title: String) -> T? {
-        return state.currentExample?[title].flatMap(T.init(fromMatch:))
+        let value = state.currentExample?[title]
+        if let value = value as? T {
+            return value
+        } else if let value = value as? String {
+            return T(fromMatch: value)
+        }
+        return nil
     }
 }
