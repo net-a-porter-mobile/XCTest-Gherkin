@@ -123,12 +123,8 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
-        step("This is Nick (.+)") { (match: Person) in
-            XCTAssertEqual(match.name, "Nick")
+        step("I know (.+)") { (match: ExampleFeatures.Person) in
+            XCTAssertTrue(match.name == "Alice" || match.name == "Bob")
         }
     }
-}
-
-struct Person: CodableMatchedStringRepresentable {
-    let name: String
 }
