@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import XCTest
 
 // Yep, turns out that an example is just a dictionary :)
 
