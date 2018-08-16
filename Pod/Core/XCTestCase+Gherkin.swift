@@ -57,11 +57,10 @@ class GherkinState: NSObject, XCTestObservation {
         let file = "\(currentStepLocation.file)"
         let line = Int(currentStepLocation.line)
         guard filePath != file, lineNumber != line else { return }
-        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
-
         if automaticScreenshotsBehaviour.contains(.onFailure) {
             test.attachScreenshot()
         }
+        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
