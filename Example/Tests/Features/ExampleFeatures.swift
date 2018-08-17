@@ -138,6 +138,9 @@ final class ExampleFeatures: XCTestCase {
 
         Outline {
             Given("I know these <persons>")
+            
+            let persons: [Person] = self.exampleValue("persons")!
+            Given("I know these \(persons)")
         }
     }
 }
