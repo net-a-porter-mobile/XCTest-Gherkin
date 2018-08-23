@@ -113,7 +113,7 @@ open class StepDefiner: NSObject, XCTestObservation {
     }
 
     /**
-     Create a new step with an expression that contains one matching groups to match collection of `MatchedStringRepresentable` values
+     Create a new step with an expression that contains one matching group to match collection of `MatchedStringRepresentable` values
 
      - parameter expression: The expression to match against
      - parameter f: The step definition to be run, passing in the first capture group from the expression
@@ -125,12 +125,12 @@ open class StepDefiner: NSObject, XCTestObservation {
                 return
             }
 
-            guard let integer = T(fromMatch: match) else {
+            guard let value = T(fromMatch: match) else {
                 XCTFail("Could not convert \"\(match)\" to \(T.self)")
                 return
             }
 
-            f(integer)
+            f(value)
         }
     }
 
