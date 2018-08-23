@@ -50,14 +50,29 @@ final class ExampleFeatures: XCTestCase {
         Outline {
             Given("I use the example name <name>")
             Then("The age should be <age>")
+            Then("The height should be <height>")
         }
     }
 
+    let examplesDictionary: [[String: ExampleStringRepresentable]] = [
+        [
+            "name": "Alice",
+            "age": 20,
+            "height": 170
+        ],
+        [
+            "name": "Bob",
+            "age": 20,
+            "height": 170
+        ]
+    ]
+
     func testReusableExamples2() {
-        Examples(examples)
+        Examples(examplesDictionary)
 
         Outline {
             Given("I use the example name <name>")
+            Then("The age should be <age>")
             Then("The height should be <height>")
         }
     }
@@ -127,20 +142,4 @@ final class ExampleFeatures: XCTestCase {
         }
     }
 
-    func testDataTable() {
-        Examples(
-            ["persons"],
-            [
-                [Person(name: "Alice", age: 27, height: 170),
-                Person(name: "Bob", age: 27, height: 170)]
-            ]
-        )
-
-        Outline {
-            Given("I know these <persons>")
-            
-            let persons: [Person] = self.exampleValue("persons")!
-            Given("I know these \(persons)")
-        }
-    }
 }

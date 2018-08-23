@@ -37,6 +37,23 @@ public extension XCTestCase {
         Examples(all)
     }
 
+
+    @nonobjc
+    func Examples(_ values: [[String: ExampleStringRepresentable]]) {
+        var titles = [String]()
+        var allValues = [[ExampleStringRepresentable]](repeating: [], count: values.count)
+
+        values.enumerated().forEach { (example) in
+            example.element.sorted(by: { $0.key < $1.key }).forEach({
+                if !titles.contains($0.key) {
+                    titles.append($0.key)
+                }
+                allValues[example.offset] = allValues[example.offset] + [$0.value]
+            })
+        }
+        Examples([titles] + allValues)
+    }
+
     /**
      If you want to reuse examples between tests then you can just pass in an array of examples directly.
 
