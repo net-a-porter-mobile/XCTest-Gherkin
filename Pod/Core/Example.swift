@@ -12,7 +12,7 @@ import XCTest
 // Yep, turns out that an example is just a dictionary :)
 
 typealias ExampleTitle = String
-typealias ExampleValue = Any
+typealias ExampleValue = ExampleStringRepresentable
 
 /**
  An Example represents a single row in the Examples(...) block in a test
