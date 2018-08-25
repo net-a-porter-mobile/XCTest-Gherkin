@@ -108,10 +108,14 @@ open class NativeTestCase: XCGNativeInitializer {
 
 extension XCTestCase {
     func perform(scenario: NativeScenario, from feature: NativeFeature) {
-        let allScenarioStepsDefined = scenario.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
+        let allScenarioStepsDefined = scenario.stepDescriptions
+            .map { state.matchingGherkinStepExpressionFound($0.expression) }
+            .reduce(true) { $0 && $1 }
         var allFeatureBackgroundStepsDefined = true
         
-        if let defined = feature.background?.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
+        if let defined = feature.background?.stepDescriptions
+            .map({ state.matchingGherkinStepExpressionFound($0.expression) })
+            .reduce(true, { $0 && $1 }) {
             allFeatureBackgroundStepsDefined = defined
         }
         
@@ -121,8 +125,8 @@ extension XCTestCase {
         }
         
         if let background = feature.background {
-            background.stepDescriptions.forEach({ self.performStep($0) })
+            background.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
         }
-        scenario.stepDescriptions.forEach({ self.performStep($0) })
+        scenario.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
     }
 }

@@ -9,10 +9,11 @@
 import Foundation
 
 private let whitespace = CharacterSet.whitespaces
+typealias StepDescription = (expression: String, file: String, line: Int)
 
 class ParseState {
     var description: String?
-    var steps: [String]
+    var steps: [StepDescription]
     var exampleLines: [(lineNumber: Int, line: String)]
     var parsingBackground: Bool
 
@@ -82,7 +83,7 @@ class ParseState {
                     var step = originalStep
                     
                     example.pairs.forEach { (title, value) in
-                        step = step.replacingOccurrences(of: "<\(title)>", with: value)
+                        step.expression = step.expression.replacingOccurrences(of: "<\(title)>", with: value)
                     }
                     
                     return step

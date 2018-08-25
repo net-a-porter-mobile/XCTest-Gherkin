@@ -27,7 +27,7 @@ class GherkinState: NSObject, XCTestObservation {
     var currentStepDepth: Int = 0
     
     // file and line from where currently executed step was invoked
-    var currentStepLocation: (file: StaticString, line: UInt)!
+    var currentStepLocation: (file: String, line: Int)!
 
     // When we are in an Outline block, this defines the examples to loop over
     var examples: [Example]?
@@ -164,22 +164,22 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Given(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func When(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Then(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func And(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Supply a set of example data to the test. This must be done before calling `Outline`.
@@ -311,7 +311,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String, file: StaticString = #file, line: UInt = #line) {
+    func performStep(_ initialExpression: String, file: String = #file, line: Int = #line) {
 
         func perform(expression: String) {
             

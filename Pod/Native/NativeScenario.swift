@@ -10,7 +10,7 @@ import Foundation
 
 class NativeScenario: CustomStringConvertible {
     let scenarioDescription: String
-    let stepDescriptions: [String]
+    let stepDescriptions: [StepDescription]
     let index: Int
 
     /**
@@ -25,7 +25,7 @@ class NativeScenario: CustomStringConvertible {
         get { return strdup(self.selectorString) }
     }
     
-    required init(_ description: String, steps: [String], index: Int = 0) {
+    required init(_ description: String, steps: [StepDescription], index: Int = 0) {
         self.scenarioDescription = description
         self.stepDescriptions = steps
         self.index = index
