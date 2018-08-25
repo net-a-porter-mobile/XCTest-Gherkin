@@ -23,8 +23,8 @@ open class PageObject: NSObject {
 public class CommonPageObjectsStepDefiner: StepDefiner {
 
     /// Format for step expression that validates that PageObject is presented
-    /// Default value is "I see %@"
-    public static var isPresentedStepFormat = "I see %@"
+    /// Default value matches "I see %@", "I should see %@" or "it is %@" with optional "the" before page object name
+    public static var isPresentedStepFormat = "(?:I (?:should )?see|it is) (?:the )?%@"
 
     override public func defineSteps() {
         allSubclassesOf(PageObject.self).forEach { (subclass) in

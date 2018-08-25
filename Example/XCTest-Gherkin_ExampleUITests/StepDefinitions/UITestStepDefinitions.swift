@@ -61,14 +61,14 @@ final class ModalScreenStepDefiner: StepDefiner {
     override func defineSteps() {
 
         step("I press Close Me button") {
-            ModalScreenPageObject().pressCloseMe()
+            ModalScreen().pressCloseMe()
         }
 
     }
 
 }
 
-final class ModalScreenPageObject: PageObject {
+final class ModalScreen: PageObject {
 
     let app = XCUIApplication()
 

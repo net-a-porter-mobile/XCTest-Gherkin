@@ -23,10 +23,10 @@ class XCTest_Gherkin_ExampleUITests: XCTestCase {
         Then("I see Initial Screen")
 
         When("I press Push Me button")
-        Then("I see Modal Screen")
+        Then("I should see the Modal Screen")
 
         When("I press Close Me button")
-        Then("I see Initial Screen")
+        Then("it is Initial Screen")
     }
 
 }
