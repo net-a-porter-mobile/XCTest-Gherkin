@@ -48,10 +48,6 @@ class GherkinState: NSObject, XCTestObservation {
         XCTestObservationCenter.shared.addTestObserver(self)
     }
 
-    deinit {
-        XCTestObservationCenter.shared.removeTestObserver(self)
-    }
-
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
         guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
         let file = "\(currentStepLocation.file)"
@@ -62,6 +58,10 @@ class GherkinState: NSObject, XCTestObservation {
         if automaticScreenshotsBehaviour.contains(.onFailure) {
             test.attachScreenshot(name: "Failed \"\(currentStepName)\"")
         }
+    }
+
+    func testCaseDidFinish(_ testCase: XCTestCase) {
+        XCTestObservationCenter.shared.removeTestObserver(self)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -106,21 +106,12 @@ class GherkinState: NSObject, XCTestObservation {
     }
     
     func printTemplatedCodeForAllMissingSteps() {
-        print("Copy paste these steps in a StepDefiner subclass:")
-        print("-------------")
-        self.missingStepsImplementations.forEach({
-            print($0)
-        })
-        print("-------------")
+        self.missingStepsImplementations.printAsTemplatedCodeForAllMissingSteps()
     }
     
     func printStepDefinitions() {
         self.loadAllStepsIfNeeded()
-        print("-------------")
-        print("Defined steps")
-        print("-------------")
-        print(self.steps.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
-        print("-------------")
+        self.steps.printStepsDefinitions()
     }
     
     func loadAllStepsIfNeeded() {
@@ -130,7 +121,10 @@ class GherkinState: NSObject, XCTestObservation {
         allSubclassesOf(StepDefiner.self).forEach { subclass in
             subclass.init(test: self.test!).defineSteps()
         }
-        
+
+        UnusedStepsTracker.shared().setSteps(self.steps.map { String(reflecting: $0) })
+        UnusedStepsTracker.shared().printUnusedSteps = { $0.printAsUnusedSteps() }
+
         assert(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
 }
@@ -339,7 +333,8 @@ extension XCTestCase {
                 }
                 fatalError("Failed to find a match for a step: \(expression)")
             }
-            
+            UnusedStepsTracker.shared().performedStep(String(reflecting: step))
+
             // Covert them to strings to pass back into the step function
             // TODO: This should really only need to be a map function :(
             var matchStrings = Array<String>()

@@ -58,3 +58,31 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
 func ==(lhs: Step, rhs: Step) -> Bool {
     return lhs.expression == rhs.expression
 }
+
+extension Collection where Element == Step {
+    func printStepsDefinitions() {
+        print("-------------")
+        print("Defined steps")
+        print("-------------")
+        print(self.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
+        print("-------------")
+    }
+}
+
+extension Collection where Element == String {
+    func printAsTemplatedCodeForAllMissingSteps() {
+        print("Copy paste these steps in a StepDefiner subclass:")
+        print("-------------")
+        self.forEach({ print($0) })
+        print("-------------")
+    }
+
+    func printAsUnusedSteps() {
+        print("-------------")
+        print("Unused steps")
+        print("-------------")
+        print(self.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"));
+        print("-------------")
+    }
+}
+

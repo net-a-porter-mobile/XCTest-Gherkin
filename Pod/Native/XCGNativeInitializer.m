@@ -6,11 +6,14 @@
 //
 
 #import "XCGNativeInitializer.h"
+#import "UnusedStepsTracker.h"
 
 @implementation XCGNativeInitializer
 
 + (void)initialize {
     [super initialize];
+    // No matter what XCGNativeInitializer is always a principal class, so we use it to startup observer
+    [[UnusedStepsTracker shared] start];
 
     // We don't want to process any features for this class.
     if (self == [XCGNativeInitializer class]) {

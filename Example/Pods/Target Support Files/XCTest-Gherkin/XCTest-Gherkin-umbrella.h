@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "UnusedStepsTracker.h"
 #import "XCGNativeInitializer.h"
 #import "XCTest_Gherkin.h"
 
