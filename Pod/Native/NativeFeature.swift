@@ -9,16 +9,16 @@
 import Foundation
 
 private struct FileTags {
-    static var Feature: [String] { return localized(expression: "feature") }
-    static var Background: [String] { return localized(expression: "background") }
-    static var Scenario: [String] { return localized(expression: "scenario") }
-    static var ScenarioOutline: [String] { return localized(expression: "scenario outline") }
-    static var Examples: [String] { return localized(expression: "examples") }
+    static var Feature: [String] { return localized(expression: "feature", default: "Feature:") }
+    static var Background: [String] { return localized(expression: "background", default: "Background:") }
+    static var Scenario: [String] { return localized(expression: "scenario", default: "Scenario:") }
+    static var ScenarioOutline: [String] { return localized(expression: "scenario outline", default: "Scenario Outline:") }
+    static var Examples: [String] { return localized(expression: "examples", default: "Examples:") }
     static let ExampleLine: [String] = ["|"]
-    static var Given: [String] { return localized(expression: "given") }
-    static var When: [String] { return localized(expression: "when") }
-    static var Then: [String] { return localized(expression: "then") }
-    static var And: [String] { return localized(expression: "and") }
+    static var Given: [String] { return localized(expression: "given", default: "Given ") }
+    static var When: [String] { return localized(expression: "when", default: "When ") }
+    static var Then: [String] { return localized(expression: "then", default: "Then ") }
+    static var And: [String] { return localized(expression: "and", default: "And ") }
 
     static var vacabulary: [String: [String: [String]]]? = {
         let bundle = Bundle(for: NativeFeature.self)
@@ -40,16 +40,16 @@ private struct FileTags {
                     } else {
                         return variant
                     }
-                })
+                }).sorted(by: >)
             }
             dict[language] = dialect
         })
         return dict
     }()
 
-    static func localized(expression: String) -> [String] {
+    static func localized(expression: String, default: String) -> [String] {
         let localised = vacabulary?[ParseState.language]?[expression]
-        return localised ?? [expression]
+        return localised ?? [`default`]
     }
 }
 

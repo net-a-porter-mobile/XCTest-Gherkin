@@ -11,8 +11,12 @@ import XCTest_Gherkin
 
 final class ExampleNativeLocalisationTest: XCTestCase {
     
-    func testLocalisedNativeExampleWithFeatureRunner() {
+    func testLocalisedFeature() {
         NativeRunner.runFeature(featureFile: "NativeFeatures/native_example_simple_localised.feature", testCase: self)
     }
-    
+
+    func testUnknownLocalisationUsesDefaultKeywords() {
+        NativeRunner.runFeature(featureFile: "NativeFeatures/native_example_simple_localised_unknown.feature", testCase: self)
+    }
+
 }
