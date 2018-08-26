@@ -19,4 +19,8 @@ final class ExampleNativeLocalisationTest: XCTestCase {
         NativeRunner.runFeature(featureFile: "NativeFeatures/native_example_simple_localised_unknown.feature", testCase: self)
     }
 
+    func testAvailableLocalisations() {
+        XCTAssertNotNil(NativeTestCase.availableLanguages)
+    }
+
 }

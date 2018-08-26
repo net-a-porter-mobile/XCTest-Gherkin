@@ -53,6 +53,13 @@ private struct FileTags {
     }
 }
 
+public extension NativeTestCase {
+    /// Returns all available localisations of keywords
+    static var availableLanguages: [String: [String: [String]]]? {
+        return FileTags.vacabulary
+    }
+}
+
 class NativeFeature: CustomStringConvertible {
     let featureDescription: String
     let scenarios: [NativeScenario]
