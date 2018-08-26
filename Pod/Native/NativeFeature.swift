@@ -12,7 +12,7 @@ private struct FileTags {
     static var Feature: [String] { return localized(expression: "feature", default: "Feature:") }
     static var Background: [String] { return localized(expression: "background", default: "Background:") }
     static var Scenario: [String] { return localized(expression: "scenario", default: "Scenario:") }
-    static var ScenarioOutline: [String] { return localized(expression: "scenario outline", default: "Scenario Outline:") }
+    static var ScenarioOutline: [String] { return localized(expression: "scenarioOutline", default: "Scenario Outline:") }
     static var Examples: [String] { return localized(expression: "examples", default: "Examples:") }
     static let ExampleLine: [String] = ["|"]
     static var Given: [String] { return localized(expression: "given", default: "Given ") }
@@ -98,7 +98,7 @@ extension NativeFeature {
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
         let (_, suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
-        guard let featureDescription = suffixOption?.trimmingColon else { return nil }
+        guard let featureDescription = suffixOption else { return nil }
         
         let feature = NativeFeature.parseLines(lines)
         
@@ -127,16 +127,15 @@ extension NativeFeature {
                 // What kind of line is it?
                 if let (linePrefix, lineSuffix) = line.lineComponents() {
                     if FileTags.Background.contains(linePrefix) {
-                        state = ParseState(description: lineSuffix.trimmingColon, parsingBackground: true)
-                    } else if FileTags.Scenario.contains(linePrefix) {
-                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix.trimmingColon)
+                        state = ParseState(description: lineSuffix, parsingBackground: true)
+                    } else if FileTags.Scenario.contains(linePrefix)
+                        || FileTags.ScenarioOutline.contains(linePrefix) {
+                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
                     } else if FileTags.Given.contains(linePrefix)
                         || FileTags.When.contains(linePrefix)
                         || FileTags.Then.contains(linePrefix)
                         || FileTags.And.contains(linePrefix) {
                         state.steps.append(lineSuffix)
-                    } else if FileTags.ScenarioOutline.contains(linePrefix) {
-                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix.trimmingColon)
                     } else if FileTags.Examples.contains(linePrefix) {
                         // Prep the examples array for examples
                         state.exampleLines = []
@@ -165,10 +164,6 @@ extension NativeFeature {
 }
 
 extension String {
-
-    var trimmingColon: String {
-        return self.trimmingCharacters(in: CharacterSet(charactersIn: ":").union(.whitespaces))
-    }
 
     func componentsWithPrefix(_ prefixVariants: [String]) -> (String, String?) {
         for prefixVariant in prefixVariants {
