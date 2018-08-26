@@ -131,7 +131,7 @@ class GherkinState: NSObject, XCTestObservation {
             subclass.init(test: self.test!).defineSteps()
         }
         
-        assert(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
+        precondition(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
 }
 
@@ -337,7 +337,7 @@ extension XCTestCase {
                     self.state.printTemplatedCodeForAllMissingSteps()
                     self.state.resetMissingSteps()
                 }
-                fatalError("Failed to find a match for a step: \(expression)")
+                preconditionFailure("Failed to find a match for a step: \(expression)")
             }
             
             // Covert them to strings to pass back into the step function
@@ -390,4 +390,9 @@ extension XCTestCase {
     fileprivate func currentStepDepthString() -> String {
         return repeatElement(" ", count: state.currentStepDepth).joined(separator: "")
     }
+}
+
+func requireNotNil<T>(_ expr: @autoclosure () -> T?, _ message: String) -> T {
+    guard let value = expr() else { preconditionFailure(message) }
+    return value
 }
