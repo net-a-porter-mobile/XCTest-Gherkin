@@ -210,6 +210,7 @@ public extension XCTestCase {
      
      */
     func Examples(_ values: [[String]]) {
+        precondition(state.examples == nil, "You can't use several Examples one after each other")
         precondition(values.count > 1, "You must pass at least one set of example data")
         
         // Split out the titles and the example data
@@ -244,14 +245,28 @@ public extension XCTestCase {
         
         precondition(state.examples != nil, "You need to define examples before running an Outline block - use Examples(...)");
         precondition(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
-        
+
         state.examples!.forEach { example in
             state.currentExample = example
             routine()
             state.currentExample = nil
         }
+        state.examples = nil
     }
-    
+
+    func Outline(_ routine: ()->(), Examples titles: [String], _ allValues: [String]...) {
+        Outline(routine, Examples: [titles] + allValues)
+    }
+
+    func Outline(_ routine: ()->(), _ allValues: () -> [[String]]) {
+        Outline(routine, Examples: allValues())
+    }
+
+    func Outline(_ routine: ()->(), Examples allValues: [[String]]) {
+        Examples(allValues)
+        Outline(routine)
+    }
+
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none

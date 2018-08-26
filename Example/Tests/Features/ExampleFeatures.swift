@@ -53,6 +53,31 @@ final class ExampleFeatures: XCTestCase {
         }
     }
 
+    func testExamplesAfterOutline() {
+        // Examples can be passed after Outline via trailing closure
+
+        // swiftlint:disable multiple_closures_with_trailing_closure
+        Outline({
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }) {[
+            [ "name",   "age", "height" ],
+            [  "Alice",  "20",  "170"   ],
+            [  "Bob",    "20",  "170"   ]
+            ]}
+        // swiftlint:enable multiple_closures_with_trailing_closure
+
+        // or via explicit Examples parameter
+        Outline({
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }, Examples:
+            [ "name",   "age", "height" ],
+           [  "Alice",  "20",  "170"   ],
+           [  "Bob",    "20",  "170"   ]
+        )
+    }
+
     func testReusableExamples2() {
         Examples(examples)
         
