@@ -127,19 +127,20 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(match.name, "Nick")
         }
 
-        step("I'm logged in as (?<aKnownUser>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
-            XCTAssertNotNil(match["aKnownUser"])
-        }
+        if #available(iOS 11.0, OSX 10.13, *) {
+            step("I'm logged in as (?<aKnownUser>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
+                XCTAssertNotNil(match["aKnownUser"])
+            }
 
-        step("I'm logged in as known (?<user>.+)") { (match: [String: Person]) in
-            let person = match["user"]!
-            XCTAssertEqual(person.name, "Nick")
-        }
+            step("I'm logged in as known (?<user>.+)") { (match: [String: Person]) in
+                let person = match["user"]!
+                XCTAssertEqual(person.name, "Nick")
+            }
 
-        step("I use the example (?<name>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
-            XCTAssertNotNil(match["name"])
+            step("I use the example (?<name>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
+                XCTAssertNotNil(match["name"])
+            }
         }
-
     }
 }
 

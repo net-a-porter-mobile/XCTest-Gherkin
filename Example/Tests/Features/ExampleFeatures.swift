@@ -87,19 +87,25 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testStepWithNamedMatch() {
-        Given("I'm logged in as Bob")
+        if #available(iOS 11.0, OSX 10.13, *) {
+            Given("I'm logged in as Bob")
+        }
     }
 
     func testStepWithNamedCodableMatch() {
-        Given("I'm logged in as known \(Person(name: "Nick"))")
+        if #available(iOS 11.0, OSX 10.13, *) {
+            Given("I'm logged in as known \(Person(name: "Nick"))")
+        }
     }
 
     func testStepWithNamedMatchesAnExamples() {
-        Examples(examples)
+        if #available(iOS 11.0, OSX 10.13, *) {
+            Examples(examples)
 
-        Outline {
-            Given("I use the example <name>")
-            Then("The height should be <height>")
+            Outline {
+                Given("I use the example <name>")
+                Then("The height should be <height>")
+            }
         }
     }
 }
