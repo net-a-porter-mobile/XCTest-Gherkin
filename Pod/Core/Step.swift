@@ -45,7 +45,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
     }
 
     func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepFunctionParameters, stepDescription: String) {
-        if #available(iOS 11.0, *) {
+        if #available(iOS 11.0, OSX 10.13, *) {
             let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+\\))")
             let namedGroups = namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count))
             if !namedGroups.isEmpty {
