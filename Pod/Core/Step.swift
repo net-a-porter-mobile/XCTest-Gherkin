@@ -44,27 +44,22 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
     }
 
-    func perform(withMatches match: NSTextCheckingResult, in expression: String, depth: Int) {
+    func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepFunctionParameters, stepDescription: String) {
         if #available(iOS 11.0, *) {
             let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+\\))")
             let namedGroups = namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count))
             if !namedGroups.isEmpty {
-                var debugExpression = self.expression
+                var debugDescription = self.expression
                 let matches: [String: String] = .init(uniqueKeysWithValues: namedGroups.map { (namedGroupMatch) -> (String, String) in
                     let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
-                    debugExpression = (debugExpression as NSString).replacingCharacters(in: namedGroupMatch.range(at: 1), with: groupName.humanReadableString.lowercased())
+                    debugDescription = (debugDescription as NSString).replacingCharacters(in: namedGroupMatch.range(at: 1), with: groupName.humanReadableString.lowercased())
 
                     let range = match.range(withName: groupName)
                     let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
                     return (groupName, string)
                 })
 
-                // Debug the step name
-                let depthString = repeatElement(" ", count: depth).joined(separator: "")
-                NSLog("step \(depthString)\(debugExpression)")
-
-                function(matches)
-                return
+                return (matches, debugDescription)
             }
         }
 
@@ -72,14 +67,9 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         let matchStrings = (1..<match.numberOfRanges).map {
             (expression as NSString).substring(with: match.range(at: $0))
         }
-
-        // Debug the step name
-        let depthString = repeatElement(" ", count: depth).joined(separator: "")
-        NSLog("step \(depthString)\(expression)")
-
-        function(matchStrings)
+        return (matchStrings, expression)
     }
-    
+
     var hashValue: Int {
         get {
             return expression.hashValue
