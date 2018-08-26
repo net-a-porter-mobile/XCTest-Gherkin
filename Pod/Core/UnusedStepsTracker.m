@@ -17,6 +17,11 @@
 
 @implementation UnusedStepsTracker
 
++ (void)initialize {
+    [super initialize];
+    [UnusedStepsTracker shared];
+}
+
 + (instancetype)shared {
     static UnusedStepsTracker* shared = nil;
     static dispatch_once_t onceToken;
@@ -25,12 +30,9 @@
         shared.allSteps = [NSMutableSet new];
         shared.executedSteps = [NSMutableSet new];
         shared.bundleCounter = 0;
+        [[XCTestObservationCenter sharedTestObservationCenter] addTestObserver: shared];
     });
     return shared;
-}
-
--(void)start {
-    [[XCTestObservationCenter sharedTestObservationCenter] addTestObserver: self];
 }
 
 - (NSArray<NSString *> *)steps {
