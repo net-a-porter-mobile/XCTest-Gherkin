@@ -83,7 +83,23 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testCodableMatches() {
-        let person = Person(name: "Nick")
-        Given("This is Nick \(person)")
+        Given("I'm logged in as \(Person(name: "Nick"))")
+    }
+
+    func testStepWithNamedMatch() {
+        Given("I'm logged in as Bob")
+    }
+
+    func testStepWithNamedCodableMatch() {
+        Given("I'm logged in as known \(Person(name: "Nick"))")
+    }
+
+    func testStepWithNamedMatchesAnExamples() {
+        Examples(examples)
+
+        Outline {
+            Given("I use the example <name>")
+            Then("The height should be <height>")
+        }
     }
 }

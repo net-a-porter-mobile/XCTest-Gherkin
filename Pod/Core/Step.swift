@@ -8,13 +8,18 @@
 
 import Foundation
 
+protocol StepFunctionParameters {}
+
+extension Array: StepFunctionParameters where Element == String {}
+extension Dictionary: StepFunctionParameters where Key == String, Value == String {}
+
 /**
  Represents a single step definition - create it with the expression and the 
  test to run as a block.
 */
 class Step: Hashable, Equatable, CustomDebugStringConvertible {
     let expression: String
-    let function: ([String])->()
+    let function: (StepFunctionParameters)->()
     
     fileprivate let file: String
     fileprivate let line: Int
@@ -29,7 +34,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
      The `file` and `line` parameters are for debugging; they should show where the step was
      initially defined.
      */
-    init(_ expression: String, file: String, line: Int, _ function: @escaping ([String])->() ) {
+    init(_ expression: String, file: String, line: Int, _ function: @escaping (StepFunctionParameters)->() ) {
         self.expression = expression
         self.function = function
         self.file = file
@@ -37,6 +42,42 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         
         // Just throw here; the test will fail :)
         self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
+    }
+
+    func perform(withMatches match: NSTextCheckingResult, in expression: String, depth: Int) {
+        if #available(iOS 11.0, *) {
+            let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+\\))")
+            let namedGroups = namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count))
+            if !namedGroups.isEmpty {
+                var debugExpression = self.expression
+                let matches: [String: String] = .init(uniqueKeysWithValues: namedGroups.map { (namedGroupMatch) -> (String, String) in
+                    let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
+                    debugExpression = (debugExpression as NSString).replacingCharacters(in: namedGroupMatch.range(at: 1), with: groupName.humanReadableString.lowercased())
+
+                    let range = match.range(withName: groupName)
+                    let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
+                    return (groupName, string)
+                })
+
+                // Debug the step name
+                let depthString = repeatElement(" ", count: depth).joined(separator: "")
+                NSLog("step \(depthString)\(debugExpression)")
+
+                function(matches)
+                return
+            }
+        }
+
+        // Covert them to strings to pass back into the step function
+        let matchStrings = (1..<match.numberOfRanges).map {
+            (expression as NSString).substring(with: match.range(at: $0))
+        }
+
+        // Debug the step name
+        let depthString = repeatElement(" ", count: depth).joined(separator: "")
+        NSLog("step \(depthString)\(expression)")
+
+        function(matchStrings)
     }
     
     var hashValue: Int {

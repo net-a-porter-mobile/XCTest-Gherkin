@@ -50,7 +50,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      
      */
     open func step(_ expression: String, file: String = #file, line: Int = #line, f0: @escaping ()->()) {
-        self.test.addStep(expression, file: file, line: line) { (ignored: [String]) in f0() }
+        self.test.addStep(expression, file: file, line: line) { (_: [String]) in f0() }
     }
 
     /**
@@ -83,7 +83,24 @@ open class StepDefiner: NSObject, XCTestObservation {
             f(converted)
         }
     }
-    
+
+    open func step(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping ([String: MatchedStringRepresentable])->()) {
+        self.test.addStep(expression, file: file, line: line) { matches in
+            f1(matches)
+        }
+    }
+
+    open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping ([String: T])->()) {
+        self.test.addStep(expression, file: file, line: line) { matches in
+            f1(matches.mapValues({ match in
+                guard let convert = T(fromMatch: match) else {
+                    preconditionFailure("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
+                }
+                return convert
+            }))
+        }
+    }
+
     /**
      If you only want to match the first parameter, this will help make your code nicer
      

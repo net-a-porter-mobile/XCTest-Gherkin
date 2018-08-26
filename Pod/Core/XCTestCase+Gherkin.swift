@@ -303,11 +303,23 @@ extension XCTestCase {
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(_ expression: String, file: String, line: Int, _ function: @escaping ([String])->()) {
+    func addStep(_ expression: String, file: String, line: Int, functionWithUnnamedMatchs function: @escaping ([String])->()) {
+        self.addStep(expression, file: file, line: line, function: { matches in
+            function(matches as! [String])
+        })
+    }
+
+    func addStep(_ expression: String, file: String, line: Int, functionWithNamedMatches function: @escaping ([String: String])->()) {
+        self.addStep(expression, file: file, line: line, function: { matches in
+            function(matches as! [String: String])
+        })
+    }
+
+    private func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepFunctionParameters)->()) {
         let step = Step(expression, file: file, line: line, function)
         state.steps.insert(step);
     }
-    
+
     /**
      Finds and performs a step test based on expression
      */
@@ -340,15 +352,6 @@ extension XCTestCase {
                 fatalError("Failed to find a match for a step: \(expression)")
             }
             
-            // Covert them to strings to pass back into the step function
-            // TODO: This should really only need to be a map function :(
-            var matchStrings = Array<String>()
-            for i in 1..<match.numberOfRanges {
-                let range = match.range(at: i)
-                let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
-                matchStrings.append(string)
-            }
-            
             // If this the first step, debug the test name as well
             if state.currentStepDepth == 0 {
                 let rawName = String(describing: self.invocation!.selector)
@@ -359,8 +362,6 @@ extension XCTestCase {
                 }
             }
             
-            // Debug the step name
-            NSLog("step \(currentStepDepthString())\(expression)")
             state.currentStepName = expression
             
             // Run the step
@@ -369,7 +370,7 @@ extension XCTestCase {
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
                 attachScreenshot(name: "Before \"\(expression)\"")
             }
-            step.function(matchStrings)
+            step.perform(withMatches: match, in: expression, depth: state.currentStepDepth)
             if automaticScreenshotsBehaviour.contains(.afterStep) {
                 attachScreenshot(name: "After \"\(expression)\"")
             }
@@ -382,12 +383,4 @@ extension XCTestCase {
         }
     }
     
-    /**
-     Converts the current step depth into a string to use for padding
-     
-     - returns: A String of spaces equal to the current step depth
-     */
-    fileprivate func currentStepDepthString() -> String {
-        return repeatElement(" ", count: state.currentStepDepth).joined(separator: "")
-    }
 }

@@ -123,9 +123,23 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
-        step("This is Nick (.+)") { (match: Person) in
+        step("I'm logged in as (?!known)(.+)") { (match: Person) in
             XCTAssertEqual(match.name, "Nick")
         }
+
+        step("I'm logged in as (?<aKnownUser>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
+            XCTAssertNotNil(match["aKnownUser"])
+        }
+
+        step("I'm logged in as known (?<user>.+)") { (match: [String: Person]) in
+            let person = match["user"]!
+            XCTAssertEqual(person.name, "Nick")
+        }
+
+        step("I use the example (?<name>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
+            XCTAssertNotNil(match["name"])
+        }
+
     }
 }
 
