@@ -30,6 +30,7 @@
 		951EBB68774F5A1E4BCE21313399489E /* XCTest-Gherkin-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 181150396740E10AC903C43EBBEC2FCB /* XCTest-Gherkin-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		991AF21699C2475520690C878D3BEA00 /* XCGNativeInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DDFB8A35AEB0A7A16C3E61EB882D8ED /* XCGNativeInitializer.m */; };
 		B0574E2F870C543589955239CC3A79BD /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F6240B366BBDD38ACD9F7015FB6F59F /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B5F7CFBB21320EE0001643BD /* gherkin-languages.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = B5F7CFB72131FB66001643BD /* gherkin-languages.json */; };
 		C7D930F0B76BE31308D68A737CACA2E2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D8173434FE00016739EAFDEFEA9313 /* Foundation.framework */; };
 		D4EFDA83D1AAC20D3BA64C4163F5ED0E /* NativeFeatureParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2068A8941D40E26ED01C43985008C844 /* NativeFeatureParser.swift */; };
 		DC1107F0E6C0DAD2336CA3DDE3EC60C7 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 622F8FD1EA4AE7DF9F918C398505DCFB /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,12 +64,25 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B5F7CFBA21320EDC001643BD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+				B5F7CFBB21320EE0001643BD /* gherkin-languages.json in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		009C015931E34FEEEFFB616BD02E58E3 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02DED36F4F2128F299FC1210E93E55C5 /* Pods-XCTest-Gherkin_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-XCTest-Gherkin_Example.release.xcconfig"; sourceTree = "<group>"; };
 		089764E5C9920FF1472FF5CDA8EF2833 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-frameworks.sh"; sourceTree = "<group>"; };
-		0A6DB05208FB19CD3399B2F5F7E07937 /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_XCTest_Gherkin_Example.framework; path = "Pods-XCTest-Gherkin_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		0C7E221CE3B57EF7145BF7F82BBC9555 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework; path = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A6DB05208FB19CD3399B2F5F7E07937 /* Pods_XCTest_Gherkin_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0C7E221CE3B57EF7145BF7F82BBC9555 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CF2D5010B98634391D430BD81939A76 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-resources.sh"; sourceTree = "<group>"; };
 		10F05C7AF6D9F9E4433D88246372DC39 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		125A874CE1018421996F5D81E661C2F0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -114,6 +128,7 @@
 		A7ED203950C11298DC8DCE3A2B917871 /* NativeRunner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NativeRunner.swift; path = Pod/Native/NativeRunner.swift; sourceTree = "<group>"; };
 		A8EE762885E96812934824CB46F9CB0B /* XCGNativeInitializer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCGNativeInitializer.h; path = Pod/Native/XCGNativeInitializer.h; sourceTree = "<group>"; };
 		AC61C9287EE2820EC11CE3CAE86CF750 /* XCTest-Gherkin-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "XCTest-Gherkin-dummy.m"; sourceTree = "<group>"; };
+		B5F7CFB72131FB66001643BD /* gherkin-languages.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = "gherkin-languages.json"; path = "Pod/Core/gherkin-languages.json"; sourceTree = "<group>"; };
 		C1932CEFC9A084B9139E289204C34AE2 /* XCTest-Gherkin.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "XCTest-Gherkin.modulemap"; sourceTree = "<group>"; };
 		C1C2C2C603007185EB49570BB95906F1 /* MatchedStringRepresentable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MatchedStringRepresentable.swift; path = Pod/Core/MatchedStringRepresentable.swift; sourceTree = "<group>"; };
 		C6B18CBA5206666F6C6E823548F72E2B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -307,6 +322,7 @@
 		A62016476526E34BCF96109523A785F1 /* XCTest-Gherkin */ = {
 			isa = PBXGroup;
 			children = (
+				B5F7CFB72131FB66001643BD /* gherkin-languages.json */,
 				6E68032C40B363844DD81F3AEF93C34A /* Core */,
 				D7AA1CC7CFC3420F78AD0ABCF6ED9002 /* Native */,
 				F3CC3A4133D17E7F529BEA74495AC0C1 /* Pod */,
@@ -444,6 +460,7 @@
 				1B4ED3E37028EA8C55E4A756A9F1C084 /* Sources */,
 				96814235FC0E1531F3BCE2E3C2D2E530 /* Frameworks */,
 				1442AF949A6191B017838FD6D6C61E2B /* Headers */,
+				B5F7CFBA21320EDC001643BD /* CopyFiles */,
 			);
 			buildRules = (
 			);

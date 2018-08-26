@@ -19,6 +19,10 @@ final class SanitySteps: StepDefiner {
         step("I have a working Gherkin environment") {
             XCTAssertTrue(true)
         }
+
+        step("Я имею рабочее окружение Gherkin") {
+            XCTAssertTrue(true)
+        }
         
         step("I have duplicate steps at the start of every scenario") {
             XCTAssertTrue(true)
@@ -33,7 +37,11 @@ final class SanitySteps: StepDefiner {
         step("This test should not ([a-zA-Z0-9]*)") { (matches: [String]) in
             XCTAssertEqual(matches.first, "fail")
         }
-        
+
+        step("этот тест не должен завершиться ([\\w0-9]*)") { (matches: [String]) in
+            XCTAssertEqual(matches.first, "ошибкой")
+        }
+
         // Example of a nested step definition
         step("This step should call another step") {
             self.step("This is another step")

@@ -9,16 +9,48 @@
 import Foundation
 
 private struct FileTags {
-    static let Feature = "Feature:"
-    static let Background = "Background:"
-    static let Scenario = "Scenario:"
-    static let Outline = "Scenario Outline:"
-    static let Examples = "Examples:"
-    static let ExampleLine = "|"
-    static let Given = "Given"
-    static let When = "When"
-    static let Then = "Then"
-    static let And = "And"
+    static var Feature: [String] { return localized(expression: "feature") }
+    static var Background: [String] { return localized(expression: "background") }
+    static var Scenario: [String] { return localized(expression: "scenario") }
+    static var ScenarioOutline: [String] { return localized(expression: "scenario outline") }
+    static var Examples: [String] { return localized(expression: "examples") }
+    static let ExampleLine: [String] = ["|"]
+    static var Given: [String] { return localized(expression: "given") }
+    static var When: [String] { return localized(expression: "when") }
+    static var Then: [String] { return localized(expression: "then") }
+    static var And: [String] { return localized(expression: "and") }
+
+    static var vacabulary: [String: [String: [String]]]? = {
+        let bundle = Bundle(for: NativeFeature.self)
+        guard let path = bundle.path(forResource: "gherkin-languages", ofType: ".json"),
+            let data = FileManager.default.contents(atPath: path),
+            let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: [String: [String]]]
+            else {
+                return nil
+        }
+        var dict = [String: [String: [String]]]()
+        json.forEach({ args in
+            let (language, values) = args
+            var dialect = [String: [String]]()
+            values.forEach { args in
+                var (expression, variants) = args
+                dialect[expression] = variants.map({ variant in
+                    if ["feature", "background", "scenario", "scenarioOutline", "examples"].contains(expression) {
+                        return variant + ":"
+                    } else {
+                        return variant
+                    }
+                })
+            }
+            dict[language] = dialect
+        })
+        return dict
+    }()
+
+    static func localized(expression: String) -> [String] {
+        let localised = vacabulary?[ParseState.language]?[expression]
+        return localised ?? [expression]
+    }
 }
 
 class NativeFeature: CustomStringConvertible {
@@ -53,7 +85,11 @@ extension NativeFeature {
         let contentsFixedWindowsNewLineCharacters = contents.replacingOccurrences(of: "\r\n", with: "\n")
         
         // Get all the lines in the file
-        var lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n").map { $0.trimmingCharacters(in: whitespace) }
+        var lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+
+        let (_, language) = lines.first!.componentsWithPrefix("# language:")
+        ParseState.language = language ?? "en"
 
         // Filter comments (#) and tags (@), also filter white lines
         lines = lines.filter { $0.first != "#" &&  $0.first != "@" && $0.count > 0}
@@ -62,7 +98,7 @@ extension NativeFeature {
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
         let (_, suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
-        guard let featureDescription = suffixOption else { return nil }
+        guard let featureDescription = suffixOption?.trimmingColon else { return nil }
         
         let feature = NativeFeature.parseLines(lines)
         
@@ -90,36 +126,28 @@ extension NativeFeature {
             if !line.isEmpty {
                 // What kind of line is it?
                 if let (linePrefix, lineSuffix) = line.lineComponents() {
-                    
-                    switch(linePrefix) {
-                        
-                    case FileTags.Background :
-                        state = ParseState(description: lineSuffix, parsingBackground: true)
-                        
-                    case FileTags.Scenario :
-                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
-                        
-                    case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
+                    if FileTags.Background.contains(linePrefix) {
+                        state = ParseState(description: lineSuffix.trimmingColon, parsingBackground: true)
+                    } else if FileTags.Scenario.contains(linePrefix) {
+                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix.trimmingColon)
+                    } else if FileTags.Given.contains(linePrefix)
+                        || FileTags.When.contains(linePrefix)
+                        || FileTags.Then.contains(linePrefix)
+                        || FileTags.And.contains(linePrefix) {
                         state.steps.append(lineSuffix)
-                        
-                    case FileTags.Outline:
-                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
-                        
-                    case FileTags.Examples:
+                    } else if FileTags.ScenarioOutline.contains(linePrefix) {
+                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix.trimmingColon)
+                    } else if FileTags.Examples.contains(linePrefix) {
                         // Prep the examples array for examples
                         state.exampleLines = []
-
-                    case FileTags.ExampleLine:
+                    } else if FileTags.ExampleLine.contains(linePrefix) {
                         state.exampleLines.append( (lineIndex+1, lineSuffix) )
-                        
-                    case FileTags.Feature:
-                        break
-                        
-                    default:
+                    } else if FileTags.Feature.contains(linePrefix) {
+                        continue
+                    } else {
                         // Just ignore lines we don't recognise yet
-                        break
+                        continue
                     }
-                    
                 }
             }
 
@@ -136,22 +164,34 @@ extension NativeFeature {
 
 }
 
-private let whitespace = CharacterSet.whitespaces
-
 extension String {
-    
+
+    var trimmingColon: String {
+        return self.trimmingCharacters(in: CharacterSet(charactersIn: ":").union(.whitespaces))
+    }
+
+    func componentsWithPrefix(_ prefixVariants: [String]) -> (String, String?) {
+        for prefixVariant in prefixVariants {
+            let (prefix, suffix) = componentsWithPrefix(prefixVariant)
+            if let suffix = suffix {
+                return (prefix, suffix)
+            }
+        }
+        return (self, nil)
+    }
+
     func componentsWithPrefix(_ prefix: String) -> (String, String?) {
         guard self.hasPrefix(prefix) else { return (self, nil) }
         
         let index = (prefix as NSString).length
-        let suffix = (self as NSString).substring(from: index).trimmingCharacters(in: whitespace)
+        let suffix = (self as NSString).substring(from: index).trimmingCharacters(in: .whitespaces)
         return (prefix, suffix)
     }
     
     func lineComponents() -> (String, String)? {
-        let prefixes = [ FileTags.Scenario, FileTags.Background, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.Outline, FileTags.Examples, FileTags.ExampleLine ]
+        let prefixes = [ FileTags.Feature, FileTags.Scenario, FileTags.Background, FileTags.Given, FileTags.When, FileTags.Then, FileTags.And, FileTags.ScenarioOutline, FileTags.Examples, FileTags.ExampleLine ]
         
-        func first(_ a: [String]) -> (String, String)? {
+        func first(_ a: [[String]]) -> (String, String)? {
             if a.count == 0 { return nil }
             let string = a.first!
             let (prefix, suffix) = self.componentsWithPrefix(string)
