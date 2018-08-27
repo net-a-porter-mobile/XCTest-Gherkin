@@ -15,7 +15,7 @@ open class NativeRunner {
     public class func runScenario(featureFile: String, scenario: String?, testCase: XCTestCase) {
         testCase.state.loadAllStepsIfNeeded()
 
-        guard let path = (Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile)) else {
+        guard let path = Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile) else {
             XCTFail("Path could not be built for feature file: \(featureFile)")
             return
         }

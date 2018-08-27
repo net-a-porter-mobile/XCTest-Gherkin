@@ -9,7 +9,6 @@
 import Foundation
 
 private let whitespace = CharacterSet.whitespaces
-typealias StepDescription = (expression: String, file: String, line: Int)
 
 class ParseState {
     var description: String?
@@ -74,25 +73,7 @@ class ParseState {
         if self.examples.isEmpty {
             scenarios.append(NativeScenario(description, steps: self.steps, index: index))
         } else {
-            // Replace each matching placeholder in each line with the example data
-            for (exampleIndex, example) in self.examples.enumerated() {
-                // This hoop is because the compiler doesn't seem to
-                // recognize map directly on the state.steps object
-                var steps = self.steps
-                steps = self.steps.map { originalStep in
-                    var step = originalStep
-                    
-                    example.pairs.forEach { (title, value) in
-                        step.expression = step.expression.replacingOccurrences(of: "<\(title)>", with: value)
-                    }
-                    
-                    return step
-                }
-                
-                // The scenario description must be unique
-                let description = "\(description)_line\(example.lineNumber)"
-                scenarios.append(NativeScenario(description, steps: steps, index: index + exampleIndex))
-            }
+            scenarios.append(NativeScenarioOutline(description, steps: self.steps, examples: self.examples, index: index))
         }
         
         self.description = nil

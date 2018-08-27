@@ -88,7 +88,7 @@ extension NativeFeature {
             // What kind of line is it?
             if let (linePrefix, lineSuffix) = line.lineComponents() {
 
-                switch(linePrefix) {
+                switch (linePrefix) {
 
                 case FileTags.Background :
                     state = ParseState(description: lineSuffix, parsingBackground: true)
@@ -96,11 +96,11 @@ extension NativeFeature {
                 case FileTags.Scenario :
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
 
-                case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
-                    state.steps.append((expression: lineSuffix, file: path, line: lineNumber))
-
                 case FileTags.Outline:
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
+
+                case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
+                    state.steps.append(.init(expression: lineSuffix, file: path, line: lineNumber))
 
                 case FileTags.Examples:
                     // Prep the examples array for examples

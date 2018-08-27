@@ -8,6 +8,12 @@
 
 import Foundation
 
+struct StepDescription {
+    let expression: String
+    let file: String
+    let line: Int
+}
+
 class NativeScenario: CustomStringConvertible {
     let scenarioDescription: String
     let stepDescriptions: [StepDescription]
@@ -39,6 +45,19 @@ class NativeScenario: CustomStringConvertible {
     
     private func leftPad(_ index: Int) -> NSString {
         return NSString(format: "%03i", index)
+    }
+}
+
+class NativeScenarioOutline: NativeScenario {
+    let examples: [NativeExample]
+
+    required init(_ description: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
+        self.examples = examples
+        super.init(description, steps: steps, index: index)
+    }
+
+    required init(_ description: String, steps: [StepDescription], index: Int) {
+        fatalError("init(_:steps:index:) has not been implemented")
     }
 }
 

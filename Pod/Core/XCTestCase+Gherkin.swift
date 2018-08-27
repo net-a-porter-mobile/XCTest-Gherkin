@@ -34,7 +34,10 @@ class GherkinState: NSObject, XCTestObservation {
     
     // The current example the Outline is running over
     var currentExample: Example?
-    
+
+    // currently executed example line when running test from feature file
+    var currentNativeExampleLineNumber: Int?
+
     // Store the name of the current test to help debugging output
     var currentTestName: String = "NO TESTS RUN YET"
     
@@ -55,10 +58,14 @@ class GherkinState: NSObject, XCTestObservation {
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
+
         if automaticScreenshotsBehaviour.contains(.onFailure) {
             test.attachScreenshot()
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+        if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
+            test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
+        }
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -250,10 +257,9 @@ extension XCTestCase {
             // If we are in an example, transform the step to reflect the current example's value
             if let example = state.currentExample {
                 // For each field in the example, go through the step expression and replace the placeholders if needed
-                example.forEach { (key, value) in
-                    let needle = "<\(key)>"
-                    expression = (expression as NSString).replacingOccurrences(of: needle, with: String(describing: value))
-                }
+                expression = example.reduce(expression, {
+                    $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
+                })
             }
             
             // Get the step and the matches inside it
