@@ -123,7 +123,7 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
-        step("I'm logged in as (?!known)(.+)") { (match: Person) in
+        step("I'm logged in as (?!known)(\\{.+\\})") { (match: Person) in
             XCTAssertEqual(match.name, "Nick")
         }
 
