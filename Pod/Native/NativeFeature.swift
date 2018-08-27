@@ -46,15 +46,10 @@ class NativeFeature: CustomStringConvertible {
 extension NativeFeature {
     
     convenience init?(contentsOfURL url: URL) {
-        // Read in the file
-        let path = url.absoluteString.replacingOccurrences(of: "file://", with: "")
-        let contents = try! NSString(contentsOf: url, encoding: String.Encoding.utf8.rawValue)
-        
-        // Replace new line character that is sometimes used if the Gherkin files have been written on a Windows machine.
-        let contentsFixedWindowsNewLineCharacters = contents.replacingOccurrences(of: "\r\n", with: "\n")
-        
+        guard let data = try? Data(contentsOf: url), let contents = String(data: data, encoding: .utf8) else { return nil }
+
         // Get all the lines in the file
-        let lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n").map { $0.trimmingCharacters(in: whitespace) }
+        let lines = contents.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: whitespace) }
 
         guard lines.count > 0 else { return nil }
         
@@ -62,7 +57,7 @@ extension NativeFeature {
         let (_, suffixOption) = lines.filter({ $0.first != "#" &&  $0.first != "@" && $0.count > 0 }).first!.componentsWithPrefix(FileTags.Feature)
         guard let featureDescription = suffixOption else { return nil }
         
-        let feature = NativeFeature.parseLines(lines, path: path)
+        let feature = NativeFeature.parseLines(lines, path: url.path)
         
         self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
     }
