@@ -53,10 +53,9 @@ class GherkinState: NSObject, XCTestObservation {
     }
 
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
-        guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
-        let file = "\(currentStepLocation.file)"
-        let line = Int(currentStepLocation.line)
+        guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         guard filePath != file, lineNumber != line else { return }
+
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
 
         if automaticScreenshotsBehaviour.contains(.onFailure) {
