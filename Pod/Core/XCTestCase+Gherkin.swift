@@ -80,16 +80,12 @@ class GherkinState: NSObject, XCTestObservation {
     func matchingGherkinStepExpressionFound(_ expression: String) -> Bool {
         let matches = self.gherkinStepsMatchingExpression(expression)
         switch matches.count {
-            
         case 0:
             print("Step definition not found for '\(expression)'")
-            let stepImplementation = "step(\"\(expression)"+"\") {XCTAssertTrue(true)}"
-            self.missingStepsImplementations.append(stepImplementation)
-            
+            self.missingStepsImplementations.append(expression)
         case 1:
             //no issues, so proceed
             return true
-            
         default:
             matches.forEach { NSLog("Matching step : \(String(reflecting: $0))") }
             print("Multiple step definitions found for : '\(expression)'")
@@ -109,7 +105,12 @@ class GherkinState: NSObject, XCTestObservation {
         print("Copy paste these steps in a StepDefiner subclass:")
         print("-------------")
         self.missingStepsImplementations.forEach({
-            print($0)
+            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
+            let suggestedSteps = self.suggestedSteps(forStep: $0)
+            if !suggestedSteps.isEmpty {
+                print("-------------\nOr maybe you meant one of these steps:\n-------------")
+                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
+            }
         })
         print("-------------")
     }
