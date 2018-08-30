@@ -57,11 +57,10 @@ class GherkinState: NSObject, XCTestObservation {
         let file = "\(currentStepLocation.file)"
         let line = Int(currentStepLocation.line)
         guard filePath != file, lineNumber != line else { return }
-        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
-
         if automaticScreenshotsBehaviour.contains(.onFailure) {
-            test.attachScreenshot(name: "Failed \"\(currentStepName)\"")
+            test.attachScreenshot()
         }
+        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -212,13 +211,12 @@ extension XCTestCase {
         automaticScreenshotsLifetime = lifetime
     }
 
-    func attachScreenshot(name: String) {
+    func attachScreenshot() {
         // if tests have no host app there is no point in making screenshots
         guard Bundle.main.bundlePath.hasSuffix(".app") else { return }
 
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot, quality: automaticScreenshotsQuality)
-        attachment.name = name
         attachment.lifetime = automaticScreenshotsLifetime
         add(attachment)
     }
@@ -297,11 +295,11 @@ extension XCTestCase {
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
-                attachScreenshot(name: "Before \"\(expression)\"")
+                attachScreenshot()
             }
             step.function(matchStrings)
             if automaticScreenshotsBehaviour.contains(.afterStep) {
-                attachScreenshot(name: "After \"\(expression)\"")
+                attachScreenshot()
             }
             state.currentStepLocation = nil
             state.currentStepDepth -= 1
