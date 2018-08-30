@@ -38,11 +38,11 @@ final class ExampleFeatures: XCTestCase {
             Then("The age should be <age>")
         }
     }
-    
-    let examples = [
+
+    let examples: [[ExampleStringRepresentable]] = [
         [ "name",   "age", "height" ],
-        [  "Alice",  "20",  "170"   ],
-        [  "Bob",    "20",  "170"   ]
+        [  "Alice",  20,  170   ],
+        [  "Bob",    20,  170   ]
     ]
     
     func testReusableExamples1() {
@@ -51,15 +51,62 @@ final class ExampleFeatures: XCTestCase {
         Outline {
             Given("I use the example name <name>")
             Then("The age should be <age>")
+            Then("The height should be <height>")
         }
     }
 
+    let examplesDictionary: [[String: ExampleStringRepresentable]] = [
+        [
+            "name": "Alice",
+            "age": 20,
+            "height": 170
+        ],
+        [
+            "name": "Bob",
+            "age": 20,
+            "height": 170
+        ]
+    ]
+
     func testReusableExamples2() {
-        Examples(examples)
-        
+        Examples(examplesDictionary)
+
         Outline {
             Given("I use the example name <name>")
+            Then("The age should be <age>")
             Then("The height should be <height>")
+        }
+    }
+
+    func testAccessCurrentExampleValue() {
+        Examples(examples)
+
+        Outline {
+            let name: String = self.exampleValue("name")!
+            let height: String = self.exampleValue("height")!
+
+            Given("I use the example name \(name)")
+            Then("The height should be \(height)")
+        }
+    }
+
+    struct Person: CodableMatchedStringRepresentable {
+        let name: String
+        let age: Int
+        let height: Int
+    }
+
+    func testCustomExampleValues() {
+        Examples(
+            ["person"],
+            [Person(name: "Bob", age: 27, height: 170)]
+        )
+
+        Outline {
+            let person: Person = self.exampleValue("person")!
+
+            Given("I use the example name \(person.name)")
+            Then("The height should be \(person.height)")
         }
     }
 
@@ -84,7 +131,16 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testCodableMatches() {
-        let person = Person(name: "Nick")
-        Given("This is Nick \(person)")
+        Examples(
+            ["person"],
+            [Person(name: "Alice", age: 27, height: 170)],
+            [Person(name: "Bob", age: 27, height: 170)]
+        )
+
+        Outline {
+            let person: Person = self.exampleValue("person")!
+            Given("I know \(person)")
+        }
     }
+
 }

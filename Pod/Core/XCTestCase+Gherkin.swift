@@ -57,12 +57,11 @@ class GherkinState: NSObject, XCTestObservation {
         guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
         let file = "\(currentStepLocation.file)"
         let line = Int(currentStepLocation.line)
-        guard filePath != file, lineNumber != line else { return }
-        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
-
+        if filePath == file && lineNumber == line { return }
         if automaticScreenshotsBehaviour.contains(.onFailure) {
-            test.attachScreenshot(name: "Failed \"\(currentStepName)\"")
+            test.attachScreenshot()
         }
+        test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -81,16 +80,12 @@ class GherkinState: NSObject, XCTestObservation {
     func matchingGherkinStepExpressionFound(_ expression: String) -> Bool {
         let matches = self.gherkinStepsMatchingExpression(expression)
         switch matches.count {
-            
         case 0:
             print("Step definition not found for '\(expression)'")
-            let stepImplementation = "step(\"\(expression)"+"\") {XCTAssertTrue(true)}"
-            self.missingStepsImplementations.append(stepImplementation)
-            
+            self.missingStepsImplementations.append(expression)
         case 1:
             //no issues, so proceed
             return true
-            
         default:
             matches.forEach { NSLog("Matching step : \(String(reflecting: $0))") }
             print("Multiple step definitions found for : '\(expression)'")
@@ -110,7 +105,12 @@ class GherkinState: NSObject, XCTestObservation {
         print("Copy paste these steps in a StepDefiner subclass:")
         print("-------------")
         self.missingStepsImplementations.forEach({
-            print($0)
+            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
+            let suggestedSteps = self.suggestedSteps(forStep: $0)
+            if !suggestedSteps.isEmpty {
+                print("-------------\nOr maybe you meant one of these steps:\n-------------")
+                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
+            }
         })
         print("-------------")
     }
@@ -190,77 +190,6 @@ public extension XCTestCase {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
     
-    /**
-     Supply a set of example data to the test. This must be done before calling `Outline`.
-     
-     If you specify a set of examples but don't run the test inside an `Outline { }` block then it won't do anything!
-     
-     - parameter titles: The titles for each column; these are the keys used to replace the placeholders in each step
-     - parameter allValues: This is an array of columns - each array will be used as a single test
-     */
-    func Examples(_ titles: [String], _ allValues: [String]...) {
-        var all = [titles]
-        all.append(contentsOf: allValues)
-        Examples(all)
-    }
-    
-    /**
-     If you want to reuse examples between tests then you can just pass in an array of examples directly.
-     
-         let examples = [ 
-                [ "title", "age" ],
-                [ "a",     "20"  ],
-                [ "b",     "25"  ]
-            ]
-     
-         ...
-     
-         Examples(examples)
-     
-     */
-    func Examples(_ values: [[String]]) {
-        precondition(values.count > 1, "You must pass at least one set of example data")
-        
-        // Split out the titles and the example data
-        let titles = values.first!
-        let allValues = values.dropFirst()
-        
-        // TODO: Hints at a reduce, but we're going over two arrays at once . . . :|
-        var accumulator = Array<Example>()
-        allValues.forEach { values in
-            precondition(values.count == titles.count, "Each example must be the same size as the titles (was \(values.count), expected \(titles.count))")
-            
-            // Loop over both titles and values, creating a dictionary (i.e. an Example)
-            var example = Example()
-            (0..<titles.count).forEach { n in
-                example[titles[n]] = values[n]
-            }
-            
-            accumulator.append(example)
-        }
-        
-        state.examples = accumulator
-    }
-    
-    /**
-     Run the following steps as part of an outline - this will replace any placeholders with each example in turn.
-
-     You must have setup the example cases before calling this; use `Example(...)` to do this.
-     
-     - parameter routine: A block containing your Given/When/Then which will be run once per example
-     */
-    func Outline( _ routine: ()->() ) {
-        
-        precondition(state.examples != nil, "You need to define examples before running an Outline block - use Examples(...)");
-        precondition(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
-        
-        state.examples!.forEach { example in
-            state.currentExample = example
-            routine()
-            state.currentExample = nil
-        }
-    }
-    
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
@@ -291,13 +220,12 @@ extension XCTestCase {
         automaticScreenshotsLifetime = lifetime
     }
 
-    func attachScreenshot(name: String) {
+    func attachScreenshot() {
         // if tests have no host app there is no point in making screenshots
         guard Bundle.main.bundlePath.hasSuffix(".app") else { return }
 
         let screenshot = XCUIScreen.main.screenshot()
         let attachment = XCTAttachment(screenshot: screenshot, quality: automaticScreenshotsQuality)
-        attachment.name = name
         attachment.lifetime = automaticScreenshotsLifetime
         add(attachment)
     }
@@ -332,7 +260,7 @@ extension XCTestCase {
             // For each field in the example, go through the step expression and replace the placeholders if needed
             example.forEach { (key, value) in
                 let needle = "<\(key)>"
-                expression = (expression as NSString).replacingOccurrences(of: needle, with: value)
+                expression = (expression as NSString).replacingOccurrences(of: needle, with: String(describing: value))
             }
         }
 
@@ -381,11 +309,11 @@ extension XCTestCase {
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
-                attachScreenshot(name: "Before \"\(expression)\"")
+                attachScreenshot()
             }
             step.function(matchStrings)
             if automaticScreenshotsBehaviour.contains(.afterStep) {
-                attachScreenshot(name: "After \"\(expression)\"")
+                attachScreenshot()
             }
             state.currentStepLocation = nil
             state.currentStepDepth -= 1
