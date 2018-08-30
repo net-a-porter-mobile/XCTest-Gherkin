@@ -17,7 +17,7 @@ final class SanitySteps: StepDefiner {
         
         // Examples of defining a step with no capture groups
         step("I have a working Gherkin environment") {
-            XCTAssertTrue(false)
+            XCTAssertTrue(true)
         }
         
         step("I have duplicate steps at the start of every scenario") {
