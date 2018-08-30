@@ -121,8 +121,8 @@ extension XCTestCase {
         }
         
         if let background = feature.background {
-            background.stepDescriptions.forEach({ self.performStep($0) })
+            background.stepDescriptions.forEach({ self.performStep($0, keyword: "") })
         }
-        scenario.stepDescriptions.forEach({ self.performStep($0) })
+        scenario.stepDescriptions.forEach({ self.performStep($0, keyword: "") })
     }
 }

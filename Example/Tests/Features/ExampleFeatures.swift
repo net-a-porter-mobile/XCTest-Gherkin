@@ -10,9 +10,10 @@ import XCTest
 import XCTest_Gherkin
 
 final class ExampleFeatures: XCTestCase {
-    
+
     override func setUp() {
         super.setUp()
+        self.continueAfterFailure = true
     }
 
     func testBasicSteps() {

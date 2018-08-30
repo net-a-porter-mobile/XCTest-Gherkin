@@ -39,7 +39,7 @@ class StringGherkinExtensionTests: XCTestCase {
     
     func testCamelCaseify_allCaps() {
         let simpleString = "THIS IS ALL CAPS"
-        XCTAssertEqual("ThisIsAllCaps", simpleString.camelCaseify)
+        XCTAssertEqual("thisIsAllCaps", simpleString.camelCaseify)
     }
     
     func testCamelCaseify_home() {

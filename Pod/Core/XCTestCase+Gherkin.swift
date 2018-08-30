@@ -37,6 +37,7 @@ class GherkinState: NSObject, XCTestObservation {
     
     // Store the name of the current test to help debugging output
     var currentTestName: String = "NO TESTS RUN YET"
+    var currentSuiteName: String = "NO TESTS RUN YET"
     
     // Store the name of the current step to help debugging output
     var currentStepName: String = "NO CURRENT STEP YET"
@@ -164,22 +165,30 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+        self.performStep(expression, keyword: "Given", file: file, line: line)
+    }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+        self.performStep(expression, keyword: "When", file: file, line: line)
+    }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+        self.performStep(expression, keyword: "Then", file: file, line: line)
+    }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+        self.performStep(expression, keyword: "And", file: file, line: line)
+    }
     
     /**
      Supply a set of example data to the test. This must be done before calling `Outline`.
@@ -311,7 +320,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String, file: StaticString = #file, line: UInt = #line) {
+    func performStep(_ initialExpression: String, keyword: String, file: StaticString = #file, line: UInt = #line) {
         // Get a mutable copy - if we are in an outline we might be changing this
         var expression = initialExpression
 
@@ -348,16 +357,22 @@ extension XCTestCase {
 
         // If this the first step, debug the test name as well
         if state.currentStepDepth == 0 {
+            let suiteName = String(describing: type(of: self))
+            if suiteName != state.currentSuiteName {
+                print("Feature: \(suiteName)")
+                state.currentSuiteName = suiteName
+            }
+
             let rawName = String(describing: self.invocation!.selector)
             let testName = rawName.hasPrefix("test") ? (rawName as NSString).substring(from: 4) : rawName
             if testName != state.currentTestName {
-                NSLog("steps from \(testName.humanReadableString)")
+                print("  Scenario: \(testName.humanReadableString)")
                 state.currentTestName = testName
             }
         }
 
         // Debug the step name
-        NSLog("step \(currentStepDepthString())\(expression)  \(step.locationDescription)")
+        print("    step \(keyword) \(currentStepDepthString())\(expression)  \(step.locationDescription)")
 
         state.currentStepName = expression
 
@@ -383,6 +398,6 @@ extension XCTestCase {
      - returns: A String of spaces equal to the current step depth
      */
     fileprivate func currentStepDepthString() -> String {
-        return repeatElement(" ", count: state.currentStepDepth).joined(separator: "")
+        return String(repeating: "  ", count: state.currentStepDepth)
     }
 }

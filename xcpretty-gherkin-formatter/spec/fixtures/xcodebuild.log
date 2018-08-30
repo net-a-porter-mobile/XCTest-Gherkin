@@ -1,0 +1,274 @@
+Test Suite 'All tests' started at 2018-08-30 21:10:49.188
+Test Suite 'XCTest-Gherkin_Tests.xctest' started at 2018-08-30 21:10:49.189
+Test Suite 'ExampleFeatures' started at 2018-08-30 21:10:49.190
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps]' started.
+Feature: ExampleFeatures
+  Scenario: Basic Steps
+    step Given I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps] : XCTAssertTrue failed - 
+    step Then This test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testBasicSteps]' failed (1.306 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testCodableMatches]' started.
+  Scenario: Codable Matches
+    step Given This is Nick {"name":"Nick"}  (SanitySteps.swift:126)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testCodableMatches]' passed (0.007 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testGenericMatchHelpers]' started.
+  Scenario: Generic Match Helpers
+    step Given I have a string hello  (SanitySteps.swift:93)
+    step And I have an integer 1  (SanitySteps.swift:97)
+    step And I have a boolean FaLsE  (SanitySteps.swift:101)
+    step And I have a double 1.2  (SanitySteps.swift:105)
+    step And I have a double which looks like an int 1  (SanitySteps.swift:109)
+    step And I have a mixture of types 1.1 hello  (SanitySteps.swift:113)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testGenericMatchHelpers]' passed (0.015 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testMatchHelpers]' started.
+  Scenario: Match Helpers
+    step Given I have a step which has a single match: 1  (SanitySteps.swift:63)
+    step And I have a step with two matches: 1 2  (SanitySteps.swift:68)
+    step Then Some value should be 6  (SanitySteps.swift:74)
+    step And Some value should be between 5 and 7  (SanitySteps.swift:79)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testMatchHelpers]' passed (0.022 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testNestedSteps]' started.
+  Scenario: Nested Steps
+    step Given This step should call another step  (SanitySteps.swift:38)
+    step    This is another step  (SanitySteps.swift:43)
+    step Then This test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testNestedSteps]' passed (0.005 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testOutlineTests]' started.
+  Scenario: Outline Tests
+    step Given I use the example name Alice  (SanitySteps.swift:48)
+    step Then The age should be 20  (SanitySteps.swift:54)
+    step Given I use the example name Bob  (SanitySteps.swift:48)
+    step Then The age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testOutlineTests]' passed (0.012 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testReusableExamples1]' started.
+  Scenario: Reusable Examples 1
+    step Given I use the example name Alice  (SanitySteps.swift:48)
+    step Then The age should be 20  (SanitySteps.swift:54)
+    step Given I use the example name Bob  (SanitySteps.swift:48)
+    step Then The age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testReusableExamples1]' passed (0.009 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testReusableExamples2]' started.
+  Scenario: Reusable Examples 2
+    step Given I use the example name Alice  (SanitySteps.swift:48)
+    step Then The height should be 170  (SanitySteps.swift:58)
+    step Given I use the example name Bob  (SanitySteps.swift:48)
+    step Then The height should be 170  (SanitySteps.swift:58)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testReusableExamples2]' passed (0.014 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testStepAnchorMatching]' started.
+  Scenario: Step Anchor Matching
+    step Given This is a substring  (SanitySteps.swift:122)
+Test Case '-[XCTest_Gherkin_Tests.ExampleFeatures testStepAnchorMatching]' passed (0.004 seconds).
+Test Suite 'ExampleFeatures' failed at 2018-08-30 21:10:50.633.
+	 Executed 9 tests, with 1 failure (0 unexpected) in 1.393 (1.443) seconds
+Test Suite 'ExampleNativeOrderTest' started at 2018-08-30 21:10:50.634
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test000BThisIsAVerySimpleExampleOfOrdering_line6]' started.
+Feature: ExampleNativeOrderTest
+  Scenario: 0 0 0 B This Is A Very Simple Example Of Ordering _line 6
+    step  this should be executed before A with example value 1  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test000BThisIsAVerySimpleExampleOfOrdering_line6]' passed (0.329 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test001BThisIsAVerySimpleExampleOfOrdering_line7]' started.
+  Scenario: 0 0 1 B This Is A Very Simple Example Of Ordering _line 7
+    step  this should be executed before A with example value 2  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test001BThisIsAVerySimpleExampleOfOrdering_line7]' passed (0.004 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test002BThisIsAVerySimpleExampleOfOrdering_line8]' started.
+  Scenario: 0 0 2 B This Is A Very Simple Example Of Ordering _line 8
+    step  this should be executed before A with example value 3  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test002BThisIsAVerySimpleExampleOfOrdering_line8]' passed (0.004 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test003AThisIsAVerySimpleExampleOfOrderingToo]' started.
+  Scenario: 0 0 3 A This Is A Very Simple Example Of Ordering Too
+    step  this should be executed after  (SanitySteps.swift:89)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeOrderTest test003AThisIsAVerySimpleExampleOfOrderingToo]' passed (0.004 seconds).
+Test Suite 'ExampleNativeOrderTest' passed at 2018-08-30 21:10:50.977.
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.341 (0.343) seconds
+Test Suite 'ExampleNativeRunnerTest' started at 2018-08-30 21:10:51.015
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithFeatureRunner]' started.
+Feature: ExampleNativeRunnerTest
+  Scenario: Native Example With Feature Runner
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithFeatureRunner] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithFeatureRunner] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  this step should call another step  (SanitySteps.swift:38)
+    step    This is another step  (SanitySteps.swift:43)
+    step  this test should not fail  (SanitySteps.swift:33)
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Alice  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Bob  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithFeatureRunner]' failed (0.171 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithScenarioRunner]' started.
+  Scenario: Native Example With Scenario Runner
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithScenarioRunner] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithScenarioRunner] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeRunnerTest testNativeExampleWithScenarioRunner]' failed (0.015 seconds).
+Test Suite 'ExampleNativeRunnerTest' failed at 2018-08-30 21:10:51.204.
+	 Executed 2 tests, with 4 failures (2 unexpected) in 0.187 (0.189) seconds
+Test Suite 'ExampleNativeTest' started at 2018-08-30 21:10:51.205
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test000ThisIsABasicHappyPathExample]' started.
+Default setup method works before each native scenario
+Feature: ExampleNativeTest
+  Scenario: 0 0 0 This Is A Basic Happy Path Example
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.ExampleNativeTest test000ThisIsABasicHappyPathExample] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.ExampleNativeTest test000ThisIsABasicHappyPathExample] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test000ThisIsABasicHappyPathExample]' failed (0.090 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test001NestedSteps]' started.
+Default setup method works before each native scenario
+  Scenario: 0 0 1 Nested Steps
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  this step should call another step  (SanitySteps.swift:38)
+    step    This is another step  (SanitySteps.swift:43)
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test001NestedSteps]' passed (0.014 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test002DemonstrateThatExamplesWork_line16]' started.
+Default setup method works before each native scenario
+  Scenario: 0 0 2 Demonstrate That Examples Work _line 1 6
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Alice  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test002DemonstrateThatExamplesWork_line16]' passed (0.018 seconds).
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test003DemonstrateThatExamplesWork_line17]' started.
+Default setup method works before each native scenario
+  Scenario: 0 0 3 Demonstrate That Examples Work _line 1 7
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Bob  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.ExampleNativeTest test003DemonstrateThatExamplesWork_line17]' passed (0.009 seconds).
+Test Suite 'ExampleNativeTest' failed at 2018-08-30 21:10:51.340.
+	 Executed 4 tests, with 2 failures (1 unexpected) in 0.131 (0.135) seconds
+Test Suite 'MultipleTestRunFeature' started at 2018-08-30 21:10:51.367
+Test Case '-[XCTest_Gherkin_Tests.MultipleTestRunFeature testFirst]' started.
+Feature: MultipleTestRunFeature
+  Scenario: First
+    step Then the test should contain it's own instance of instanceParameter  (MultipleTestRunTests.swift:43)
+Test Case '-[XCTest_Gherkin_Tests.MultipleTestRunFeature testFirst]' passed (0.048 seconds).
+Test Case '-[XCTest_Gherkin_Tests.MultipleTestRunFeature testSecond]' started.
+  Scenario: Second
+    step Then the test should contain it's own instance of instanceParameter  (MultipleTestRunTests.swift:43)
+Test Case '-[XCTest_Gherkin_Tests.MultipleTestRunFeature testSecond]' passed (0.002 seconds).
+Test Suite 'MultipleTestRunFeature' passed at 2018-08-30 21:10:51.419.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 0.051 (0.053) seconds
+Test Suite 'NativeScenarioTest' started at 2018-08-30 21:10:51.421
+Test Case '-[XCTest_Gherkin_Tests.NativeScenarioTest testNativeScenarioSelectorString]' started.
+Test Case '-[XCTest_Gherkin_Tests.NativeScenarioTest testNativeScenarioSelectorString]' passed (0.001 seconds).
+Test Suite 'NativeScenarioTest' passed at 2018-08-30 21:10:51.423.
+	 Executed 1 test, with 0 failures (0 unexpected) in 0.001 (0.002) seconds
+Test Suite 'RunMultipleFeatureFilesTest' started at 2018-08-30 21:10:51.463
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000BThisIsAVerySimpleExampleOfOrdering_line6]' started.
+Feature: RunMultipleFeatureFilesTest
+  Scenario: 0 0 0 B This Is A Very Simple Example Of Ordering _line 6
+    step  this should be executed before A with example value 1  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000BThisIsAVerySimpleExampleOfOrdering_line6]' passed (0.045 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsABasicHappyPathExample]' started.
+  Scenario: 0 0 0 This Is A Basic Happy Path Example
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsABasicHappyPathExample] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsABasicHappyPathExample] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsABasicHappyPathExample]' failed (0.126 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsAVerySimpleBasicHappyPathExample]' started.
+  Scenario: 0 0 0 This Is A Very Simple Basic Happy Path Example
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsAVerySimpleBasicHappyPathExample] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsAVerySimpleBasicHappyPathExample] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test000ThisIsAVerySimpleBasicHappyPathExample]' failed (0.026 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test001BThisIsAVerySimpleExampleOfOrdering_line7]' started.
+  Scenario: 0 0 1 B This Is A Very Simple Example Of Ordering _line 7
+    step  this should be executed before A with example value 2  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test001BThisIsAVerySimpleExampleOfOrdering_line7]' passed (0.006 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test001NestedSteps]' started.
+  Scenario: 0 0 1 Nested Steps
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  this step should call another step  (SanitySteps.swift:38)
+    step    This is another step  (SanitySteps.swift:43)
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test001NestedSteps]' passed (0.055 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test002BThisIsAVerySimpleExampleOfOrdering_line8]' started.
+  Scenario: 0 0 2 B This Is A Very Simple Example Of Ordering _line 8
+    step  this should be executed before A with example value 3  (SanitySteps.swift:84)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test002BThisIsAVerySimpleExampleOfOrdering_line8]' passed (0.008 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test002DemonstrateThatExamplesWork_line16]' started.
+  Scenario: 0 0 2 Demonstrate That Examples Work _line 1 6
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Alice  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test002DemonstrateThatExamplesWork_line16]' passed (0.016 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test003AThisIsAVerySimpleExampleOfOrderingToo]' started.
+  Scenario: 0 0 3 A This Is A Very Simple Example Of Ordering Too
+    step  this should be executed after  (SanitySteps.swift:89)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test003AThisIsAVerySimpleExampleOfOrderingToo]' passed (0.008 seconds).
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test003DemonstrateThatExamplesWork_line17]' started.
+  Scenario: 0 0 3 Demonstrate That Examples Work _line 1 7
+    step  I have duplicate steps at the start of every scenario  (SanitySteps.swift:23)
+    step  I should move these steps to the background section  (SanitySteps.swift:27)
+    step  I use the example name Bob  (SanitySteps.swift:48)
+    step  the age should be 20  (SanitySteps.swift:54)
+Test Case '-[XCTest_Gherkin_Tests.RunMultipleFeatureFilesTest test003DemonstrateThatExamplesWork_line17]' passed (0.012 seconds).
+Test Suite 'RunMultipleFeatureFilesTest' failed at 2018-08-30 21:10:51.809.
+	 Executed 9 tests, with 4 failures (2 unexpected) in 0.301 (0.346) seconds
+Test Suite 'RunSingleFeatureFileTest' started at 2018-08-30 21:10:51.811
+Test Case '-[XCTest_Gherkin_Tests.RunSingleFeatureFileTest test000ThisIsAVerySimpleBasicHappyPathExample]' started.
+Feature: RunSingleFeatureFileTest
+  Scenario: 0 0 0 This Is A Very Simple Basic Happy Path Example
+    step  I have a working Gherkin environment  (SanitySteps.swift:19)
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StepDefinitions/SanitySteps.swift:20: error: -[XCTest_Gherkin_Tests.RunSingleFeatureFileTest test000ThisIsAVerySimpleBasicHappyPathExample] : XCTAssertTrue failed - 
+/Users/ilya.puchka/dev/XCTest-Gherkin/Pod/Native/NativeTestCase.swift:126: error: -[XCTest_Gherkin_Tests.RunSingleFeatureFileTest test000ThisIsAVerySimpleBasicHappyPathExample] : XCTAssertTrue failed - 
+    step  this test should not fail  (SanitySteps.swift:33)
+Test Case '-[XCTest_Gherkin_Tests.RunSingleFeatureFileTest test000ThisIsAVerySimpleBasicHappyPathExample]' failed (0.062 seconds).
+Test Suite 'RunSingleFeatureFileTest' failed at 2018-08-30 21:10:51.874.
+	 Executed 1 test, with 2 failures (1 unexpected) in 0.062 (0.063) seconds
+Test Suite 'StringGherkinExtensionTests' started at 2018-08-30 21:10:51.875
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_allCaps]' started.
+/Users/ilya.puchka/dev/XCTest-Gherkin/Example/Tests/StringGherkinExtensionTests.swift:42: error: -[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_allCaps] : XCTAssertEqual failed: ("thisIsAllCaps") is not equal to ("ThisIsAllCaps") - 
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_allCaps]' failed (0.003 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_DesignerAZ]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_DesignerAZ]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_emptyStringDoesntCrash]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_emptyStringDoesntCrash]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_home]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_home]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_multipleSpaces]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_multipleSpaces]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_noSpecialChars]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_noSpecialChars]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_oneSpace]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_oneSpace]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_oneSpaceOneDash]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_oneSpaceOneDash]' passed (0.050 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_ShoppingBag]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_ShoppingBag]' passed (0.001 seconds).
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_twoSpacesTwoDashes]' started.
+Test Case '-[XCTest_Gherkin_Tests.StringGherkinExtensionTests testCamelCaseify_twoSpacesTwoDashes]' passed (0.001 seconds).
+Test Suite 'StringGherkinExtensionTests' failed at 2018-08-30 21:10:51.985.
+	 Executed 10 tests, with 1 failure (0 unexpected) in 0.058 (0.110) seconds
+Test Suite 'XCTest-Gherkin_Tests.xctest' failed at 2018-08-30 21:10:51.986.
+	 Executed 42 tests, with 14 failures (6 unexpected) in 2.526 (2.796) seconds
+Test Suite 'XCTest_Gherkin.framework' started at 2018-08-30 21:10:51.987
+Test Suite 'XCTest_Gherkin.framework' passed at 2018-08-30 21:10:51.987.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+Test Suite 'All tests' failed at 2018-08-30 21:10:51.988.
+	 Executed 42 tests, with 14 failures (6 unexpected) in 2.526 (2.800) seconds
