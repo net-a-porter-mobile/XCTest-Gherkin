@@ -292,7 +292,7 @@ extension XCTestCase {
             }
 
             let rawName = String(describing: self.invocation!.selector)
-            let testName = rawName.hasPrefix("test") ? (rawName as NSString).substring(from: 4) : rawName
+            let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
             if testName != state.currentTestName {
                 print("  Scenario: \(testName.humanReadableString)")
                 state.currentTestName = testName
