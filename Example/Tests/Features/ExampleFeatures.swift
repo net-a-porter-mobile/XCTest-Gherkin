@@ -37,21 +37,6 @@ final class ExampleFeatures: XCTestCase {
             Then("The age should be <age>")
         }
     }
-    
-    let examples = [
-        [ "name",   "age", "height" ],
-        [  "Alice",  "20",  "170"   ],
-        [  "Bob",    "20",  "170"   ]
-    ]
-    
-    func testReusableExamples1() {
-        Examples(examples)
-        
-        Outline {
-            Given("I use the example name <name>")
-            Then("The age should be <age>")
-        }
-    }
 
     func testExamplesAfterOutline() {
         // Examples can be passed after Outline via trailing closure
@@ -65,6 +50,14 @@ final class ExampleFeatures: XCTestCase {
             [  "Alice",  "20",  "170"   ],
             [  "Bob",    "20",  "170"   ]
             ]}
+
+        Outline({
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }) {[
+            ["name": "Alice", "age": 20, "height": 170],
+            ["name": "Bob", "age": 20, "height": 170 ]
+            ]}
         // swiftlint:enable multiple_closures_with_trailing_closure
 
         // or via explicit Examples parameter
@@ -76,14 +69,84 @@ final class ExampleFeatures: XCTestCase {
            [  "Alice",  "20",  "170"   ],
            [  "Bob",    "20",  "170"   ]
         )
+
+        Outline({
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+        }, Examples: [
+            ["name": "Alice", "age": 20, "height": 170],
+            ["name": "Bob", "age": 20, "height": 170 ]
+            ])
     }
 
-    func testReusableExamples2() {
+    let examples: [[ExampleStringRepresentable]] = [
+        [ "name",   "age", "height" ],
+        [  "Alice",  20,  170   ],
+        [  "Bob",    20,  170   ]
+    ]
+    
+    func testReusableExamples1() {
         Examples(examples)
         
         Outline {
             Given("I use the example name <name>")
+            Then("The age should be <age>")
             Then("The height should be <height>")
+        }
+    }
+
+    let examplesDictionary: [[String: ExampleStringRepresentable]] = [
+        [
+            "name": "Alice",
+            "age": 20,
+            "height": 170
+        ],
+        [
+            "name": "Bob",
+            "age": 20,
+            "height": 170
+        ]
+    ]
+
+    func testReusableExamples2() {
+        Examples(examplesDictionary)
+
+        Outline {
+            Given("I use the example name <name>")
+            Then("The age should be <age>")
+            Then("The height should be <height>")
+        }
+    }
+
+    func testAccessCurrentExampleValue() {
+        Examples(examples)
+
+        Outline {
+            let name: String = self.exampleValue("name")!
+            let height: String = self.exampleValue("height")!
+
+            Given("I use the example name \(name)")
+            Then("The height should be \(height)")
+        }
+    }
+
+    struct Person: CodableMatchedStringRepresentable {
+        let name: String
+        let age: Int
+        let height: Int
+    }
+
+    func testCustomExampleValues() {
+        Examples(
+            ["person"],
+            [Person(name: "Bob", age: 27, height: 170)]
+        )
+
+        Outline {
+            let person: Person = self.exampleValue("person")!
+
+            Given("I use the example name \(person.name)")
+            Then("The height should be \(person.height)")
         }
     }
 
@@ -108,7 +171,16 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testCodableMatches() {
-        let person = Person(name: "Nick")
-        Given("This is Nick \(person)")
+        Examples(
+            ["person"],
+            [Person(name: "Alice", age: 27, height: 170)],
+            [Person(name: "Bob", age: 27, height: 170)]
+        )
+
+        Outline {
+            let person: Person = self.exampleValue("person")!
+            Given("I know \(person)")
+        }
     }
+
 }
