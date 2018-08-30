@@ -107,7 +107,7 @@ class TravisFormatter < XCPretty::Simple
   end
 
   def gray(text)
-    ansi_parse(text, :white)
+    "\u{001B}[0;90m#{text}\u{001B}[0;0m"
   end
 
   def green(text)
