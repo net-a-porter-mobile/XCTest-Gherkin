@@ -15,9 +15,9 @@ class TravisFormatter < XCPretty::Simple
     when TEST_CASE_FAILED_MATCHER
       return format_failed_test($1, $2, $3)
     when FEATURE_MATCHER
-      return format_feature_or_scenario(text)
+      return format_feature(text)
     when SCENARIO_MATCHER
-      return format_feature_or_scenario(text)
+      return format_scenario(text)
     when STEP_MATCHER
       text = format_performed_step(method(:green))
       @performed_step = INDENT + $1 + "  " + gray($2)
@@ -50,9 +50,12 @@ class TravisFormatter < XCPretty::Simple
     end
   end
   
-  def format_feature_or_scenario(message)
-    text = ("\n\u{001B}[0;39m" + message).strip + "\u{001B}[0;0m"
-    format_text_after_step(method(:green), "\n", text)
+  def format_feature(text)
+    format_text_after_step(method(:green), "\n", "\n" + text.strip)
+  end
+
+  def format_scenario(text)
+    format_text_after_step(method(:green), "\n", "\n" + text)
   end
 
   def format_passing_test(suite, test, time)
