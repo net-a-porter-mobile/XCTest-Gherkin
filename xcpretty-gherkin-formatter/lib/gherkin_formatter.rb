@@ -10,17 +10,25 @@ class TravisFormatter < XCPretty::Simple
     @performed_step = nil
   end
 
-  def format_other(message);
-    case message.strip
+  def pretty_format(text)
+    case text.strip
     when TEST_CASE_FAILED_MATCHER
       return format_failed_test($1, $2, $3)
     when FEATURE_MATCHER
-      return format_feature_or_scenario(message)
+      return format_feature_or_scenario(text)
     when SCENARIO_MATCHER
-      return format_feature_or_scenario(message)
+      return format_feature_or_scenario(text)
+    when STEP_MATCHER
+      text = format_performed_step(method(:green))
+      @performed_step = INDENT + $1 + "  " + gray($2)
+      return text
     else
-      return format_performed_step(method(:green))
+      parser.parse(text)
     end
+  end
+
+  def format_other(message);
+    return format_performed_step(method(:green))
   end
 
   # renderes cached step and clears cache
@@ -31,19 +39,6 @@ class TravisFormatter < XCPretty::Simple
       return text
     else
       return EMPTY
-    end
-  end
-
-  # xcpretty detects everything starting with 4 spaces as shell command
-  # renders cached step and caches new step
-  def format_shell_command(command, arguments);
-    case "#{command} #{arguments}"
-    when STEP_MATCHER
-      text = format_performed_step(method(:green))
-      @performed_step = "    #{$1}  " + gray("(#{$2})")
-      return text
-    else
-      return super
     end
   end
 
