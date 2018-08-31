@@ -85,23 +85,32 @@ class TravisFormatter < XCPretty::Simple
   end
 
   def format_failure(f)
-    snippet = Snippet.from_filepath(f[:file_path])
+    filepath = f[:file_path]
+    snippet = Snippet.from_filepath(filepath)
+    path, line_number = filepath.split(':')
+
     output = INDENT + "#{red(f[:reason])}\n"
     output += INDENT + "#{cyan(f[:file_path])}\n"
     return output if snippet.contents.empty?
 
     output += INDENT + "```\n"
+    snippet_contents = []
     if @colorize
-      output += Syntax.highlight(snippet)
+      snippet_contents = Syntax.highlight(snippet).lines[0...-1]
     else
-      output += snippet.contents
+      snippet_contents = snippet.contents.lines
     end
-    output += INDENT + "```"
 
+    snippet_contents.each_with_index { |line, index|
+      output += INDENT + gray("#{line_number.to_i + index - 1}") + line 
+    }
+
+    output += INDENT + "```"
     output
   end
 
   def gray(text)
+    return text unless !!@colorize
     "\u{001B}[0;90m#{text}\u{001B}[0;0m"
   end
 
