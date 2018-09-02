@@ -116,6 +116,11 @@ This will run the tests twice, once with the values `Alice,20` and once with the
 
 NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherkin you specify them afterwards. Sorry about that.
 
+### Page Object
+Built in `PageObject` type can be used as a base type for your own page objects. It will assert that its `isPresented()`, that you should override, returnes `true` when instance of it is created. It aslo defines a `name` property which by default is the name of the type without `PageObject` suffix, if any.  
+
+`PageObject` also comes with some predefined steps, defined by `CommonPageObjectsStepDefiner`, which validate that this page object is displayed, with formats `I see %@`, `I should see %@` and `it is %@` with optional `the` before page object name parameter.
+
 ### Dealing with errors / debugging tests
 
 #### Missing steps
