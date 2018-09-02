@@ -1,3 +1,5 @@
+import XCTest
+
 /// Base class for PageObject pattern.
 open class PageObject: NSObject {
     required public override init() {
