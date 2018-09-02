@@ -90,10 +90,10 @@ final class ExampleFeatures: XCTestCase {
         }
     }
 
-    struct Person: CodableMatchedStringRepresentable {
+    struct Person: CodableMatchedStringRepresentable, Equatable {
         let name: String
         let age: Int
-        let height: Int
+        let height: Float
     }
 
     func testCustomExampleValues() {
@@ -179,4 +179,30 @@ final class ExampleFeatures: XCTestCase {
         /// in the step
         Given(MatchStringLiteralStepDefiner.literal)
     }
+
+    func testArrayDataTable() {
+        Given("I add the following numbers: \(DataTable([1, 2, 3]))")
+        Then("I end up with 6")
+    }
+
+    func testDictionaryDataTable() {
+        Given("I add the following letters: \(DataTable(["a": 1, "b": 2, "c": 3]))")
+        Then("I end up with 6")
+    }
+
+    func testCodableDataTable() {
+        let persons = [
+            Person(name: "Alice", age: 27, height: 170),
+            Person(name: "Bob", age: 27, height: 170)
+        ]
+        Given("I know the following persons: \(DataTable(persons))")
+
+        let personsByName = [
+            "Alice": Person(name: "Alice", age: 27, height: 170),
+            "Bob": Person(name: "Bob", age: 27, height: 170)
+        ]
+        Given("I know the following persons by name: \(DataTable(personsByName))")
+    }
+
+
 }

@@ -95,11 +95,27 @@ extension NativeFeature {
                      Language.current.keywords.When,
                      Language.current.keywords.Then,
                      Language.current.keywords.And:
-                    state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+
+                    if let dataTableLines = state.dataTableLines {
+                        let lastStep = state.steps.removeLast()
+                        state.steps.append(lastStep + " \(dataTableLines.joined(separator: ","))")
+                        state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+                        state.dataTableLines = nil
+                    } else {
+                        state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+                    }
+
                 case Language.current.keywords.Examples:
                     state.exampleLines = []
                 case Language.current.keywords.ExampleLine:
-                    state.exampleLines.append((lineIndex+1, lineSuffix))
+
+                    if state.exampleLines != nil {
+                        state.exampleLines?.append( (lineIndex+1, line) )
+                    } else {
+                        state.dataTableLines = state.dataTableLines ?? []
+                        state.dataTableLines?.append(line)
+                    }
+
                 default:
                     break
                 }
@@ -110,6 +126,11 @@ extension NativeFeature {
         
         // If we hit the end of the file, we need to make sure we have dealt with
         // the last scenarios
+        if let dataTableLines = state.dataTableLines {
+            let lastStep = state.steps.removeLast()
+            state.steps.append(lastStep + " \(dataTableLines.joined(separator: ","))")
+            state.dataTableLines = nil
+        }
         if let newScenarios = state.scenarios(at: scenarios.count) {
             let description = state.description.joined(separator: "\n")
             newScenarios.forEach { $0.scenarioDescription = description }

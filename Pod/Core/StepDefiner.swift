@@ -151,21 +151,6 @@ open class StepDefiner: NSObject, XCTestObservation {
     }
 
     /**
-     Create a new step with an expression that contains one matching group to match collection of `MatchedStringRepresentable` values
-
-     - parameter expression: The expression to match against
-     - parameter f: The step definition to be run, passing in the first capture group from the expression
-    */
-    open func step<T: Collection & MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
-        self.test.addStep(expression, options: regexOptions, file: file, line: line) { matches in
-            precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
-            let match = matches[0]
-            let value = requireToConvert(T(fromMatch: match), match, expression)
-            f(value)
-        }
-    }
-
-    /**
      If you only want to match the first two parameters, this will help make your code nicer
      
      Don't pass anything for file: or line: - these will be automagically filled out for you. Use it like this:
