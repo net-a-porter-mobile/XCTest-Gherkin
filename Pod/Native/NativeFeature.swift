@@ -20,7 +20,7 @@ private struct FileTags {
     static var Then: [String] { return localized(expression: "then", default: "Then ") }
     static var And: [String] { return localized(expression: "and", default: "And ") }
 
-    static var vacabulary: [String: [String: [String]]]? = {
+    static var vocabulary: [String: [String: [String]]]? = {
         let bundle = Bundle(for: NativeFeature.self)
         guard let path = bundle.path(forResource: "gherkin-languages", ofType: ".json"),
             let data = FileManager.default.contents(atPath: path),
@@ -48,7 +48,7 @@ private struct FileTags {
     }()
 
     static func localized(expression: String, default: String) -> [String] {
-        let localised = vacabulary?[ParseState.language]?[expression]
+        let localised = vocabulary?[ParseState.language]?[expression]
         return localised ?? [`default`]
     }
 }
@@ -56,7 +56,7 @@ private struct FileTags {
 public extension NativeTestCase {
     /// Returns all available localisations of keywords
     static var availableLanguages: [String: [String: [String]]]? {
-        return FileTags.vacabulary
+        return FileTags.vocabulary
     }
 }
 
