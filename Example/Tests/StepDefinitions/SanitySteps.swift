@@ -123,8 +123,8 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
-        step("I'm logged in as (?!known)(\\{.+\\})") { (match: Person) in
-            XCTAssertEqual(match.name, "Nick")
+        step("I'm logged in as (?!known)(\\{.+\\})") { (match: ExampleFeatures.Person) in
+            XCTAssertEqual(match.name, "Alice")
         }
 
         if #available(iOS 11.0, OSX 10.13, *) {
@@ -132,9 +132,9 @@ final class SanitySteps: StepDefiner {
                 XCTAssertNotNil(match["aKnownUser"])
             }
 
-            step("I'm logged in as known (?<user>.+)") { (match: [String: Person]) in
+            step("I'm logged in as known (?<user>.+)") { (match: [String: ExampleFeatures.Person]) in
                 let person = match["user"]!
-                XCTAssertEqual(person.name, "Nick")
+                XCTAssertEqual(person.name, "Alice")
             }
 
             step("I use the example (?<name>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
@@ -142,8 +142,4 @@ final class SanitySteps: StepDefiner {
             }
         }
     }
-}
-
-struct Person: CodableMatchedStringRepresentable {
-    let name: String
 }

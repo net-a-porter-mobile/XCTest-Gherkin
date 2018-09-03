@@ -101,28 +101,54 @@ open class NativeTestCase: XCGNativeInitializer {
         let selector = sel_registerName(scenario.selectorCString)
         let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
         let success = class_addMethod(self, selector, method_getImplementation(method!), method_getTypeEncoding(method!))
-        assert(success, "Could not swizzle feature test method!")
+        precondition(success, "Could not create test method for scenario with name: \(scenario), probably such scenario already exists.")
     }
     
 }
 
 extension XCTestCase {
+    
     func perform(scenario: NativeScenario, from feature: NativeFeature) {
-        let allScenarioStepsDefined = scenario.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true) { $0 && $1 }
-        var allFeatureBackgroundStepsDefined = true
-        
-        if let defined = feature.background?.stepDescriptions.map(state.matchingGherkinStepExpressionFound).reduce(true, { $0 && $1 }) {
-            allFeatureBackgroundStepsDefined = defined
+        func perform(scenario: NativeScenario) {
+            let allScenarioStepsDefined = scenario.stepDescriptions
+                .map { state.matchingGherkinStepExpressionFound($0.expression) }
+                .reduce(true) { $0 && $1 }
+            var allFeatureBackgroundStepsDefined = true
+
+            if let defined = feature.background?.stepDescriptions
+                .map({ state.matchingGherkinStepExpressionFound($0.expression) })
+                .reduce(true, { $0 && $1 }) {
+                allFeatureBackgroundStepsDefined = defined
+            }
+
+            precondition(allScenarioStepsDefined && allFeatureBackgroundStepsDefined,
+                         "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
+
+            if let background = feature.background {
+                background.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
+            }
+
+            scenario.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
         }
-        
-        guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
-            XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-            return
+
+        if let outline = scenario as? NativeScenarioOutline {
+            // Replace each matching placeholder in each line with the example data
+            for (exampleIndex, example) in outline.examples.enumerated() {
+                // This hoop is because the compiler doesn't seem to
+                // recognize map directly on the state.steps object
+                let steps = outline.stepDescriptions.map { step -> StepDescription in
+                    let expression = example.pairs.reduce(step.expression, {
+                        $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
+                    })
+                    return StepDescription(expression: expression, file: step.file, line: step.line)
+                }
+
+                self.state.currentNativeExampleLineNumber = example.lineNumber
+                let scenario = NativeScenario(outline.scenarioDescription, steps: steps, index: outline.index + exampleIndex)
+                perform(scenario: scenario)
+            }
+        } else {
+            perform(scenario: scenario)
         }
-        
-        if let background = feature.background {
-            background.stepDescriptions.forEach({ self.performStep($0) })
-        }
-        scenario.stepDescriptions.forEach({ self.performStep($0) })
     }
 }

@@ -15,22 +15,18 @@ open class NativeRunner {
     public class func runScenario(featureFile: String, scenario: String?, testCase: XCTestCase) {
         testCase.state.loadAllStepsIfNeeded()
 
-        guard let path = (Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile)) else {
-            XCTFail("Path could not be built for feature file: \(featureFile)")
-            return
-        }
-        
-        let features = loadFeatures(path: path)
+        let path = Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile)
+        let featureFilePath = requireNotNil(path, "Path could not be built for feature file: \(featureFile)")
+
+        let features = loadFeatures(path: featureFilePath)
         
         for feature in features {
             let scenarios = feature.scenarios.filter {
                 scenario == nil || $0.scenarioDescription.hasPrefix(scenario!)
             }
             
-            if scenarios.count < 1 {
-                XCTFail("No scenario found with name: \(scenario ?? "<no scenario provided>")")
-            }
-            
+            precondition(!scenarios.isEmpty, "No scenario found with name: \(scenario ?? "<no scenario provided>")")
+
             for scenario in scenarios {
                 testCase.perform(scenario: scenario, from: feature)
             }
@@ -42,11 +38,8 @@ open class NativeRunner {
     }
     
     private class func loadFeatures(path: URL) -> [NativeFeature] {
-        guard let features = NativeFeatureParser(path: path).parsedFeatures() else {
-            assertionFailure("Could not retrieve features from the path '\(path)'")
-            return []
-        }
-        
+        let features = requireNotNil(NativeFeatureParser(path: path).parsedFeatures(),
+                                     "Could not retrieve features from the path '\(path)'")
         return features
     }
 }
