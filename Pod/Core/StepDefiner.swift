@@ -72,11 +72,7 @@ open class StepDefiner: NSObject, XCTestObservation {
             // Convert the matches to the correct type
             var converted = [T]()
             for match in matches {
-                guard let convert = T(fromMatch: match) else {
-                    XCTFail("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
-                    return
-                }
-
+                let convert = requireNotNil(T(fromMatch: match), "Failed to convert \(match) to \(T.self) in \"\(expression)\"")
                 converted.append(convert)
             }
 
@@ -98,17 +94,10 @@ open class StepDefiner: NSObject, XCTestObservation {
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (T)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
-            guard let match = matches.first else {
-                XCTFail("Expected single match not found in \"\(expression)\"")
-                return
-            }
-
-            guard let integer = T(fromMatch: match) else {
-                XCTFail("Could not convert \"\(match)\" to \(T.self)")
-                return
-            }
-
-            f1(integer)
+            precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
+            let match = matches[0]
+            let value = requireNotNil(T(fromMatch: match), "Could not convert \"\(match)\" to \(T.self)")
+            f1(value)
         }
     }
 
@@ -137,7 +126,7 @@ open class StepDefiner: NSObject, XCTestObservation {
     /**
      If you only want to match the first two parameters, this will help make your code nicer
      
-     Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:
+     Don't pass anything for file: or line: - these will be automagically filled out for you. Use it like this:
      
          step("Some (regular|irregular) expression with a second capture group here (.*)") { (match1: String, match2: Int) in
              ... some function ...
@@ -148,22 +137,12 @@ open class StepDefiner: NSObject, XCTestObservation {
      */
     open func step<T: MatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f2: @escaping (T, U)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
-            
-            guard matches.count >= 2 else {
-                XCTFail("Expected at least 2 matches, found \(matches.count) instead, from \"\(expression)\"")
-                return
-            }
+            precondition(matches.count >= 2, "Expected at least 2 matches, found \(matches.count) instead, from \"\(expression)\"")
+            let (match1, match2) = (matches[0], matches[1])
 
-            guard let i1 = T(fromMatch: matches[0]) else {
-                XCTFail("Could not convert '\(matches[0])' to \(T.self), from \"\(expression)\"")
-                return
-            }
+            let i1 = requireNotNil(T(fromMatch: match1), "Could not convert '\(match1)' to \(T.self), from \"\(expression)\"")
+            let i2 = requireNotNil(U(fromMatch: match2), "Could not convert '\(match2)' to \(U.self), from \"\(expression)\"")
 
-            guard let i2 = U(fromMatch: matches[1]) else {
-                XCTFail("Could not convert '\(matches[1])' to \(U.self), from \"\(expression)\"")
-                return
-            }
-            
             f2(i1, i2)
         }
     }
