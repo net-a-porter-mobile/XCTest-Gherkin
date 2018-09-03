@@ -37,18 +37,28 @@ public extension String {
             return String(firstCharacter).uppercased() + String(self.dropFirst())
         }
     }
-    
+
+    func snakeToCamelCase(_ string: String) -> String {
+        return string.components(separatedBy: "_")
+            .filter { !$0.isEmpty }
+            .map({ $0.uppercaseFirstLetterString })
+            .joined()
+    }
+
     /**
-     Given `CamelCaseString` this will return `Camel Case String`
+     Given `CamelCaseString` or `snake_case_string` this will return `Camel Case String`
      
      TODO: There is probably a more efficient way to do this. Technically this is O(n) I guess, just not a very nice O(n).
      */
     var humanReadableString: String {
         get {
-            guard self.count > 1, let firstCharacter = self.first else { return self }
-            return String(firstCharacter) + self.dropFirst().reduce("") { (word, character) in
+            let string = snakeToCamelCase(self)
+            guard string.count > 1, let firstCharacter = string.first else { return string }
+            return String(firstCharacter) + string.dropFirst().reduce("") { (word, character) in
                 let letter = String(character)
-                if letter == letter.uppercased() {
+                let lastIsLetter = !word.isEmpty && String(word.last!).rangeOfCharacter(from: .letters) != nil
+                let thisIsLetter = letter.rangeOfCharacter(from: .letters) != nil
+                if letter == letter.uppercased() && (lastIsLetter || (!lastIsLetter && thisIsLetter)) {
                     return word + " " + letter
                 }
                 else {
