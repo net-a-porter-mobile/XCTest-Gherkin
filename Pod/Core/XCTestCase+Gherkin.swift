@@ -27,14 +27,17 @@ class GherkinState: NSObject, XCTestObservation {
     var currentStepDepth: Int = 0
     
     // file and line from where currently executed step was invoked
-    var currentStepLocation: (file: StaticString, line: UInt)!
+    var currentStepLocation: (file: String, line: Int)!
 
     // When we are in an Outline block, this defines the examples to loop over
     var examples: [Example]?
     
     // The current example the Outline is running over
     var currentExample: Example?
-    
+
+    // currently executed example line when running test from feature file
+    var currentNativeExampleLineNumber: Int?
+
     // Store the name of the current test to help debugging output
     var currentTestName: String = "NO TESTS RUN YET"
     
@@ -49,14 +52,16 @@ class GherkinState: NSObject, XCTestObservation {
     }
 
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
-        guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
-        let file = "\(currentStepLocation.file)"
-        let line = Int(currentStepLocation.line)
-        guard filePath != file, lineNumber != line else { return }
+        guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
+        if filePath == file && lineNumber == line { return }
+
         if automaticScreenshotsBehaviour.contains(.onFailure) {
             test.attachScreenshot()
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+        if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
+            test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
+        }
     }
 
     func testCaseDidFinish(_ testCase: XCTestCase) {
@@ -154,22 +159,22 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Given(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func When(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func Then(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) { self.performStep(expression, file: file, line: line) }
+    func And(_ expression: String, file: String = #file, line: Int = #line) { self.performStep(expression, file: file, line: line) }
     
 }
 
@@ -229,7 +234,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String, file: StaticString = #file, line: UInt = #line) {
+    func performStep(_ initialExpression: String, file: String = #file, line: Int = #line) {
 
         func perform(expression: String) {
             
@@ -242,10 +247,9 @@ extension XCTestCase {
             // If we are in an example, transform the step to reflect the current example's value
             if let example = state.currentExample {
                 // For each field in the example, go through the step expression and replace the placeholders if needed
-                example.forEach { (key, value) in
-                    let needle = "<\(key)>"
-                    expression = (expression as NSString).replacingOccurrences(of: needle, with: String(describing: value))
-                }
+                expression = example.reduce(expression, {
+                    $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
+                })
             }
             
             // Get the step and the matches inside it
