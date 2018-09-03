@@ -101,7 +101,7 @@ open class NativeTestCase: XCGNativeInitializer {
         let selector = sel_registerName(scenario.selectorCString)
         let method = class_getInstanceMethod(self, #selector(featureScenarioTest))
         let success = class_addMethod(self, selector, method_getImplementation(method!), method_getTypeEncoding(method!))
-        assert(success, "Could not swizzle feature test method!")
+        precondition(success, "Could not create test method for scenario with name: \(scenario), probably such scenario already exists.")
     }
     
 }
@@ -121,10 +121,8 @@ extension XCTestCase {
                 allFeatureBackgroundStepsDefined = defined
             }
 
-            guard allScenarioStepsDefined && allFeatureBackgroundStepsDefined else {
-                XCTFail("Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-                return
-            }
+            precondition(allScenarioStepsDefined && allFeatureBackgroundStepsDefined,
+                         "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
 
             if let background = feature.background {
                 background.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
