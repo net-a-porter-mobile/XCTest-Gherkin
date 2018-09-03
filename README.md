@@ -56,7 +56,7 @@ class SomeStepDefinitions : StepDefiner {
 }
 ```
 
-These steps match (via regular expressions, using `NSRegularExpression` obvs) and return the capture groups (if there are any). The second step will capture the digits from the end of the test and compare it to the current state of the UI.
+These steps match (via regular expressions, using **case insensitive** `NSRegularExpression`) and return the capture groups (if there are any). The second step will capture the digits from the end of the test and compare it to the current state of the UI.
 
 There are convenience versions of the step method which extract the first match for you:
 
