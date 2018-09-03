@@ -38,6 +38,7 @@
 - (NSArray<NSString *> *)steps {
     return self.allSteps.allObjects;
 }
+
 - (void)setSteps:(NSArray<NSString *> *)steps {
     [self.allSteps addObjectsFromArray:steps];
 }

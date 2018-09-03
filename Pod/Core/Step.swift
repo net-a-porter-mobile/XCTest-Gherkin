@@ -70,10 +70,17 @@ extension Collection where Element == Step {
 }
 
 extension Collection where Element == String {
-    func printAsTemplatedCodeForAllMissingSteps() {
+    func printAsTemplatedCodeForAllMissingSteps(suggestedSteps: (String) -> [Step]) {
         print("Copy paste these steps in a StepDefiner subclass:")
         print("-------------")
-        self.forEach({ print($0) })
+        self.forEach {
+            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
+            let suggestedSteps = suggestedSteps($0)
+            if !suggestedSteps.isEmpty {
+                print("-------------\nOr maybe you meant one of these steps:\n-------------")
+                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
+            }
+        }
         print("-------------")
     }
 
