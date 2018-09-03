@@ -26,6 +26,7 @@ private struct FileTags {
             let data = FileManager.default.contents(atPath: path),
             let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: [String: [String]]]
             else {
+                print("Failed to read localisation file `gherkin-languages.json`, check that it is in bundle")
                 return nil
         }
         var dict = [String: [String: [String]]]()
