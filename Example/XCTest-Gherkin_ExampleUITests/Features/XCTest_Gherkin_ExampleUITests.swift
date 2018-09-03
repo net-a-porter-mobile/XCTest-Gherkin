@@ -15,5 +15,18 @@ class XCTest_Gherkin_ExampleUITests: XCTestCase {
         Given("I have launched the app")
         When("I tap the PushMe button")
     }
-    
+
+    func testPresentModal() {
+        self.continueAfterFailure = false
+
+        Given("I have launched the app")
+        Then("I see Initial Screen")
+
+        When("I press Push Me button")
+        Then("I should see the Modal Screen")
+
+        When("I press Close Me button")
+        Then("it is Initial Screen")
+    }
+
 }
