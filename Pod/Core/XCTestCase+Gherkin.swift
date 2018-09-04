@@ -27,14 +27,17 @@ class GherkinState: NSObject, XCTestObservation {
     var currentStepDepth: Int = 0
     
     // file and line from where currently executed step was invoked
-    var currentStepLocation: (file: StaticString, line: UInt)!
+    var currentStepLocation: (file: String, line: Int)!
 
     // When we are in an Outline block, this defines the examples to loop over
     var examples: [Example]?
     
     // The current example the Outline is running over
     var currentExample: Example?
-    
+
+    // currently executed example line when running test from feature file
+    var currentNativeExampleLineNumber: Int?
+
     // Store the name of the current test to help debugging output
     var currentTestName: String = "NO TESTS RUN YET"
     var currentSuiteName: String = "NO TESTS RUN YET"
@@ -54,14 +57,16 @@ class GherkinState: NSObject, XCTestObservation {
     }
 
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
-        guard let test = self.test, let currentStepLocation = test.state.currentStepLocation else { return }
-        let file = "\(currentStepLocation.file)"
-        let line = Int(currentStepLocation.line)
+        guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
+
         if automaticScreenshotsBehaviour.contains(.onFailure) {
             test.attachScreenshot()
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
+        if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
+            test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
+        }
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -132,7 +137,7 @@ class GherkinState: NSObject, XCTestObservation {
             subclass.init(test: self.test!).defineSteps()
         }
         
-        assert(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
+        precondition(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
 }
 
@@ -165,28 +170,28 @@ public extension XCTestCase {
     /**
      Run the step matching the specified expression
      */
-    func Given(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+    func Given(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "Given", file: file, line: line)
     }
     
     /**
      Run the step matching the specified expression
      */
-    func When(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+    func When(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "When", file: file, line: line)
     }
     
     /**
      Run the step matching the specified expression
      */
-    func Then(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+    func Then(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "Then", file: file, line: line)
     }
     
     /**
      Run the step matching the specified expression
      */
-    func And(_ expression: String, file: StaticString = #file, line: UInt = #line) {
+    func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
     
@@ -248,7 +253,7 @@ extension XCTestCase {
     /**
      Finds and performs a step test based on expression
      */
-    func performStep(_ initialExpression: String, keyword: String, file: StaticString = #file, line: UInt = #line) {
+    func performStep(_ initialExpression: String, keyword: String, file: String = #file, line: Int = #line) {
         // Get a mutable copy - if we are in an outline we might be changing this
         var expression = initialExpression
 
@@ -258,9 +263,8 @@ extension XCTestCase {
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
-            example.forEach { (key, value) in
-                let needle = "<\(key)>"
-                expression = (expression as NSString).replacingOccurrences(of: needle, with: String(describing: value))
+            expression = example.reduce(expression) {
+                $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
             }
         }
 
@@ -271,7 +275,7 @@ extension XCTestCase {
                 self.state.printTemplatedCodeForAllMissingSteps()
                 self.state.resetMissingSteps()
             }
-            fatalError("Failed to find a match for a step: \(expression)")
+            preconditionFailure("Failed to find a match for a step: \(expression)")
         }
 
         // Covert them to strings to pass back into the step function
@@ -305,7 +309,7 @@ extension XCTestCase {
         state.currentStepName = expression
 
         // Run the step
-        XCTContext.runActivity(named: "\(initialExpression)  \(step.locationDescription)") { (_) in
+        XCTContext.runActivity(named: "\(keyword) \(expression)  \(step.locationDescription)") { (_) in
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
@@ -328,4 +332,9 @@ extension XCTestCase {
     fileprivate func currentStepDepthString() -> String {
         return String(repeating: "  ", count: state.currentStepDepth)
     }
+}
+
+func requireNotNil<T>(_ expr: @autoclosure () -> T?, _ message: String) -> T {
+    guard let value = expr() else { preconditionFailure(message) }
+    return value
 }

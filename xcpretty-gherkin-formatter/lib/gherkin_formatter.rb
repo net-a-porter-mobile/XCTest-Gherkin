@@ -20,7 +20,7 @@ class TravisFormatter < XCPretty::Simple
       return format_scenario(text)
     when STEP_MATCHER
       text = format_performed_step(method(:green))
-      @performed_step = INDENT + $1 + "  " + gray($2)
+      @performed_step = INDENT + $1 + "  " + gray("(#{$2})")
       return text
     else
       parser.parse(text)

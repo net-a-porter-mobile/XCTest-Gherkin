@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -14,16 +18,19 @@
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exv-kf-IFk">
-                                <rect key="frame" x="270" y="50" width="60" height="30"/>
+                                <rect key="frame" x="157.5" y="50" width="60" height="30"/>
                                 <accessibility key="accessibilityConfiguration" identifier="PushMe"/>
                                 <state key="normal" title="Push Me"/>
+                                <connections>
+                                    <segue destination="0X7-uR-G8N" kind="presentation" id="q9V-fh-2cI"/>
+                                </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="exv-kf-IFk" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="b91-lj-hXN"/>
                             <constraint firstItem="exv-kf-IFk" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="30" id="v3O-Yw-Qh0"/>
@@ -32,6 +39,39 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="fo4-fC-YEP">
+            <objects>
+                <viewController id="0X7-uR-G8N" customClass="ViewController" customModule="XCTest_Gherkin_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vSJ-GO-BLA"/>
+                        <viewControllerLayoutGuide type="bottom" id="khz-9q-ibU"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="CSs-qC-XrM">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nBS-lT-Gtc">
+                                <rect key="frame" x="155.5" y="50" width="64" height="30"/>
+                                <accessibility key="accessibilityConfiguration" identifier="CloseMe"/>
+                                <state key="normal" title="Close Me"/>
+                                <connections>
+                                    <segue destination="DQ0-0U-oSi" kind="unwind" unwindAction="closeModal:" id="vXY-Bs-5rq"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="nBS-lT-Gtc" firstAttribute="top" secondItem="vSJ-GO-BLA" secondAttribute="bottom" constant="30" id="Djl-vV-mkt"/>
+                            <constraint firstItem="nBS-lT-Gtc" firstAttribute="centerX" secondItem="CSs-qC-XrM" secondAttribute="centerX" id="v07-U3-7Wv"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZxW-MM-xiQ" sceneMemberID="firstResponder"/>
+                <exit id="DQ0-0U-oSi" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="895" y="32"/>
         </scene>
     </scenes>
 </document>
