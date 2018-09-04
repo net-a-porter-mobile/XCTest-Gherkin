@@ -246,8 +246,8 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(
                 match.values,
                 [
-                    NativeDataTableTest.Person(name: "Alice", age: "20", height: "170"),
-                    NativeDataTableTest.Person(name: "Bob", age: "21", height: "171")
+                    NativeDataTableTest.Person(name: "Alice", age: "20", height: 170, fulltime: true),
+                    NativeDataTableTest.Person(name: "Bob", age: "21", height: 171, fulltime: false)
                 ]
             )
         }
@@ -256,8 +256,8 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(
                 match.values,
                 [
-                    "1": NativeDataTableTest.Person(name: "Alice", age: "20", height: "170"),
-                    "2": NativeDataTableTest.Person(name: "Bob", age: "21", height: "171")
+                    1: NativeDataTableTest.Person(name: "Alice", age: "20", height: 170, fulltime: true),
+                    2: NativeDataTableTest.Person(name: "Bob", age: "21", height: 171, fulltime: false)
                 ]
             )
         }

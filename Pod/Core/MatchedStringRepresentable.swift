@@ -25,7 +25,11 @@ extension Double: MatchedStringRepresentable { }
 
 extension Bool: MatchedStringRepresentable {
     public init?(fromMatch match: String) {
-        self.init(match.lowercased())
+        switch match.lowercased() {
+        case "true", "yes", "y": self = true
+        case "false", "no", "n": self = false
+        default: return nil
+        }
     }
 }
 

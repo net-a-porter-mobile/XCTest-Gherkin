@@ -14,7 +14,8 @@ final class NativeDataTableTest: NativeTestCase {
     struct Person: CodableMatchedStringRepresentable, Equatable {
         let name: String
         let age: String
-        let height: String
+        let height: Int
+        let fulltime: Bool
     }
 
     override class func path() -> URL? {

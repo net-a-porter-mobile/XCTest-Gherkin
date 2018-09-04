@@ -43,13 +43,13 @@ Feature: Data tables
 
     Scenario: data table with codable values
         Given I have the following persons:
-        | name  | age | height |
-        | Alice | 20  | 170    |
-        | Bob   | 21  | 171    |
+        | name  | age   | height |  fulltime  |
+        | Alice | "20"  | 170    |    true    |
+        | Bob   | "21"  | 171    |    false   |
 
     Scenario: data table with hash map of codable values
         Given I have the following persons by id:
-        |   | name  | age | height |
-        | 1 | Alice | 20  | 170    |
-        | 2 | Bob   | 21  | 171    |
+        |   | name  | age   | height |  fulltime  |
+        | 1 | Alice | "20"  | 170    |      Y     |
+        | 2 | Bob   | '21'  | 171    |      N     |
 

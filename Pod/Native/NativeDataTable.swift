@@ -9,7 +9,7 @@ import Foundation
 
 extension String: Error {}
 
-public struct NativeDataTable<T: Collection & Codable> {
+public struct NativeDataTable<T: Collection> {
     public let values: T
 
     public init?(fromMatch match: String, transform: ([[String]]) throws -> T) {
@@ -40,7 +40,7 @@ public struct NativeDataTable<T: Collection & Codable> {
 }
 
 extension StepDefiner {
-    func step<T: Collection & Codable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<T>)->(), transform: @escaping ([[String]]) throws -> T) {
+    func step<T: Collection>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<T>)->(), transform: @escaping ([[String]]) throws -> T) {
         self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
             guard let match = matches.first else {
                 XCTFail("Expected single match not found in \"\(expression)\"")
@@ -75,7 +75,7 @@ extension StepDefiner {
                 throw "Table should contain single column"
             }
             return try values.map {
-                guard let value = T.init(fromMatch: $0[0]) else {
+                guard let value = T(fromMatch: $0[0]) else {
                     throw "Failed to convert \($0[0]) to \(T.self)"
                 }
                 return value
@@ -96,7 +96,7 @@ extension StepDefiner {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [[T]] in
             return try values.map { row in
                 try row.map { (cell) -> T in
-                    guard let value = T.init(fromMatch: cell) else {
+                    guard let value = T(fromMatch: cell) else {
                         throw "Failed to convert \(cell) to \(T.self)"
                     }
                     return value
@@ -126,7 +126,7 @@ extension StepDefiner {
             return try values.reduce(into: [[String: T]]()) { values, row in
                 let value = try row.enumerated().reduce(into: [String: T]()) { (values, cell) in
                     let title = titles[cell.offset]
-                    guard let value = T.init(fromMatch: cell.element) else {
+                    guard let value = T(fromMatch: cell.element) else {
                         throw "Failed to convert \(cell.element) to \(T.self)"
                     }
                     values[title] = value
@@ -158,7 +158,7 @@ extension StepDefiner {
                 throw "Table should contain two columns"
             }
             return try values.reduce(into: [String: T]()) { (values, row) in
-                guard let value = T.init(fromMatch: row[1]) else {
+                guard let value = T(fromMatch: row[1]) else {
                     throw "Failed to convert \(row[1]) to \(T.self)"
                 }
                 values[row[0]] = value
@@ -185,7 +185,7 @@ extension StepDefiner {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [String: [T]] in
             return try values.reduce(into: [String: [T]]()) { (values, row) in
                 values[row[0]] = try row.dropFirst().map { cell in
-                    guard let value = T.init(fromMatch: cell) else {
+                    guard let value = T(fromMatch: cell) else {
                         throw "Failed to convert \(cell) to \(T.self)"
                     }
                     return value
@@ -217,7 +217,7 @@ extension StepDefiner {
             return try values.reduce(into: [String: [String: T]]()) { (values, row) in
                 values[row[0]] = try Array(row.dropFirst()).enumerated().reduce(into: [String: T](), { (values, cell) in
                     let title = titles[cell.offset]
-                    guard let value = T.init(fromMatch: cell.element) else {
+                    guard let value = T(fromMatch: cell.element) else {
                         throw "Failed to convert \(cell.element) to \(T.self)"
                     }
                     values[title] = value
@@ -236,8 +236,8 @@ extension StepDefiner {
 
      Output:
      [
-     Person(name: "Alice", age: "20", height: "170"),
-     Person(name: "Bob", age: "21", height: "171")
+     Person(name: "Alice", age: 20, height: 170),
+     Person(name: "Bob", age: 21, height: 171)
      ]
     */
     open func step<T: CodableMatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[T]>)->()) {
@@ -245,11 +245,11 @@ extension StepDefiner {
             var values = values
             let titles = values.removeFirst()
             return try values.reduce(into: [T]()) { values, row in
-                let value = row.enumerated().reduce(into: [String: String]()) { (values, cell) in
+                let value = row.enumerated().reduce(into: [String: Any]()) { (values, cell) in
                     let title = titles[cell.offset]
-                    values[title] = cell.element
+                    values[title] = cell.element.cellValue
                 }
-                let data = try JSONEncoder().encode(value)
+                let data = try JSONSerialization.data(withJSONObject: value, options: [])
                 let decoded = try JSONDecoder().decode(T.self, from: data)
                 values.append(decoded)
             }
@@ -266,24 +266,43 @@ extension StepDefiner {
 
      Output:
      [
-     "1": Person(name: "Alice", age: "20", height: "170"),
-     "2": Person(name: "Bob", age: "21", height: "171")
+     1: Person(name: "Alice", age: 20, height: 170),
+     2: Person(name: "Bob", age: 21, height: 171)
      ]
     */
-    open func step<T: CodableMatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: T]>)->()) {
-        self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [String: T] in
+    open func step<T: CodableMatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[U: T]>)->()) {
+        self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [U: T] in
             var values = values
             let titles = Array(values.removeFirst().dropFirst())
-            return try values.reduce(into: [String: T]()) { (values, row) in
-                let value = Array(row.dropFirst()).enumerated().reduce(into: [String: String](), { (values, cell) in
+            return try values.reduce(into: [U: T]()) { (values, row) in
+                guard let key = U(fromMatch: row[0]) else {
+                    throw "Failed to convert \(row[0]) to \(U.self)"
+                }
+                let value = Array(row.dropFirst()).enumerated().reduce(into: [String: Any](), { (values, cell) in
                     let title = titles[cell.offset]
-                    values[title] = cell.element
+                    values[title] = cell.element.cellValue
                 })
-                let data = try JSONEncoder().encode(value)
+                let data = try JSONSerialization.data(withJSONObject: value, options: [])
                 let decoded = try JSONDecoder().decode(T.self, from: data)
-                values[row[0]] = decoded
+                values[key] = decoded
             }
         }
     }
 
 }
+
+private extension String {
+    var cellValue: Any {
+        if (hasPrefix("\"") && hasSuffix("\"")) || (hasPrefix("'") && hasSuffix("'")) {
+            return String(self.dropFirst().dropLast())
+        } else if let float = Double(fromMatch: self) {
+            return float
+        } else if let bool = Bool(fromMatch: self) {
+            return bool
+        } else {
+            return self
+        }
+    }
+
+}
+
