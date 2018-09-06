@@ -78,11 +78,14 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
     
     var debugDescription: String {
         get {
-            // We only want the output the final filename part of `file`
-            let name = (file as NSString).lastPathComponent
-            
-            return "/\(expression)/  (\(name):\(line))"
+            return "/\(expression)/  \(locationDescription)"
         }
+    }
+
+    var locationDescription: String {
+        // We only want the output the final filename part of `file`
+        let name = (file as NSString).lastPathComponent
+        return "(\(name):\(line))"
     }
 }
 

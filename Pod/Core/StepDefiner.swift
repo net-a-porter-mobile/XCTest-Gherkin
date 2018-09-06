@@ -175,6 +175,6 @@ open class StepDefiner: NSObject, XCTestObservation {
 
      */
     open func step(_ expression: String) {
-        self.test.performStep(expression)
+        self.test.performStep(expression, keyword: "")
     }
 }

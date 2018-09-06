@@ -125,10 +125,10 @@ extension XCTestCase {
                          "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
 
             if let background = feature.background {
-                background.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
+                background.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
             }
 
-            scenario.stepDescriptions.forEach({ self.performStep($0.expression, file: $0.file, line: $0.line) })
+            scenario.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
         }
 
         if let outline = scenario as? NativeScenarioOutline {
@@ -140,7 +140,7 @@ extension XCTestCase {
                     let expression = example.pairs.reduce(step.expression, {
                         $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
                     })
-                    return StepDescription(expression: expression, file: step.file, line: step.line)
+                    return StepDescription(keyword: step.keyword, expression: expression, file: step.file, line: step.line)
                 }
 
                 self.state.currentNativeExampleLineNumber = example.lineNumber

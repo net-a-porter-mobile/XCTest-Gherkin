@@ -9,6 +9,7 @@
 import Foundation
 
 struct StepDescription {
+    let keyword: String
     let expression: String
     let file: String
     let line: Int
