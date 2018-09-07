@@ -310,7 +310,7 @@ extension XCTestCase {
         let (matches, debugDescription) = step.matches(from: match, expression: expression)
 
         // Debug the step name
-        print("    step \(keyword) \(currentStepDepthString())\(expression)  \(step.locationDescription)")
+        print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.locationDescription)")
 
         // Run the step
         XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.locationDescription)") { (_) in
