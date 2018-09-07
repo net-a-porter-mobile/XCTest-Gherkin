@@ -73,7 +73,6 @@ step("This value should be between ([0-9]*) and ([0-9]*)") { (match1: String, ma
 ```
 
 ### Captured value types
-
 In step definition with captured values you can use any type conforming to `MatchedStringRepresentable`. `String`, `Double`, `Int` and `Bool` types already conform to this protocol. You can also match your custom types by conforming them to `CodableMatchedStringRepresentable`. This requires type to implement only `Codable` protocol methods, `MatchedStringRepresentable` implementation is provided by the library.
 
 ```swift
@@ -92,6 +91,38 @@ func testLoggedInUser() {
     let nick = Person(name: "Nick")
     Given("User is loggeed in as \(nick)")
 }
+```
+
+### Named capture groups
+On iOS 11 and macOS 10.13 you can use named capture groups to improve your console and activity logs. The name of the group will be transformed to human readable form and will replace the step expression substring that it captures. This is particularly useful when you use your custom types as step parameters as described in the previous section.
+
+Without named capture groups such test
+
+```swift
+step("User is logged in as (.+)") { (match: Person) in ... }
+
+func testLoggedInUser() {
+    let nick = Person(name: "Nick")
+    Given("User is loggeed in as \(Person(name: "Nick"))")
+}
+```
+
+will produce following logs:
+
+```
+step User is loggeed in as {"name":"Nick"}
+```
+
+With named capture groups the step definition can look like
+
+```swift
+step("User is logged in as (?<aRegisteredUser>.+)") { (match: Person) in ... }
+```
+
+and the same test will produce logs:
+
+```
+step User is logged in as a registered user
 ```
 
 ### Examples and feature outlines

@@ -245,11 +245,23 @@ extension XCTestCase {
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(_ expression: String, file: String, line: Int, _ function: @escaping ([String])->()) {
+    func addStep(_ expression: String, file: String, line: Int, functionWithUnnamedMatchs function: @escaping ([String])->()) {
+        self.addStep(expression, file: file, line: line, function: { matches in
+            function(matches as! [String])
+        })
+    }
+
+    func addStep(_ expression: String, file: String, line: Int, functionWithNamedMatches function: @escaping ([String: String])->()) {
+        self.addStep(expression, file: file, line: line, function: { matches in
+            function(matches as! [String: String])
+        })
+    }
+
+    private func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepFunctionParameters)->()) {
         let step = Step(expression, file: file, line: line, function)
         state.steps.insert(step);
     }
-    
+
     /**
      Finds and performs a step test based on expression
      */
@@ -278,15 +290,6 @@ extension XCTestCase {
             preconditionFailure("Failed to find a match for a step: \(expression)")
         }
 
-        // Covert them to strings to pass back into the step function
-        // TODO: This should really only need to be a map function :(
-        var matchStrings = Array<String>()
-        for i in 1..<match.numberOfRanges {
-            let range = match.range(at: i)
-            let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
-            matchStrings.append(string)
-        }
-
         // If this the first step, debug the test name as well
         if state.currentStepDepth == 0 {
             let suiteName = String(describing: type(of: self))
@@ -303,19 +306,22 @@ extension XCTestCase {
             }
         }
 
+        state.currentStepName = expression
+        let (matches, debugDescription) = step.matches(from: match, expression: expression)
+
         // Debug the step name
         print("    step \(keyword) \(currentStepDepthString())\(expression)  \(step.locationDescription)")
 
-        state.currentStepName = expression
-
         // Run the step
-        XCTContext.runActivity(named: "\(keyword) \(expression)  \(step.locationDescription)") { (_) in
+        XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.locationDescription)") { (_) in
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
                 attachScreenshot()
             }
-            step.function(matchStrings)
+
+            step.function(matches)
+
             if automaticScreenshotsBehaviour.contains(.afterStep) {
                 attachScreenshot()
             }
