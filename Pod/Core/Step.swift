@@ -46,20 +46,23 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
 
     func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepFunctionParameters, stepDescription: String) {
         if #available(iOS 11.0, OSX 10.13, *) {
-            let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+\\))")
-            let namedGroups = namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count))
-            if !namedGroups.isEmpty {
-                var debugDescription = self.expression
-                let matches: [String: String] = .init(uniqueKeysWithValues: namedGroups.map { (namedGroupMatch) -> (String, String) in
-                    let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
-                    debugDescription = (debugDescription as NSString).replacingCharacters(in: namedGroupMatch.range(at: 1), with: groupName.humanReadableString.lowercased())
+            let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+?\\))")
+            var debugDescription = expression
+            var namedMatches = [String: String]()
+            namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count)).forEach { (namedGroupMatch) in
+                let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
+                let range = match.range(withName: groupName)
+                let value = (expression as NSString).substring(with: range)
+                debugDescription = (debugDescription as NSString).replacingCharacters(in: range, with: groupName.humanReadableString.lowercased())
+                namedMatches[groupName] = value
+            }
+            if !namedMatches.isEmpty {
+                var allMatches = (1..<match.numberOfRanges).reduce(into: [String: String]()) { current, index in
+                    current["\(index)"] = (expression as NSString).substring(with: match.range(at: index))
+                }
+                allMatches.merge(namedMatches, uniquingKeysWith: { $1 })
 
-                    let range = match.range(withName: groupName)
-                    let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
-                    return (groupName, string)
-                })
-
-                return (matches, debugDescription)
+                return (allMatches, debugDescription)
             }
         }
 

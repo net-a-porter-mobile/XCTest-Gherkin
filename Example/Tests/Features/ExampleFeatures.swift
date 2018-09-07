@@ -150,7 +150,7 @@ final class ExampleFeatures: XCTestCase {
 
     func testStepWithNamedCodableMatch() {
         if #available(iOS 11.0, OSX 10.13, *) {
-            Given("I'm logged in as known \(Person(name: "Alice", age: 27, height: 170))")
+            Given("I'm logged in as a known \(Person(name: "Alice", age: 27, height: 170))")
         }
     }
 
@@ -159,8 +159,7 @@ final class ExampleFeatures: XCTestCase {
             Examples(examples)
 
             Outline {
-                Given("I use the example <name>")
-                Then("The height should be <height>")
+                Then("I use the example <name> and the height <height>")
             }
         }
     }

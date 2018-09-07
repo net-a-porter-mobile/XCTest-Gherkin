@@ -132,13 +132,15 @@ final class SanitySteps: StepDefiner {
                 XCTAssertNotNil(match["aKnownUser"])
             }
 
-            step("I'm logged in as known (?<user>.+)") { (match: [String: ExampleFeatures.Person]) in
+            step("I'm logged in as a known (?<user>.+)") { (match: [String: ExampleFeatures.Person]) in
                 let person = match["user"]!
                 XCTAssertEqual(person.name, "Alice")
             }
 
-            step("I use the example (?<name>Alice|Bob)") { (match: [String: MatchedStringRepresentable]) in
+            step("I use the example (?<name>Alice|Bob) and the height ([0-9]+)") { (match: [String: String]) in
                 XCTAssertNotNil(match["name"])
+                XCTAssertEqual(match["name"], match["1"])
+                XCTAssertEqual(match["2"], "170")
             }
         }
     }
