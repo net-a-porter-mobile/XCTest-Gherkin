@@ -27,11 +27,11 @@ class ParseState {
         self.parsingBackground = parsingBackground
     }
     
-    private var examples: [NativeExample] {
+    private var examples: [Example] {
         get {
             if self.exampleLines.count < 2 { return [] }
             
-            var examples: [NativeExample] = []
+            var examples: [Example] = []
             
             // The first line is the titles
             let titles = self.exampleLines.first!.line.components(separatedBy: "|").map { $0.trimmingCharacters(in: whitespace) }
@@ -59,27 +59,11 @@ class ParseState {
     
     func background() -> NativeBackground? {
         guard parsingBackground, let description = self.description, self.steps.count > 0 else { return nil }
-        
         return NativeBackground(description, steps: self.steps)
     }
     
-    func scenarios(at index: Int) -> [NativeScenario]? {
+    func scenario() -> NativeScenario? {
         guard let description = self.description, self.steps.count > 0 else { return nil }
-        
-        var scenarios = Array<NativeScenario>()
-        
-        // If we have no examples then we have one scenario.
-        // Otherwise we need to make more than one scenario.
-        if self.examples.isEmpty {
-            scenarios.append(NativeScenario(description, steps: self.steps, index: index))
-        } else {
-            scenarios.append(NativeScenarioOutline(description, steps: self.steps, examples: self.examples, index: index))
-        }
-        
-        self.description = nil
-        self.steps = []
-        self.exampleLines = []
-        
-        return scenarios
+        return NativeScenario(description, steps: self.steps, examples: self.examples)
     }
 }

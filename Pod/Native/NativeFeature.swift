@@ -71,8 +71,8 @@ extension NativeFeature {
         func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
             if let aBackground = state.background() {
                 background = aBackground
-            } else if let newScenarios = state.scenarios(at: scenarios.count) {
-                scenarios.append(contentsOf: newScenarios)
+            } else if let newScenario = state.scenario() {
+                scenarios.append(newScenario)
             }
             state = ParseState(description: lineSuffix)
         }
@@ -121,8 +121,8 @@ extension NativeFeature {
         
         // If we hit the end of the file, we need to make sure we have dealt with
         // the last scenarios
-        if let newScenarios = state.scenarios(at: scenarios.count) {
-            scenarios.append(contentsOf: newScenarios)
+        if let newScenario = state.scenario() {
+            scenarios.append(newScenario)
         }
     
         return (background, scenarios)

@@ -18,47 +18,26 @@ struct StepDescription {
 class NativeScenario: CustomStringConvertible {
     let scenarioDescription: String
     let stepDescriptions: [StepDescription]
-    let index: Int
+    let examples: [Example]
 
     /**
      If the scenario description is 'Test funny things are funny' then the result of calling
      `selectorName` would be `testTestFunnyThingsAreFunny`
      */
-    var selectorString: String {
-        get { return "test\(self.leftPad(index))\(self.scenarioDescription.camelCaseify)" }
-    }
+    let selectorString: String
     
-    var selectorCString: UnsafeMutablePointer<Int8> {
-        get { return strdup(self.selectorString) }
-    }
+    let selectorCString: UnsafeMutablePointer<Int8>
     
-    required init(_ description: String, steps: [StepDescription], index: Int = 0) {
+    required init(_ description: String, steps: [StepDescription], examples: [Example] = []) {
         self.scenarioDescription = description
         self.stepDescriptions = steps
-        self.index = index
+        self.examples = examples
+        self.selectorString = "test\(self.scenarioDescription.camelCaseify)"
+        self.selectorCString = strdup(self.selectorString)
     }
     
     var description: String {
-        get {
-            return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
-        }
-    }
-    
-    private func leftPad(_ index: Int) -> NSString {
-        return NSString(format: "%03i", index)
-    }
-}
-
-class NativeScenarioOutline: NativeScenario {
-    let examples: [NativeExample]
-
-    required init(_ description: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
-        self.examples = examples
-        super.init(description, steps: steps, index: index)
-    }
-
-    required init(_ description: String, steps: [StepDescription], index: Int) {
-        fatalError("init(_:steps:index:) has not been implemented")
+        return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
     }
 }
 

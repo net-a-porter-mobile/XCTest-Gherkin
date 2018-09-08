@@ -110,45 +110,20 @@ extension XCTestCase {
     
     func perform(scenario: NativeScenario, from feature: NativeFeature) {
         func perform(scenario: NativeScenario) {
-            let allScenarioStepsDefined = scenario.stepDescriptions
-                .map { state.matchingGherkinStepExpressionFound($0.expression) }
-                .reduce(true) { $0 && $1 }
-            var allFeatureBackgroundStepsDefined = true
-
-            if let defined = feature.background?.stepDescriptions
-                .map({ state.matchingGherkinStepExpressionFound($0.expression) })
-                .reduce(true, { $0 && $1 }) {
-                allFeatureBackgroundStepsDefined = defined
-            }
-
-            precondition(allScenarioStepsDefined && allFeatureBackgroundStepsDefined,
-                         "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-
             if let background = feature.background {
                 background.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
             }
-
             scenario.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
         }
 
-        if let outline = scenario as? NativeScenarioOutline {
-            // Replace each matching placeholder in each line with the example data
-            for (exampleIndex, example) in outline.examples.enumerated() {
-                // This hoop is because the compiler doesn't seem to
-                // recognize map directly on the state.steps object
-                let steps = outline.stepDescriptions.map { step -> StepDescription in
-                    let expression = example.pairs.reduce(step.expression, {
-                        $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
-                    })
-                    return StepDescription(keyword: step.keyword, expression: expression, file: step.file, line: step.line)
-                }
-
-                self.state.currentNativeExampleLineNumber = example.lineNumber
-                let scenario = NativeScenario(outline.scenarioDescription, steps: steps, index: outline.index + exampleIndex)
-                perform(scenario: scenario)
-            }
-        } else {
+        if scenario.examples.isEmpty {
             perform(scenario: scenario)
+        } else {
+            scenario.examples.forEach { example in
+                state.currentExample = example
+                perform(scenario: scenario)
+                state.currentExample = nil
+            }
         }
     }
 }
