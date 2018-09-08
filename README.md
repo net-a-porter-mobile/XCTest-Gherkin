@@ -113,10 +113,10 @@ will produce following logs:
 step User is loggeed in as {"name":"Nick"}
 ```
 
-With named capture groups the step definition can look like this (notice that `match` is now a dictionary)
+With named capture groups the step definition can look like this (notice that `match` is now a `StepMatches<Person>`)
 
 ```swift
-step("User is logged in as (?<aRegisteredUser>.+)") { (match: [String: Person]) in ... }
+step("User is logged in as (?<aRegisteredUser>.+)") { (match: StepMatches<Person>) in ... }
 ```
 
 and the same test will produce logs:
