@@ -35,9 +35,6 @@ class GherkinState: NSObject, XCTestObservation {
     // The current example the Outline is running over
     var currentExample: Example?
 
-    // currently executed example line when running test from feature file
-    var currentNativeExampleLineNumber: Int?
-
     // Store the name of the current test to help debugging output
     var currentTestName: String = "NO TESTS RUN YET"
     var currentSuiteName: String = "NO TESTS RUN YET"
@@ -64,7 +61,7 @@ class GherkinState: NSObject, XCTestObservation {
             test.attachScreenshot()
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
-        if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
+        if let exampleLineNumber = self.currentExample?.lineNumber, lineNumber != exampleLineNumber {
             test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
         }
     }
@@ -275,7 +272,7 @@ extension XCTestCase {
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
-            expression = example.reduce(expression) {
+            expression = example.pairs.reduce(expression) {
                 $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
             }
         }

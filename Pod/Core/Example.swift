@@ -17,7 +17,7 @@ typealias ExampleValue = ExampleStringRepresentable
 /**
  An Example represents a single row in the Examples(...) block in a test
  */
-typealias Example = [ExampleTitle: ExampleValue]
+typealias Example = (lineNumber: Int?, pairs: [String: ExampleStringRepresentable])
 
 public typealias ExampleStringRepresentable = MatchedStringRepresentable
 
@@ -81,14 +81,14 @@ public extension XCTestCase {
             precondition(values.count == titles.count, "Each example must be the same size as the titles (was \(values.count), expected \(titles.count))")
 
             // Loop over both titles and values, creating a dictionary (i.e. an Example)
-            var example = Example()
+            var exampleValues = [String: String]()
             (0..<titles.count).forEach { n in
                 let title = String(describing: titles[n])
                 let value = String(describing: values[n])
-                example[title] = value
+                exampleValues[title] = value
             }
 
-            accumulator.append(example)
+            accumulator.append(Example(nil, exampleValues))
         }
 
         state.examples = accumulator
@@ -113,7 +113,7 @@ public extension XCTestCase {
     }
 
     func exampleValue<T: ExampleStringRepresentable>(_ title: String) -> T? {
-        let value = state.currentExample?[title]
+        let value = state.currentExample?.pairs[title]
         if let value = value as? T {
             return value
         } else if let value = value as? String {

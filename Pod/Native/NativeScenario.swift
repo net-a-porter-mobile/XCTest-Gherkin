@@ -50,9 +50,9 @@ class NativeScenario: CustomStringConvertible {
 }
 
 class NativeScenarioOutline: NativeScenario {
-    let examples: [NativeExample]
+    let examples: [Example]
 
-    required init(_ description: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
+    required init(_ description: String, steps: [StepDescription], examples: [Example], index: Int = 0) {
         self.examples = examples
         super.init(description, steps: steps, index: index)
     }

@@ -117,20 +117,10 @@ extension XCTestCase {
         }
 
         if let outline = scenario as? NativeScenarioOutline {
-            // Replace each matching placeholder in each line with the example data
-            for (exampleIndex, example) in outline.examples.enumerated() {
-                // This hoop is because the compiler doesn't seem to
-                // recognize map directly on the state.steps object
-                let steps = outline.stepDescriptions.map { step -> StepDescription in
-                    let expression = example.pairs.reduce(step.expression, {
-                        $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
-                    })
-                    return StepDescription(keyword: step.keyword, expression: expression, file: step.file, line: step.line)
-                }
-
-                self.state.currentNativeExampleLineNumber = example.lineNumber
-                let scenario = NativeScenario(outline.scenarioDescription, steps: steps, index: outline.index + exampleIndex)
+            outline.examples.forEach { example in
+                state.currentExample = example
                 perform(scenario: scenario)
+                state.currentExample = nil
             }
         } else {
             perform(scenario: scenario)
