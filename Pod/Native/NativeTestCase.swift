@@ -116,14 +116,14 @@ extension XCTestCase {
             scenario.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
         }
 
-        if let outline = scenario as? NativeScenarioOutline {
-            outline.examples.forEach { example in
+        if scenario.examples.isEmpty {
+            perform(scenario: scenario)
+        } else {
+            scenario.examples.forEach { example in
                 state.currentExample = example
                 perform(scenario: scenario)
                 state.currentExample = nil
             }
-        } else {
-            perform(scenario: scenario)
         }
     }
 }

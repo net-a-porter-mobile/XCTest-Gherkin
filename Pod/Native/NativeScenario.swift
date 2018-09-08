@@ -18,6 +18,7 @@ struct StepDescription {
 class NativeScenario: CustomStringConvertible {
     let scenarioDescription: String
     let stepDescriptions: [StepDescription]
+    let examples: [Example]
     let index: Int
 
     /**
@@ -32,9 +33,10 @@ class NativeScenario: CustomStringConvertible {
         get { return strdup(self.selectorString) }
     }
     
-    required init(_ description: String, steps: [StepDescription], index: Int = 0) {
+    required init(_ description: String, steps: [StepDescription], examples: [Example] = [], index: Int = 0) {
         self.scenarioDescription = description
         self.stepDescriptions = steps
+        self.examples = examples
         self.index = index
     }
     
@@ -46,19 +48,6 @@ class NativeScenario: CustomStringConvertible {
     
     private func leftPad(_ index: Int) -> NSString {
         return NSString(format: "%03i", index)
-    }
-}
-
-class NativeScenarioOutline: NativeScenario {
-    let examples: [Example]
-
-    required init(_ description: String, steps: [StepDescription], examples: [Example], index: Int = 0) {
-        self.examples = examples
-        super.init(description, steps: steps, index: index)
-    }
-
-    required init(_ description: String, steps: [StepDescription], index: Int) {
-        fatalError("init(_:steps:index:) has not been implemented")
     }
 }
 

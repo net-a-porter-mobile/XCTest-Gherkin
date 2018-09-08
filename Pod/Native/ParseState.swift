@@ -68,14 +68,8 @@ class ParseState {
         
         var scenarios = Array<NativeScenario>()
         
-        // If we have no examples then we have one scenario.
-        // Otherwise we need to make more than one scenario.
-        if self.examples.isEmpty {
-            scenarios.append(NativeScenario(description, steps: self.steps, index: index))
-        } else {
-            scenarios.append(NativeScenarioOutline(description, steps: self.steps, examples: self.examples, index: index))
-        }
-        
+        scenarios.append(NativeScenario(description, steps: self.steps, examples: self.examples, index: index))
+
         self.description = nil
         self.steps = []
         self.exampleLines = []
