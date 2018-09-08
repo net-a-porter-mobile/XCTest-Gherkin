@@ -100,7 +100,7 @@ extension NativeFeature {
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
 
                 case FileTags.Given, FileTags.When, FileTags.Then, FileTags.And:
-                    state.steps.append(.init(expression: lineSuffix, file: path, line: lineNumber))
+                    state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
 
                 case FileTags.Examples:
                     // Prep the examples array for examples

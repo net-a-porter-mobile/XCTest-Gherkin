@@ -1,3 +1,5 @@
+import XCTest
+
 /// Base class for PageObject pattern.
 open class PageObject: NSObject {
     required public override init() {
@@ -5,7 +7,8 @@ open class PageObject: NSObject {
         XCTAssertTrue(isPresented(), "\(type(of: self).name) is not presented")
     }
 
-    /// Name of the screen (or its part) that this page object represent
+    /// Name of the screen (or its part) that this page object represent.
+    /// Default is name of this type without "PageObject" suffix, if any.
     open static var name: String {
         let name = String(describing: self)
         if name.lowercased().hasSuffix("pageobject") {
