@@ -245,18 +245,6 @@ extension XCTestCase {
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(_ expression: String, file: String, line: Int, functionWithUnnamedMatchs function: @escaping ([String])->()) {
-        self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches.allMatches)
-        })
-    }
-
-    func addStep(_ expression: String, file: String, line: Int, functionWithNamedMatches function: @escaping ([String: String])->()) {
-        self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches.namedMatches)
-        })
-    }
-
     func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
         let step = Step(expression, file: file, line: line, function)
         state.steps.insert(step);
@@ -343,4 +331,8 @@ extension XCTestCase {
 func requireNotNil<T>(_ expr: @autoclosure () -> T?, _ message: String) -> T {
     guard let value = expr() else { preconditionFailure(message) }
     return value
+}
+
+func requireToConvert<T>(_ expr: @autoclosure () -> T?, _ match: String, _ expression: String) -> T {
+    return requireNotNil(expr, "Could not convert '\(match)' to \(T.self) in '\(expression)'")
 }

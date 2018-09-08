@@ -50,7 +50,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      
      */
     open func step(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ()->()) {
-        self.test.addStep(expression, file: file, line: line) { (_: [String]) in f() }
+        self.test.addStep(expression, file: file, line: line) { _ in f() }
     }
 
     /**
@@ -67,10 +67,10 @@ open class StepDefiner: NSObject, XCTestObservation {
      
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ([T])->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
+        self.test.addStep(expression, file: file, line: line) { matches in
             var converted = [T]()
-            for match in matches {
-                let convert = requireNotNil(T(fromMatch: match), "Failed to convert \(match) to \(T.self) in \"\(expression)\"")
+            for match in matches.allMatches {
+                let convert = requireToConvert(T(fromMatch: match), match, expression)
                 converted.append(convert)
             }
 
@@ -79,7 +79,7 @@ open class StepDefiner: NSObject, XCTestObservation {
     }
 
     /**
-     Create a new step with an expression that contains one or more matching groups. You can mix named and regular groups
+     Create a new step with an expression that contains one or more matching groups. You can mix named and regular groups.
 
      Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:
 
@@ -93,14 +93,13 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the matches from the expression. Matches can be accessed by index or name of the corresponding group
 
      */
+    @available(iOS 11.0, OSX 10.13, *)
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (StepMatches<T>)->()) {
         self.test.addStep(expression, file: file, line: line) { (matches: StepMatches<String>) in
-            f(matches.map { match in
-                guard let convert = T(fromMatch: match) else {
-                    preconditionFailure("Failed to convert \(match) to \(T.self) in \"\(expression)\"")
-                }
-                return convert
-            })
+            let values = matches.map { match in
+                requireToConvert(T(fromMatch: match), match, expression)
+            }
+            f(values)
         }
     }
 
@@ -117,10 +116,10 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first capture group from the expression
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
+        self.test.addStep(expression, file: file, line: line) { matches in
             precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
             let match = matches[0]
-            let value = requireNotNil(T(fromMatch: match), "Could not convert \"\(match)\" to \(T.self)")
+            let value = requireToConvert(T(fromMatch: match), match, expression)
             f(value)
         }
     }
@@ -132,17 +131,10 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first capture group from the expression
     */
     open func step<T: Collection & MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
-            guard let match = matches.first else {
-                XCTFail("Expected single match not found in \"\(expression)\"")
-                return
-            }
-
-            guard let value = T(fromMatch: match) else {
-                XCTFail("Could not convert \"\(match)\" to \(T.self)")
-                return
-            }
-
+        self.test.addStep(expression, file: file, line: line) { matches in
+            precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
+            let match = matches[0]
+            let value = requireToConvert(T(fromMatch: match), match, expression)
             f(value)
         }
     }
@@ -160,12 +152,12 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first two capture groups from the expression
      */
     open func step<T: MatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T, U)->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
+        self.test.addStep(expression, file: file, line: line) { (matches: StepMatches) in
             precondition(matches.count >= 2, "Expected at least 2 matches, found \(matches.count) instead, from \"\(expression)\"")
             let (match1, match2) = (matches[0], matches[1])
 
-            let i1 = requireNotNil(T(fromMatch: match1), "Could not convert '\(match1)' to \(T.self), from \"\(expression)\"")
-            let i2 = requireNotNil(U(fromMatch: match2), "Could not convert '\(match2)' to \(U.self), from \"\(expression)\"")
+            let i1 = requireToConvert(T(fromMatch: match1), match1, expression)
+            let i2 = requireToConvert(U(fromMatch: match2), match2, expression)
 
             f(i1, i2)
         }
