@@ -81,15 +81,6 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(match2, 7)
         }
         
-        step("This should be executed before A with example value ([0-9])") { (count: Int) in
-            XCTAssertEqual(count, self.numberOfExamplesExecutedInOrder)
-            self.numberOfExamplesExecutedInOrder += 1
-        }
-        
-        step("This should be executed after") {
-            XCTAssertEqual( self.numberOfExamplesExecutedInOrder, 4)
-        }
-
         step("I have a string (.*)") { (match: String) in
             XCTAssertEqual(match, "hello")
         }
