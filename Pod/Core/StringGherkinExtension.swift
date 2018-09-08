@@ -18,7 +18,9 @@ public extension String {
     */
     var camelCaseify: String {
         get {
-            guard case let characters = (self.split { $0 == " " || $0 == "-" }), characters.count > 1 else {
+            let allowed = CharacterSet(charactersIn: "-").union(.alphanumerics).union(.whitespaces)
+            let filtered = self.filter({ CharacterSet(charactersIn: "\($0)").isSubset(of: allowed) })
+            guard case let characters = (filtered.split { $0 == " " || $0 == "-" }).filter({ !$0.isEmpty }), characters.count > 1 else {
                 return self.uppercaseFirstLetterString
             }
             return characters.map { String($0).lowercased().uppercaseFirstLetterString }.joined(separator: "")
