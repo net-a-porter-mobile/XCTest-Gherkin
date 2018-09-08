@@ -38,6 +38,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
     
     // Compute this as part of init
     let regex: NSRegularExpression
+    let groupsNames: [String]
     
     /**
      Create a new Step definition with an expression to match against and a function to be
@@ -51,7 +52,16 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         self.function = function
         self.file = file
         self.line = line
-        
+
+        if #available(iOS 11.0, OSX 10.13, *) {
+            let namedGroupExpr = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+?\\))")
+            groupsNames = namedGroupExpr.matches(in: expression, range: NSMakeRange(0, expression.count)).map { namedGroupMatch in
+                return (expression as NSString).substring(with: namedGroupMatch.range(at: 2))
+            }
+        } else {
+            groupsNames = []
+        }
+
         // Just throw here; the test will fail :)
         self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
     }
@@ -61,9 +71,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         var namedMatches = [String: String]()
 
         if #available(iOS 11.0, OSX 10.13, *) {
-            let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+?\\))")
-            namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count)).forEach { (namedGroupMatch) in
-                let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
+            groupsNames.forEach { (groupName) in
                 let range = match.range(withName: groupName)
                 let value = (expression as NSString).substring(with: range)
                 debugDescription = (debugDescription as NSString).replacingCharacters(in: range, with: groupName.humanReadableString.lowercased())
