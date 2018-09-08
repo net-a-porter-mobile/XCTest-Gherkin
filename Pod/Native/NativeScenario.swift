@@ -24,24 +24,20 @@ class NativeScenario: CustomStringConvertible {
      If the scenario description is 'Test funny things are funny' then the result of calling
      `selectorName` would be `testTestFunnyThingsAreFunny`
      */
-    var selectorString: String {
-        get { return "test\(self.scenarioDescription.camelCaseify)" }
-    }
+    let selectorString: String
     
-    var selectorCString: UnsafeMutablePointer<Int8> {
-        get { return strdup(self.selectorString) }
-    }
+    let selectorCString: UnsafeMutablePointer<Int8>
     
     required init(_ description: String, steps: [StepDescription], examples: [Example] = []) {
         self.scenarioDescription = description
         self.stepDescriptions = steps
         self.examples = examples
+        self.selectorString = "test\(self.scenarioDescription.camelCaseify)"
+        self.selectorCString = strdup(self.selectorString)
     }
     
     var description: String {
-        get {
-            return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
-        }
+        return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
     }
 }
 
