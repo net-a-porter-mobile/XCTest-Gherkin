@@ -8,10 +8,22 @@
 
 import Foundation
 
-protocol StepFunctionParameters {}
+public struct StepMatches<T: MatchedStringRepresentable> {
+    public let allMatches: [T]
+    public let namedMatches: [String: T]
 
-extension Array: StepFunctionParameters where Element == String {}
-extension Dictionary: StepFunctionParameters where Key == String, Value == String {}
+    public subscript(_ index: Int) -> T {
+        return allMatches[index]
+    }
+
+    public subscript(_ key: String) -> T? {
+        return namedMatches[key]
+    }
+
+    public func map<U: MatchedStringRepresentable>(_ f: (T) -> U) -> StepMatches<U> {
+        return StepMatches<U>(allMatches: allMatches.map(f), namedMatches: namedMatches.mapValues(f))
+    }
+}
 
 /**
  Represents a single step definition - create it with the expression and the 
@@ -19,7 +31,7 @@ extension Dictionary: StepFunctionParameters where Key == String, Value == Strin
 */
 class Step: Hashable, Equatable, CustomDebugStringConvertible {
     let expression: String
-    let function: (StepFunctionParameters)->()
+    let function: (StepMatches<String>)->()
     
     fileprivate let file: String
     fileprivate let line: Int
@@ -34,7 +46,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
      The `file` and `line` parameters are for debugging; they should show where the step was
      initially defined.
      */
-    init(_ expression: String, file: String, line: Int, _ function: @escaping (StepFunctionParameters)->() ) {
+    init(_ expression: String, file: String, line: Int, _ function: @escaping (StepMatches<String>)->() ) {
         self.expression = expression
         self.function = function
         self.file = file
@@ -44,11 +56,12 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
     }
 
-    func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepFunctionParameters, stepDescription: String) {
+    func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepMatches<String>, stepDescription: String) {
+        var debugDescription = expression
+        var namedMatches = [String: String]()
+
         if #available(iOS 11.0, OSX 10.13, *) {
             let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+?\\))")
-            var debugDescription = expression
-            var namedMatches = [String: String]()
             namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count)).forEach { (namedGroupMatch) in
                 let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
                 let range = match.range(withName: groupName)
@@ -56,21 +69,12 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
                 debugDescription = (debugDescription as NSString).replacingCharacters(in: range, with: groupName.humanReadableString.lowercased())
                 namedMatches[groupName] = value
             }
-            if !namedMatches.isEmpty {
-                var allMatches = (1..<match.numberOfRanges).reduce(into: [String: String]()) { current, index in
-                    current["\(index)"] = (expression as NSString).substring(with: match.range(at: index))
-                }
-                allMatches.merge(namedMatches, uniquingKeysWith: { $1 })
-
-                return (allMatches, debugDescription)
-            }
         }
 
-        // Covert them to strings to pass back into the step function
-        let matchStrings = (1..<match.numberOfRanges).map {
+        let allMatches = (1..<match.numberOfRanges).map {
             (expression as NSString).substring(with: match.range(at: $0))
         }
-        return (matchStrings, expression)
+        return (StepMatches(allMatches: allMatches, namedMatches: namedMatches), debugDescription)
     }
 
     var hashValue: Int {

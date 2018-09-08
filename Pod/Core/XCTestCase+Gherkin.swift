@@ -247,17 +247,17 @@ extension XCTestCase {
     */
     func addStep(_ expression: String, file: String, line: Int, functionWithUnnamedMatchs function: @escaping ([String])->()) {
         self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches as! [String])
+            function(matches.allMatches)
         })
     }
 
     func addStep(_ expression: String, file: String, line: Int, functionWithNamedMatches function: @escaping ([String: String])->()) {
         self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches as! [String: String])
+            function(matches.namedMatches)
         })
     }
 
-    private func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepFunctionParameters)->()) {
+    func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
         let step = Step(expression, file: file, line: line, function)
         state.steps.insert(step);
     }
