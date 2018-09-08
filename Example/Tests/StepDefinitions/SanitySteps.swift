@@ -131,5 +131,7 @@ final class SanitySteps: StepDefiner {
             XCTAssertTrue(match[0].name == "Alice" || match[1].name == "Bob")
         }
 
+        step("This is unused step") {}
+
     }
 }
