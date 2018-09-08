@@ -110,24 +110,9 @@ extension XCTestCase {
     
     func perform(scenario: NativeScenario, from feature: NativeFeature) {
         func perform(scenario: NativeScenario) {
-            let allScenarioStepsDefined = scenario.stepDescriptions
-                .map { state.matchingGherkinStepExpressionFound($0.expression) }
-                .reduce(true) { $0 && $1 }
-            var allFeatureBackgroundStepsDefined = true
-
-            if let defined = feature.background?.stepDescriptions
-                .map({ state.matchingGherkinStepExpressionFound($0.expression) })
-                .reduce(true, { $0 && $1 }) {
-                allFeatureBackgroundStepsDefined = defined
-            }
-
-            precondition(allScenarioStepsDefined && allFeatureBackgroundStepsDefined,
-                         "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
-
             if let background = feature.background {
                 background.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
             }
-
             scenario.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
         }
 
