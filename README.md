@@ -125,7 +125,7 @@ and the same test will produce logs:
 step User is logged in as a registered user
 ```
 
-In step implementation you will access matched values using the name of the group, i.e. `match["aRegisteredUser"]`. You can access all matched values (including matched by unnamed groups) by their index, starting from 1, i.e. `match["1"]` (note that key is still a string). So you can have more than one named group and you can mix them with unnamed groups.
+In step implementation you will access matched values using the name of the group, i.e. `match["aRegisteredUser"]`. You can access all matched values (including matched by unnamed groups) by their index, starting from 0, i.e. `match[0]`. So you can have more than one named group and you can mix them with unnamed groups.
 
 ### Examples and feature outlines
 If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
