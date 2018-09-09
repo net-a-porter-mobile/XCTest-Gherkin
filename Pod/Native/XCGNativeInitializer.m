@@ -6,11 +6,15 @@
 //
 
 #import "XCGNativeInitializer.h"
+#import "UnusedStepsTracker.h"
 
 @implementation XCGNativeInitializer
 
 + (void)initialize {
     [super initialize];
+    // XCGNativeInitializer is always a principal class when Native is linked
+    // so we use it to startup observer
+    [UnusedStepsTracker initialize];
 
     // We don't want to process any features for this class.
     if (self == [XCGNativeInitializer class]) {

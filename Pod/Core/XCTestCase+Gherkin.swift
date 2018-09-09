@@ -52,10 +52,6 @@ class GherkinState: NSObject, XCTestObservation {
         XCTestObservationCenter.shared.addTestObserver(self)
     }
 
-    deinit {
-        XCTestObservationCenter.shared.removeTestObserver(self)
-    }
-
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
@@ -67,6 +63,10 @@ class GherkinState: NSObject, XCTestObservation {
         if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
             test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
         }
+    }
+
+    func testCaseDidFinish(_ testCase: XCTestCase) {
+        XCTestObservationCenter.shared.removeTestObserver(self)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -107,26 +107,13 @@ class GherkinState: NSObject, XCTestObservation {
     }
     
     func printTemplatedCodeForAllMissingSteps() {
-        print("Copy paste these steps in a StepDefiner subclass:")
-        print("-------------")
-        self.missingStepsImplementations.forEach({
-            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
-            let suggestedSteps = self.suggestedSteps(forStep: $0)
-            if !suggestedSteps.isEmpty {
-                print("-------------\nOr maybe you meant one of these steps:\n-------------")
-                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
-            }
-        })
-        print("-------------")
+        self.missingStepsImplementations
+            .printAsTemplatedCodeForAllMissingSteps(suggestedSteps: self.suggestedSteps(forStep:))
     }
     
     func printStepDefinitions() {
         self.loadAllStepsIfNeeded()
-        print("-------------")
-        print("Defined steps")
-        print("-------------")
-        print(self.steps.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
-        print("-------------")
+        self.steps.printStepsDefinitions()
     }
     
     func loadAllStepsIfNeeded() {
@@ -136,7 +123,10 @@ class GherkinState: NSObject, XCTestObservation {
         allSubclassesOf(StepDefiner.self).forEach { subclass in
             subclass.init(test: self.test!).defineSteps()
         }
-        
+
+        UnusedStepsTracker.shared().setSteps(self.steps.map { String(reflecting: $0) })
+        UnusedStepsTracker.shared().printUnusedSteps = { $0.printAsUnusedSteps() }
+
         precondition(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
 }
@@ -277,6 +267,8 @@ extension XCTestCase {
             }
             preconditionFailure("Failed to find a match for a step: \(expression)")
         }
+
+        UnusedStepsTracker.shared().performedStep(String(reflecting: step))
 
         // If this the first step, debug the test name as well
         if state.currentStepDepth == 0 {
