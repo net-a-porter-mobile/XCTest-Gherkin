@@ -250,6 +250,21 @@ There is an example of this in the Example/ project as part of this pod. Look at
 
 The advantages of this are obvious; you get to quickly run your existing feature files and can get up and running quickly. The disadvanages are beacuse the tests are generated at runtime they can't be run individually from inside Xcode so debugging is tricker. I would use this to start testing inside Xcode but if it gets hairy, convert that feature file into a native Swift test and debug from there.
 
+
+### Localisation of feature files
+
+You can use feature files written in multiple languages. To set the language of a feature file put a `# language: en` with appropriate language code at the first line of a feature file. By default English localisation is used. You can see all available localisations in `gherkin-languages.json` file or from code using `NativeTestCase.availableLanguages` property. Here is an example of a feature file in Russian:
+
+```
+# language: ru
+Функция: Разбор простого функционального файла
+
+    Сценарий: Это очень простой пример успешного сценария
+        Допустим Я имею рабочее окружение Gherkin
+        Тогда этот тест не должен завершиться ошибкой
+```
+
+
 ### Disclaimer
 The Gherkin syntax parser here isn't really production ready - it's certainly not a validator and will probably happily parse malformed Gherkin files quite happily. The feature files it's parsing are assumed to be fairly well constructed. The purpose of this subpod is to help migrate from old feature files into the Swift way of doing things so that's all it does. Feel free to submit pull requests if you want to change this :)
 
