@@ -141,5 +141,8 @@ final class SanitySteps: StepDefiner {
                 XCTAssertNotNil(match["name"])
             }
         }
+
+        step("This is unused step") {}
+
     }
 }
