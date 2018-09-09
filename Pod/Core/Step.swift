@@ -9,8 +9,8 @@
 import Foundation
 
 public struct StepMatches<T: MatchedStringRepresentable> {
-    public let allMatches: [T]
-    public let namedMatches: [String: T]
+    let allMatches: [T]
+    let namedMatches: [String: T]
 
     public var count: Int {
         return allMatches.count
