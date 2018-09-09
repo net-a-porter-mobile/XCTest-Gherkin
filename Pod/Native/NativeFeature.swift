@@ -86,34 +86,26 @@ class NativeFeature: CustomStringConvertible {
 extension NativeFeature {
     
     convenience init?(contentsOfURL url: URL) {
-        // Read in the file
-        let contents = try! NSString(contentsOf: url, encoding: String.Encoding.utf8.rawValue)
-        
-        // Replace new line character that is sometimes used if the Gherkin files have been written on a Windows machine.
-        let contentsFixedWindowsNewLineCharacters = contents.replacingOccurrences(of: "\r\n", with: "\n")
-        
+        guard let data = try? Data(contentsOf: url), let contents = String(data: data, encoding: .utf8) else { return nil }
+
         // Get all the lines in the file
-        var lines = contentsFixedWindowsNewLineCharacters.components(separatedBy: "\n")
-            .map { $0.trimmingCharacters(in: .whitespaces) }
+        let lines = contents.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
 
         let (_, language) = lines.first!.componentsWithPrefix("# language:")
         ParseState.language = language ?? "en"
 
-        // Filter comments (#) and tags (@), also filter white lines
-        lines = lines.filter { $0.first != "#" &&  $0.first != "@" && $0.count > 0}
-
         guard lines.count > 0 else { return nil }
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
-        let (_, suffixOption) = lines.first!.componentsWithPrefix(FileTags.Feature)
+        let (_, suffixOption) = lines.filter({ $0.first != "#" &&  $0.first != "@" && $0.count > 0 }).first!.componentsWithPrefix(FileTags.Feature)
         guard let featureDescription = suffixOption else { return nil }
         
-        let feature = NativeFeature.parseLines(lines)
+        let feature = NativeFeature.parseLines(lines, path: url.path)
         
         self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
     }
     
-    fileprivate class func parseLines(_ lines: [String]) -> (background: NativeBackground?, scenarios: [NativeScenario]) {
+    fileprivate class func parseLines(_ lines: [String], path: String) -> (background: NativeBackground?, scenarios: [NativeScenario]) {
         
         var state = ParseState()
         var scenarios = Array<NativeScenario>()
@@ -129,35 +121,31 @@ extension NativeFeature {
         }
         
         // Go through each line in turn
+        var lineNumber = 0
         for (lineIndex, line) in lines.enumerated() {
-            
-            if !line.isEmpty {
-                // What kind of line is it?
-                if let (linePrefix, lineSuffix) = line.lineComponents() {
-                    if FileTags.Background.contains(linePrefix) {
-                        state = ParseState(description: lineSuffix, parsingBackground: true)
-                    } else if FileTags.Scenario.contains(linePrefix)
-                        || FileTags.ScenarioOutline.contains(linePrefix) {
-                        saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
-                    } else if FileTags.Given.contains(linePrefix)
-                        || FileTags.When.contains(linePrefix)
-                        || FileTags.Then.contains(linePrefix)
-                        || FileTags.And.contains(linePrefix) {
-                        state.steps.append(lineSuffix)
-                    } else if FileTags.Examples.contains(linePrefix) {
-                        // Prep the examples array for examples
-                        state.exampleLines = []
-                    } else if FileTags.ExampleLine.contains(linePrefix) {
-                        state.exampleLines.append( (lineIndex+1, lineSuffix) )
-                    } else if FileTags.Feature.contains(linePrefix) {
-                        continue
-                    } else {
-                        // Just ignore lines we don't recognise yet
-                        continue
-                    }
+            lineNumber += 1
+
+            // Filter comments (#) and tags (@), also filter white lines
+            guard line.first != "#" &&  line.first != "@" && line.count > 0 else { continue }
+
+            if let (linePrefix, lineSuffix) = line.lineComponents() {
+                if FileTags.Background.contains(linePrefix) {
+                    state = ParseState(description: lineSuffix, parsingBackground: true)
+                } else if FileTags.Scenario.contains(linePrefix) || FileTags.ScenarioOutline.contains(linePrefix) {
+                    saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
+                } else if FileTags.Given.contains(linePrefix) ||
+                    FileTags.When.contains(linePrefix) ||
+                    FileTags.Then.contains(linePrefix) ||
+                    FileTags.And.contains(linePrefix) {
+                    state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+                } else if FileTags.Examples.contains(linePrefix) {
+                    state.exampleLines = []
+                } else if FileTags.ExampleLine.contains(linePrefix) {
+                    state.exampleLines.append((lineIndex+1, lineSuffix))
+                } else {
+                    continue
                 }
             }
-
         }
         
         // If we hit the end of the file, we need to make sure we have dealt with
