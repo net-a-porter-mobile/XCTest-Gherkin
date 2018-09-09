@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import XCTest_Gherkin
+@testable import XCTest_Gherkin
 
 final class ExampleFeatures: XCTestCase {
 
@@ -163,6 +163,16 @@ final class ExampleFeatures: XCTestCase {
                 Then("The height should be <height>")
             }
         }
+    }
+
+    func testUnusedStep() {
+        Given("This is a substring")
+
+        UnusedStepsTracker.shared().printUnusedSteps = { steps in
+            XCTAssertFalse(steps.contains(where: { $0.contains("This is a substring") }))
+            XCTAssertTrue(steps.contains(where: { $0.contains("This is unused step") }))
+        }
+        UnusedStepsTracker.shared().performSelector(onMainThread: #selector(XCTestObservation.testBundleDidFinish(_:)), with: nil, waitUntilDone: true)
     }
 
 }
