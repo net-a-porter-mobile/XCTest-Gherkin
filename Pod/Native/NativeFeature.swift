@@ -8,74 +8,6 @@
 
 import Foundation
 
-private struct FileTag {
-    let variants: [String]
-
-    static func ~=(lhs: FileTag, rhs: String) -> Bool {
-        return lhs.variants.contains(rhs)
-    }
-
-    static private(set) var Feature: FileTag!
-    static private(set) var Background: FileTag!
-    static private(set) var Scenario: FileTag!
-    static private(set) var ScenarioOutline: FileTag!
-    static private(set) var Examples: FileTag!
-    static private(set) var ExampleLine: FileTag!
-    static private(set) var Given: FileTag!
-    static private(set) var When: FileTag!
-    static private(set) var Then: FileTag!
-    static private(set) var And: FileTag!
-
-    static var language: String = "en" {
-        didSet {
-            Feature = localized(expression: "feature", default: "Feature", ending: ":")
-            Background = localized(expression: "background", default: "Background", ending: ":")
-            Scenario = localized(expression: "scenario", default: "Scenario", ending: ":")
-            ScenarioOutline = localized(expression: "scenarioOutline", default: "Scenario Outline", ending: ":")
-            Examples = localized(expression: "examples", default: "Examples", ending: ":")
-            ExampleLine = FileTag(variants: ["|"])
-            Given = localized(expression: "given", default: "Given", ending: " ")
-            When = localized(expression: "when", default: "When", ending: " ")
-            Then = localized(expression: "then", default: "Then", ending: " ")
-            And = localized(expression: "and", default: "And", ending: " ")
-        }
-    }
-
-    static var vocabulary: [String: [String: [String]]]? = {
-        let bundle = Bundle(for: NativeFeature.self)
-        guard let path = bundle.path(forResource: "gherkin-languages", ofType: ".json"),
-            let data = FileManager.default.contents(atPath: path),
-            let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: [String: [String]]]
-            else {
-                print("Failed to read localisation file `gherkin-languages.json`, check that it is in bundle")
-                return nil
-        }
-        var dict = [String: [String: [String]]]()
-        json.forEach({ args in
-            let (language, values) = args
-            var dialect = [String: [String]]()
-            values.forEach { args in
-                var (expression, variants) = args
-                dialect[expression] = variants.sorted(by: >)
-            }
-            dict[language] = dialect
-        })
-        return dict
-    }()
-
-    static func localized(expression: String, default: String, ending: String) -> FileTag {
-        let localised = vocabulary?[FileTag.language]?[expression] ?? [`default`]
-        return FileTag(variants: localised.map { $0.hasSuffix(ending) ? $0 : $0 + ending })
-    }
-}
-
-public extension NativeTestCase {
-    /// Returns all available localisations of keywords
-    static var availableLanguages: [String: [String: [String]]]? {
-        return FileTag.vocabulary
-    }
-}
-
 class NativeFeature: CustomStringConvertible {
     let featureDescription: String
     let scenarios: [NativeScenario]
@@ -107,12 +39,12 @@ extension NativeFeature {
         let lines = contents.components(separatedBy: CharacterSet.newlines).map { $0.trimmingCharacters(in: .whitespaces) }
 
         let (_, language) = lines.first!.componentsWithPrefix("# language:")
-        FileTag.language = language ?? "en"
+        Language.current.locale = language ?? "en"
 
         guard lines.count > 0 else { return nil }
         
         // The feature description needs to be on the first line - we'll fail this method if it isn't!
-        let (_, suffixOption) = lines.filter({ $0.first != "#" &&  $0.first != "@" && $0.count > 0 }).first!.componentsWithPrefix(FileTag.Feature)
+        let (_, suffixOption) = lines.filter({ $0.first != "#" &&  $0.first != "@" && $0.count > 0 }).first!.componentsWithPrefix(Language.current.keywords.Feature)
         guard let featureDescription = suffixOption else { return nil }
         
         let feature = NativeFeature.parseLines(lines, path: url.path)
@@ -145,15 +77,19 @@ extension NativeFeature {
 
             if let (linePrefix, lineSuffix) = line.lineComponents() {
                 switch linePrefix {
-                case FileTag.Background:
+                case Language.current.keywords.Background:
                     state = ParseState(description: lineSuffix, parsingBackground: true)
-                case FileTag.Scenario, FileTag.ScenarioOutline:
+                case Language.current.keywords.Scenario,
+                     Language.current.keywords.ScenarioOutline:
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
-                case FileTag.Given, FileTag.When, FileTag.Then, FileTag.And:
+                case Language.current.keywords.Given,
+                     Language.current.keywords.When,
+                     Language.current.keywords.Then,
+                     Language.current.keywords.And:
                     state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
-                case FileTag.Examples:
+                case Language.current.keywords.Examples:
                     state.exampleLines = []
-                case FileTag.ExampleLine:
+                case Language.current.keywords.ExampleLine:
                     state.exampleLines.append((lineIndex+1, lineSuffix))
                 default:
                     break
@@ -174,8 +110,8 @@ extension NativeFeature {
 
 extension String {
 
-    fileprivate func componentsWithPrefix(_ tag: FileTag) -> (String, String?) {
-        for prefixVariant in tag.variants {
+    fileprivate func componentsWithPrefix(_ keyword: Keyword) -> (String, String?) {
+        for prefixVariant in keyword.variants {
             let (prefix, suffix) = componentsWithPrefix(prefixVariant)
             if let suffix = suffix {
                 return (prefix, suffix)
@@ -193,30 +129,30 @@ extension String {
     }
     
     func lineComponents() -> (String, String)? {
-        let tags: [FileTag] = [
-            FileTag.Feature,
-            FileTag.Scenario,
-            FileTag.Background,
-            FileTag.Given,
-            FileTag.When,
-            FileTag.Then,
-            FileTag.And,
-            FileTag.ScenarioOutline,
-            FileTag.Examples,
-            FileTag.ExampleLine
+        let keywords: [Keyword] = [
+            Language.current.keywords.Feature,
+            Language.current.keywords.Scenario,
+            Language.current.keywords.Background,
+            Language.current.keywords.Given,
+            Language.current.keywords.When,
+            Language.current.keywords.Then,
+            Language.current.keywords.And,
+            Language.current.keywords.ScenarioOutline,
+            Language.current.keywords.Examples,
+            Language.current.keywords.ExampleLine
         ]
         
-        func first(_ tags: [FileTag]) -> (String, String)? {
-            if tags.count == 0 { return nil }
-            let tag = tags.first!
-            let (prefix, suffix) = self.componentsWithPrefix(tag)
+        func first(_ keywords: [Keyword]) -> (String, String)? {
+            if keywords.count == 0 { return nil }
+            let keyword = keywords.first!
+            let (prefix, suffix) = self.componentsWithPrefix(keyword)
             if let suffix = suffix {
                 return (prefix, suffix)
             } else {
-                return first(Array(tags.dropFirst(1)))
+                return first(Array(keywords.dropFirst(1)))
             }
         }
         
-        return first(tags)
+        return first(keywords)
     }
 }
