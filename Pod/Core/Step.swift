@@ -71,22 +71,21 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
     }
 
     var hashValue: Int {
-        get {
-            return expression.hashValue
-        }
+        return expression.hashValue
     }
     
     var debugDescription: String {
-        get {
-            return "/\(expression)/  \(locationDescription)"
-        }
+        return "/\(expression)/  \(shortLocationDescription)"
     }
 
-    var locationDescription: String {
-        // We only want the output the final filename part of `file`
-        let name = (file as NSString).lastPathComponent
-        return "(\(name):\(line))"
+    var fullLocationDescription: String {
+        return "(\(file):\(line))"
     }
+
+    var shortLocationDescription: String {
+        return "(\((file as NSString).lastPathComponent):\(line))"
+    }
+
 }
 
 func ==(lhs: Step, rhs: Step) -> Bool {
