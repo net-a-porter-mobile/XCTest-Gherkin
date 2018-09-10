@@ -290,10 +290,10 @@ extension XCTestCase {
         let (matches, debugDescription) = step.matches(from: match, expression: expression)
 
         // Debug the step name
-        print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.locationDescription)")
+        print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.fullLocationDescription)")
 
         // Run the step
-        XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.locationDescription)") { (_) in
+        XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.shortLocationDescription)") { (_) in
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
             if automaticScreenshotsBehaviour.contains(.beforeStep) {
