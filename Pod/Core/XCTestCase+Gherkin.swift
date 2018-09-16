@@ -56,8 +56,10 @@ class GherkinState: NSObject, XCTestObservation {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
 
-        if automaticScreenshotsBehaviour.contains(.onFailure) {
-            test.attachScreenshot()
+        if #available(iOS 9.0, *) {
+            if automaticScreenshotsBehaviour.contains(.onFailure) {
+                test.attachScreenshot()
+            }
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
         if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
@@ -204,6 +206,7 @@ public struct AutomaticScreenshotsBehaviour: OptionSet {
     public static let all: AutomaticScreenshotsBehaviour = [.onFailure, .beforeStep, .afterStep]
 }
 
+@available(iOS 9.0, *)
 extension XCTestCase {
 
     /// Set behaviour for automatic screenshots (default is `.none`), their quality (default is `.medium`) and lifetime (default is `.deleteOnSuccess`)
@@ -296,15 +299,21 @@ extension XCTestCase {
         XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.shortLocationDescription)") { (_) in
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
-            if automaticScreenshotsBehaviour.contains(.beforeStep) {
-                attachScreenshot()
+
+            if #available(iOS 9.0, *) {
+                if automaticScreenshotsBehaviour.contains(.beforeStep) {
+                    attachScreenshot()
+                }
             }
 
             step.function(matches)
 
-            if automaticScreenshotsBehaviour.contains(.afterStep) {
-                attachScreenshot()
+            if #available(iOS 9.0, *) {
+                if automaticScreenshotsBehaviour.contains(.afterStep) {
+                    attachScreenshot()
+                }
             }
+
             state.currentStepLocation = nil
             state.currentStepDepth -= 1
         }
