@@ -235,8 +235,8 @@ extension XCTestCase {
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
-        let step = Step(expression, file: file, line: line, function)
+    func addStep(_ expression: String, options: NSRegularExpression.Options, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
+        let step = Step(expression, options: options, file: file, line: line, function)
         state.steps.insert(step);
     }
 

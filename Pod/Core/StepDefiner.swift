@@ -8,18 +8,30 @@
 
 import XCTest
 
+extension NSRegularExpression.Options {
+    public static let matchesFullString = NSRegularExpression.Options(rawValue: 1 << 20)
+}
+
 /**
 Classes which extend this class will be queried by the system to
 populate the step definitions before test runs
 */
 open class StepDefiner: NSObject, XCTestObservation {
     public private(set) var test: XCTestCase
+    
+    /// Options to configure steps regular expressions. Default is `[.caseInsensitive]`
+    public let regexOptions: NSRegularExpression.Options
 
-    required public init(test: XCTestCase) {
+    required convenience public init(test: XCTestCase) {
+        self.init(test: test, regexOptions: [.caseInsensitive])
+    }
+
+    public init(test: XCTestCase, regexOptions: NSRegularExpression.Options) {
         self.test = test
-
+        self.regexOptions = regexOptions
+        
         super.init()
-
+        
         XCTestObservationCenter.shared.addTestObserver(self)
     }
 
@@ -50,7 +62,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      
      */
     open func step(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ()->()) {
-        self.test.addStep(expression, file: file, line: line) { _ in f() }
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { _ in f() }
     }
 
     /**
@@ -67,7 +79,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping ([T])->()) {
-        self.test.addStep(expression, file: file, line: line) { matches in
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { matches in
             var converted = [T]()
             for match in matches.allMatches {
                 let convert = requireToConvert(T(fromMatch: match), match, expression)
@@ -95,7 +107,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      */
     @available(iOS 11.0, OSX 10.13, *)
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (StepMatches<T>)->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: StepMatches<String>) in
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { (matches: StepMatches<String>) in
             let values = matches.map { match in
                 requireToConvert(T(fromMatch: match), match, expression)
             }
@@ -116,7 +128,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first capture group from the expression
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
-        self.test.addStep(expression, file: file, line: line) { matches in
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { matches in
             precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
             let match = matches[0]
             let value = requireToConvert(T(fromMatch: match), match, expression)
@@ -131,7 +143,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first capture group from the expression
     */
     open func step<T: Collection & MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
-        self.test.addStep(expression, file: file, line: line) { matches in
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { matches in
             precondition(matches.count >= 1, "Expected single match in \"\(expression)\"")
             let match = matches[0]
             let value = requireToConvert(T(fromMatch: match), match, expression)
@@ -152,7 +164,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      - parameter f: The step definition to be run, passing in the first two capture groups from the expression
      */
     open func step<T: MatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f: @escaping (T, U)->()) {
-        self.test.addStep(expression, file: file, line: line) { (matches: StepMatches) in
+        self.test.addStep(expression, options: regexOptions, file: file, line: line) { (matches: StepMatches) in
             precondition(matches.count >= 2, "Expected at least 2 matches, found \(matches.count) instead, from \"\(expression)\"")
             let (match1, match2) = (matches[0], matches[1])
 
