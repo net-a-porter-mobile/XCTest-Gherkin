@@ -61,4 +61,13 @@ class StringGherkinExtensionTests: XCTestCase {
         let simpleString = ""
         XCTAssertEqual("", simpleString.camelCaseify)
     }
+    
+    func testHumanReadbleString_separatesWordsWithSpaces() {
+        XCTAssertEqual("Camel Case String 123 abc 456", "camelCaseString123abc456".humanReadableString)
+        XCTAssertEqual("Snake Case String Abc 123 abc 456", "snake_case_string_abc123abc456".humanReadableString)
+    }
+    
+    func testHumanReadableString_doesNotTransformAlreadyReadableString() {
+        XCTAssertEqual("Camel Case String 123 abc 456", "camelCaseString123abc456".humanReadableString.humanReadableString)
+    }
 }
