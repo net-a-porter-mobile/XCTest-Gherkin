@@ -33,7 +33,7 @@ Adds Gherkin syntax to XCTestCase
   end
 
   s.subspec 'Native' do |ss|
-    ss.source_files = 'Pod/Native/**/*'
+    ss.source_files = [ 'Pod/Native/**/*.swift', 'Pod/Native/**/*.m', 'Pod/Native/**/*.h' ]
     ss.resources = ["Pod/Native/gherkin-languages.json"]
     ss.dependency 'XCTest-Gherkin/Core'
   end
