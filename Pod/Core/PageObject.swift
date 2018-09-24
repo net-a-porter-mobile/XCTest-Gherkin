@@ -9,7 +9,7 @@ open class PageObject: NSObject {
 
     /// Name of the screen (or its part) that this page object represent.
     /// Default is name of this type without "PageObject" suffix, if any.
-    open static var name: String {
+    public static var name: String {
         let name = String(describing: self)
         if name.lowercased().hasSuffix("pageobject") {
             return String(name.dropLast(10))
