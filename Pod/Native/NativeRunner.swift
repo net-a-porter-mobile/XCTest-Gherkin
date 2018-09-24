@@ -22,7 +22,7 @@ open class NativeRunner {
         
         for feature in features {
             let scenarios = feature.scenarios.filter {
-                scenario == nil || $0.scenarioDescription.hasPrefix(scenario!)
+                scenario == nil || $0.name.hasPrefix(scenario!)
             }
             
             precondition(!scenarios.isEmpty, "No scenario found with name: \(scenario ?? "<no scenario provided>")")

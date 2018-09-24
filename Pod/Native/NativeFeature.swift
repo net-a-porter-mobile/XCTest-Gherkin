@@ -9,11 +9,13 @@
 import Foundation
 
 class NativeFeature: CustomStringConvertible {
+    let name: String
     let featureDescription: String
     let scenarios: [NativeScenario]
     let background: NativeBackground?
     
-    required init(description: String, scenarios: [NativeScenario], background: NativeBackground?) {
+    required init(name: String, description: String, scenarios: [NativeScenario], background: NativeBackground?) {
+        self.name = name
         self.featureDescription = description
         self.scenarios = scenarios
         self.background = background
@@ -43,28 +45,33 @@ extension NativeFeature {
 
         guard lines.count > 0 else { return nil }
         
-        // The feature description needs to be on the first line - we'll fail this method if it isn't!
-        let (_, suffixOption) = lines.filter({ $0.first != "#" &&  $0.first != "@" && $0.count > 0 }).first!.componentsWithPrefix(Language.current.keywords.Feature)
-        guard let featureDescription = suffixOption else { return nil }
-        
-        let feature = NativeFeature.parseLines(lines, path: url.path)
-        
-        self.init(description: featureDescription, scenarios: feature.scenarios, background: feature.background)
+        self.init(parseLines: lines, path: url.path)
     }
     
-    fileprivate class func parseLines(_ lines: [String], path: String) -> (background: NativeBackground?, scenarios: [NativeScenario]) {
-        
+    fileprivate convenience init?(parseLines lines: [String], path: String) {
+        // The feature name needs to be on the first line - we'll fail this method if it isn't!
+        guard case let (_, name?) = lines
+            .filter({ $0.first != "#" &&  $0.first != "@" && !$0.isEmpty })
+            .first!.componentsWithPrefix(Language.current.keywords.Feature)
+            else {
+                return nil
+        }
+
         var state = ParseState()
         var scenarios = Array<NativeScenario>()
         var background: NativeBackground?
+        var featureDescription: [String]?
         
         func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
+            let description = state.description.joined(separator: "\n")
             if let aBackground = state.background() {
                 background = aBackground
+                background?.scenarioDescription = description
             } else if let newScenarios = state.scenarios(at: scenarios.count) {
+                newScenarios.forEach { $0.scenarioDescription = description }
                 scenarios.append(contentsOf: newScenarios)
             }
-            state = ParseState(description: lineSuffix)
+            state = ParseState(name: lineSuffix)
         }
         
         // Go through each line in turn
@@ -73,14 +80,16 @@ extension NativeFeature {
             lineNumber += 1
 
             // Filter comments (#) and tags (@), also filter white lines
-            guard line.first != "#" &&  line.first != "@" && line.count > 0 else { continue }
+            guard line.first != "#" &&  line.first != "@" && !line.isEmpty else { continue }
 
             if let (linePrefix, lineSuffix) = line.lineComponents() {
                 switch linePrefix {
                 case Language.current.keywords.Background:
-                    state = ParseState(description: lineSuffix, parsingBackground: true)
+                    featureDescription = featureDescription ?? state.description
+                    state = ParseState(name: lineSuffix, parsingBackground: true)
                 case Language.current.keywords.Scenario,
                      Language.current.keywords.ScenarioOutline:
+                    featureDescription = featureDescription ?? state.description
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
                 case Language.current.keywords.Given,
                      Language.current.keywords.When,
@@ -94,16 +103,20 @@ extension NativeFeature {
                 default:
                     break
                 }
+            } else {
+                state.description.append(line)
             }
         }
         
         // If we hit the end of the file, we need to make sure we have dealt with
         // the last scenarios
         if let newScenarios = state.scenarios(at: scenarios.count) {
+            let description = state.description.joined(separator: "\n")
+            newScenarios.forEach { $0.scenarioDescription = description }
             scenarios.append(contentsOf: newScenarios)
         }
-    
-        return (background, scenarios)
+
+        self.init(name: name, description: featureDescription?.joined(separator: "\n") ?? "", scenarios: scenarios, background: background)
     }
 
 }
