@@ -186,7 +186,6 @@ public extension XCTestCase {
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
-    
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
