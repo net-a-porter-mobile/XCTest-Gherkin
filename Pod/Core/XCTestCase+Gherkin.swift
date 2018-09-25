@@ -56,7 +56,7 @@ class GherkinState: NSObject, XCTestObservation {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
 
-        if #available(iOS 9.0, *) {
+        if #available(iOS 9.0, OSX 10.11, *) {
             if automaticScreenshotsBehaviour.contains(.onFailure) {
                 test.attachScreenshot()
             }
@@ -186,7 +186,6 @@ public extension XCTestCase {
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
-    
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
@@ -206,7 +205,7 @@ public struct AutomaticScreenshotsBehaviour: OptionSet {
     public static let all: AutomaticScreenshotsBehaviour = [.onFailure, .beforeStep, .afterStep]
 }
 
-@available(iOS 9.0, *)
+@available(iOS 9.0, OSX 10.11, *)
 extension XCTestCase {
 
     /// Set behaviour for automatic screenshots (default is `.none`), their quality (default is `.medium`) and lifetime (default is `.deleteOnSuccess`)
@@ -300,7 +299,7 @@ extension XCTestCase {
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
 
-            if #available(iOS 9.0, *) {
+            if #available(iOS 9.0, OSX 10.11, *) {
                 if automaticScreenshotsBehaviour.contains(.beforeStep) {
                     attachScreenshot()
                 }
@@ -308,7 +307,7 @@ extension XCTestCase {
 
             step.function(matches)
 
-            if #available(iOS 9.0, *) {
+            if #available(iOS 9.0, OSX 10.11, *) {
                 if automaticScreenshotsBehaviour.contains(.afterStep) {
                     attachScreenshot()
                 }
