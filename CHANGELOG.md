@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+### 0.17.1
++ fix for name property on PageObject (thanks @ilyapuchka)
+
 ## 0.17.0 (all @ilyapuchka)
 + Xcode 10 support
 + Support for named matches
