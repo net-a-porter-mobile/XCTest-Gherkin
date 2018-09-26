@@ -38,33 +38,40 @@ public extension String {
         }
     }
 
-    func snakeToCamelCase(_ string: String) -> String {
-        return string.components(separatedBy: "_")
+    var snakeToCamelCase: String {
+        return components(separatedBy: "_")
             .filter { !$0.isEmpty }
             .map({ $0.uppercaseFirstLetterString })
             .joined()
     }
 
     /**
-     Given `CamelCaseString` or `snake_case_string` this will return `Camel Case String`
+     Given `CaseString` or `case_string` this will return `Case String`
      
      TODO: There is probably a more efficient way to do this. Technically this is O(n) I guess, just not a very nice O(n).
      */
     var humanReadableString: String {
         get {
-            let string = snakeToCamelCase(self)
-            guard string.count > 1, let firstCharacter = string.first else { return string }
-            return String(firstCharacter) + string.dropFirst().reduce("") { (word, character) in
+            let string = self.snakeToCamelCase
+            guard string.count > 1 else { return string }
+            var words = [String]()
+            var word: String = ""
+            string.forEach { (character) in
                 let letter = String(character)
                 let lastIsLetter = !word.isEmpty && String(word.last!).rangeOfCharacter(from: .letters) != nil
                 let thisIsLetter = letter.rangeOfCharacter(from: .letters) != nil
-                if letter == letter.uppercased() && (lastIsLetter || (!lastIsLetter && thisIsLetter)) {
-                    return word + " " + letter
+                if (letter == letter.uppercased() && lastIsLetter)
+                    || (thisIsLetter && !lastIsLetter)
+                    && !word.isEmpty {
+                    words.append(word)
+                    word = letter != " " ? letter : ""
                 }
                 else {
-                    return word + letter
+                    word += letter != " " ? letter : ""
                 }
             }
+            words.append(word)
+            return words.joined(separator: " ")
         }
     }
 }

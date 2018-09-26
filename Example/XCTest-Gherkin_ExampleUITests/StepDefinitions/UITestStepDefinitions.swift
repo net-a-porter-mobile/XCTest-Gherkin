@@ -47,6 +47,10 @@ final class InitialScreenPageObject: PageObject {
 
     let app = XCUIApplication()
 
+    class override var name: String {
+        return "Initial Screen"
+    }
+    
     override func isPresented() -> Bool {
         return tryWaitFor(element: app.buttons["PushMe"], withState: "exists == true")
     }

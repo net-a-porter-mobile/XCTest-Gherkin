@@ -9,12 +9,12 @@ open class PageObject: NSObject {
 
     /// Name of the screen (or its part) that this page object represent.
     /// Default is name of this type without "PageObject" suffix, if any.
-    public static var name: String {
+    open class var name: String {
         let name = String(describing: self)
         if name.lowercased().hasSuffix("pageobject") {
-            return String(name.dropLast(10))
+            return String(name.dropLast(10)).humanReadableString
         }
-        return name
+        return name.humanReadableString
     }
 
     /// This method should be overriden by subclasses
@@ -33,7 +33,7 @@ public class CommonPageObjectsStepDefiner: StepDefiner {
         allSubclassesOf(PageObject.self).forEach { (subclass) in
             guard subclass != PageObject.self else { return }
 
-            let name = subclass.name.humanReadableString
+            let name = subclass.name
             let expression = String(format: CommonPageObjectsStepDefiner.isPresentedStepFormat, name)
             step(expression) {
                 _ = subclass.init()
