@@ -16,7 +16,8 @@ struct StepDescription {
 }
 
 class NativeScenario: CustomStringConvertible {
-    let scenarioDescription: String
+    let name: String
+    var scenarioDescription: String = ""
     let stepDescriptions: [StepDescription]
     let index: Int
 
@@ -25,15 +26,15 @@ class NativeScenario: CustomStringConvertible {
      `selectorName` would be `testTestFunnyThingsAreFunny`
      */
     var selectorString: String {
-        get { return "test\(self.leftPad(index))\(self.scenarioDescription.camelCaseify)" }
+        get { return "test\(self.leftPad(index))\(self.name.camelCaseify)" }
     }
     
     var selectorCString: UnsafeMutablePointer<Int8> {
         get { return strdup(self.selectorString) }
     }
     
-    required init(_ description: String, steps: [StepDescription], index: Int = 0) {
-        self.scenarioDescription = description
+    required init(_ name: String, steps: [StepDescription], index: Int = 0) {
+        self.name = name
         self.stepDescriptions = steps
         self.index = index
     }
@@ -52,9 +53,9 @@ class NativeScenario: CustomStringConvertible {
 class NativeScenarioOutline: NativeScenario {
     let examples: [NativeExample]
 
-    required init(_ description: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
+    required init(_ name: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
         self.examples = examples
-        super.init(description, steps: steps, index: index)
+        super.init(name, steps: steps, index: index)
     }
 
     required init(_ description: String, steps: [StepDescription], index: Int) {
