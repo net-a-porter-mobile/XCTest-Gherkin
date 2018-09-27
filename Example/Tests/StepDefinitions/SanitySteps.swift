@@ -110,7 +110,7 @@ final class SanitySteps: StepDefiner {
             XCTAssertFalse(match)
         }
 
-        step("I have a double (.*)") { (match: Double) in
+        step("I have a double ([0-9\\.]*)$") { (match: Double) in
             XCTAssertEqual(match, 1.2)
         }
 

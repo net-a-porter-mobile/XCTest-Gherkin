@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XCTest-Gherkin"
-  s.version          = "0.16.0"
+  s.version          = "0.17.1"
   s.summary          = "Gherkin style tests"
   s.description      = <<-DESC
 Adds Gherkin syntax to XCTestCase
@@ -33,7 +33,7 @@ Adds Gherkin syntax to XCTestCase
   end
 
   s.subspec 'Native' do |ss|
-    ss.source_files = 'Pod/Native/**/*'
+    ss.source_files = [ 'Pod/Native/**/*.swift', 'Pod/Native/**/*.m', 'Pod/Native/**/*.h' ]
     ss.resources = ["Pod/Native/gherkin-languages.json"]
     ss.dependency 'XCTest-Gherkin/Core'
   end
