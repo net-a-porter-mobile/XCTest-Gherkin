@@ -149,6 +149,33 @@ This will run the tests twice, once with the values `Alice,20` and once with the
 
 NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherkin you specify them afterwards. Sorry about that.
 
+### Background
+If you are repeating the same steps in each scenario you can move them to a `Background`. A `Background` is run before each scenario (effectively just before first scenario step is execuated) or outline pass (but **after** `setUp()`). You can have as many steps in `Background` as you want.
+
+```swift
+class OnboardingTests: XCTestCase {
+
+    func Background() {
+        Given("I launch the app")
+    }
+
+    func testOnboardingIsDisplayed() {
+        Then("I see onboarding screen")
+    }
+
+    func testOnboardingIsDisplayedEachTime() {
+        Examples([""], ["1"], ["2"])
+
+        Outline {
+            Then("I see onboarding screen")
+            And("I kill the app")
+        }
+    }
+
+}
+
+```
+
 ### Page Object
 Built in `PageObject` type can be used as a base type for your own page objects. It will assert that its `isPresented()`, that you should override, returnes `true` when instance of it is created. It aslo defines a `name` property which by default is the name of the type without `PageObject` suffix, if any.  
 
