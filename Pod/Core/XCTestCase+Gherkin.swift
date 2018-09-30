@@ -232,6 +232,13 @@ extension XCTestCase {
  Put our package methods into this extension
 */
 extension XCTestCase {
+
+    fileprivate  var testName: String {
+        let rawName = String(describing: self.invocation!.selector)
+        let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
+        return testName
+    }
+
     // MARK: Adding steps
     
     /**
@@ -272,7 +279,7 @@ extension XCTestCase {
 
         UnusedStepsTracker.shared().performedStep(String(reflecting: step))
 
-        // If this the first step, debug the test name as well
+        // If this is the first step, debug the test (scenario) name and feature as well
         if state.currentStepDepth == 0 {
             let suiteName = String(describing: type(of: self))
             if suiteName != state.currentSuiteName {
@@ -280,11 +287,12 @@ extension XCTestCase {
                 state.currentSuiteName = suiteName
             }
 
-            let rawName = String(describing: self.invocation!.selector)
-            let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
-            if testName != state.currentTestName {
+            if self.testName != state.currentTestName {
                 print("  Scenario: \(testName.humanReadableString)")
-                state.currentTestName = testName
+                state.currentTestName = self.testName
+                if state.currentExample == nil {
+                    performBackground()
+                }
             }
         }
 

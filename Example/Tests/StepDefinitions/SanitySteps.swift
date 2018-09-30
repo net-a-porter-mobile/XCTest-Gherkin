@@ -12,6 +12,7 @@ import XCTest_Gherkin
 final class SanitySteps: StepDefiner {
     
     private var numberOfExamplesExecutedInOrder = 1
+    private var backgroundStepsExecuted = false
     
     override func defineSteps() {
         
@@ -129,6 +130,16 @@ final class SanitySteps: StepDefiner {
 
         step("This is a substring") {
             // This step should match instead of the one above, even though the other one is defined first
+        }
+
+        step("first execute background step") {
+            XCTAssertFalse(self.backgroundStepsExecuted, "Background should be executed once per scenario or example")
+            self.backgroundStepsExecuted = true
+        }
+
+        step("background step should be executed") {
+            XCTAssertTrue(self.backgroundStepsExecuted, "Background should be executed for each scenario or example")
+            self.backgroundStepsExecuted = false
         }
 
         step("I'm logged in as (?!known)(\\{.+\\})") { (match: ExampleFeatures.Person) in
