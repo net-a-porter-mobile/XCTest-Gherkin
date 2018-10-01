@@ -262,9 +262,7 @@ extension XCTestCase {
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
-            expression = example.reduce(expression) {
-                $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
-            }
+            expression = expression.replacingExamplePlaceholders(example)
         }
 
         // Get the step and the matches inside it
