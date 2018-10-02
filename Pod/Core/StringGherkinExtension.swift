@@ -75,3 +75,19 @@ public extension String {
         }
     }
 }
+
+extension String {
+    func replacingExamplePlaceholders(_ example: Example) -> String {
+        let expression = example.reduce(self) {
+            $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
+        }
+        
+        let regex = try! NSRegularExpression(pattern: "<(.+?)>")
+        if let match = regex.firstMatch(in: expression, range: NSMakeRange(0, expression.count)) {
+            let unknown = (expression as NSString).substring(with: match.range(at: 1))
+            preconditionFailure("Unknown example variable \(unknown)")
+        }
+
+        return expression
+    }
+}

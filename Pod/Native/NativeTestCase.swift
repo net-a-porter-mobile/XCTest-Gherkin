@@ -137,9 +137,7 @@ extension XCTestCase {
                 // This hoop is because the compiler doesn't seem to
                 // recognize map directly on the state.steps object
                 let steps = outline.stepDescriptions.map { step -> StepDescription in
-                    let expression = example.pairs.reduce(step.expression, {
-                        $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
-                    })
+                    let expression = step.expression.replacingExamplePlaceholders(example.pairs)
                     return StepDescription(keyword: step.keyword, expression: expression, file: step.file, line: step.line)
                 }
 
