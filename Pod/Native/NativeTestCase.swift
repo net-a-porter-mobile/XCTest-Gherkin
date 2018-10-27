@@ -80,8 +80,10 @@ open class NativeTestCase: XCGNativeInitializer {
     // MARK: Test template method
     
     func featureScenarioTest() {
-        guard let (feature, scenario) = type(of: self).featureScenarioData(self.invocation!.selector) else {
-            return
+        guard
+            let selector = self.invocation?.selector,
+            let (feature, scenario) = type(of: self).featureScenarioData(selector) else {
+                return
         }
         perform(scenario: scenario, from: feature)
     }
