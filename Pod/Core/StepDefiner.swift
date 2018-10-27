@@ -9,6 +9,7 @@
 import XCTest
 
 extension NSRegularExpression.Options {
+    /// Match full string. Equivalent to adding `^` and `$` and the start and end of expression.
     public static let matchesFullString = NSRegularExpression.Options(rawValue: 1 << 20)
 }
 
@@ -18,20 +19,16 @@ populate the step definitions before test runs
 */
 open class StepDefiner: NSObject, XCTestObservation {
     public private(set) var test: XCTestCase
-    
+
     /// Options to configure steps regular expressions. Default is `[.caseInsensitive]`
     public let regexOptions: NSRegularExpression.Options
 
-    required convenience public init(test: XCTestCase) {
-        self.init(test: test, regexOptions: [.caseInsensitive])
-    }
-
-    public init(test: XCTestCase, regexOptions: NSRegularExpression.Options) {
+    public required init(test: XCTestCase, regexOptions: NSRegularExpression.Options = [.caseInsensitive]) {
         self.test = test
         self.regexOptions = regexOptions
-        
+
         super.init()
-        
+
         XCTestObservationCenter.shared.addTestObserver(self)
     }
 
