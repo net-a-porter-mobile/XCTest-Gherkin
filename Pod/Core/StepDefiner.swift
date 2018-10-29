@@ -76,7 +76,7 @@ open class StepDefiner: NSObject, XCTestObservation {
      */
     open func step(exactly exact: String, file: String = #file, line: Int = #line, f: @escaping ()->()) {
         let expression = NSRegularExpression.escapedPattern(for: exact)
-        self.test.addStep("^"+expression+"$", file: file, line: line) { _ in f() }
+        self.test.addStep("^"+expression+"$", options: regexOptions, file: file, line: line) { _ in f() }
     }
 
     /**
