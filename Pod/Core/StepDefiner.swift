@@ -63,6 +63,23 @@ open class StepDefiner: NSObject, XCTestObservation {
     }
 
     /**
+     Create a step which _exactly_ matches the passed in string.
+
+     Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:
+
+         step(exactly: "Some string literal") {
+             ... some function ...
+         }
+
+     - parameter exactly: The expression to _exactly_ match against
+     - parameter f: The step definition to be run
+     */
+    open func step(exactly exact: String, file: String = #file, line: Int = #line, f: @escaping ()->()) {
+        let expression = NSRegularExpression.escapedPattern(for: exact)
+        self.test.addStep("^"+expression+"$", file: file, line: line) { _ in f() }
+    }
+
+    /**
      Create a new step with an expression that contains one or more matching groups.
      
      Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:

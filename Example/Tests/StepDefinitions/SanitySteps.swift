@@ -12,6 +12,7 @@ import XCTest_Gherkin
 final class SanitySteps: StepDefiner {
     
     private var numberOfExamplesExecutedInOrder = 1
+    private var backgroundStepsExecuted = false
     
     override func defineSteps() {
         
@@ -131,6 +132,16 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
+        step("first execute background step") {
+            XCTAssertFalse(self.backgroundStepsExecuted, "Background should be executed once per scenario or example")
+            self.backgroundStepsExecuted = true
+        }
+
+        step("background step should be executed") {
+            XCTAssertTrue(self.backgroundStepsExecuted, "Background should be executed for each scenario or example")
+            self.backgroundStepsExecuted = false
+        }
+
         step("I'm logged in as (?!known)(\\{.+\\})") { (match: ExampleFeatures.Person) in
             XCTAssertEqual(match.name, "Alice")
         }
@@ -154,5 +165,21 @@ final class SanitySteps: StepDefiner {
 
         step("This is unused step") {}
 
+    }
+}
+
+final class MatchStringLiteralStepDefiner: StepDefiner {
+
+    /// This is a literal, which if used as a regular expression will match pretty much everything. This tests that this doesn't happen :)
+    static let literal = "^(.*)$"
+
+    override func defineSteps() {
+        step(exactly: MatchStringLiteralStepDefiner.literal) {
+        }
+
+        /// Explicitly define a step here which contains `literal` to sanity check that the exact matcher doesn't match against substrings.
+        step(MatchStringLiteralStepDefiner.literal + " NOPE") {
+            XCTFail("This step should definitely not have matched")
+        }
     }
 }
