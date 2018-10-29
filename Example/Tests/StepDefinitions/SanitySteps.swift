@@ -167,3 +167,19 @@ final class SanitySteps: StepDefiner {
 
     }
 }
+
+final class MatchStringLiteralStepDefiner: StepDefiner {
+
+    /// This is a literal, which if used as a regular expression will match pretty much everything. This tests that this doesn't happen :)
+    static let literal = "^(.*)$"
+
+    override func defineSteps() {
+        step(exactly: MatchStringLiteralStepDefiner.literal) {
+        }
+
+        /// Explicitly define a step here which contains `literal` to sanity check that the exact matcher doesn't match against substrings.
+        step(MatchStringLiteralStepDefiner.literal + " NOPE") {
+            XCTFail("This step should definitely not have matched")
+        }
+    }
+}
