@@ -36,31 +36,54 @@ public extension String {
         return String(firstCharacter).uppercased() + String(self.dropFirst())
     }
 
-    func snakeToCamelCase(_ string: String) -> String {
-        return string.components(separatedBy: "_")
+    var snakeToCamelCase: String {
+        return components(separatedBy: "_")
             .filter { !$0.isEmpty }
             .map({ $0.uppercaseFirstLetterString })
             .joined()
     }
 
     /**
-     Given `CamelCaseString` or `snake_case_string` this will return `Camel Case String`
+     Given `CaseString` or `case_string` this will return `Case String`
      
      TODO: There is probably a more efficient way to do this. Technically this is O(n) I guess, just not a very nice O(n).
      */
     var humanReadableString: String {
-        let string = snakeToCamelCase(self)
-        guard string.count > 1, let firstCharacter = string.first else { return string }
-        return String(firstCharacter) + string.dropFirst().reduce("") { (word, character) in
+        let string = self.snakeToCamelCase
+        guard string.count > 1 else { return string }
+        var words = [String]()
+        var word: String = ""
+        string.forEach { (character) in
             let letter = String(character)
             let lastIsLetter = !word.isEmpty && String(word.last!).rangeOfCharacter(from: .letters) != nil
             let thisIsLetter = letter.rangeOfCharacter(from: .letters) != nil
-            if letter == letter.uppercased() && (lastIsLetter || (!lastIsLetter && thisIsLetter)) {
-                return word + " " + letter
+            if (letter == letter.uppercased() && lastIsLetter)
+                || (thisIsLetter && !lastIsLetter)
+                && !word.isEmpty {
+                words.append(word)
+                word = letter != " " ? letter : ""
             }
             else {
-                return word + letter
+                word += letter != " " ? letter : ""
             }
         }
+        words.append(word)
+        return words.joined(separator: " ")
+    }
+}
+
+extension String {
+    func replacingExamplePlaceholders(_ example: Example) -> String {
+        let expression = example.reduce(self) {
+            $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
+        }
+        
+        let regex = try! NSRegularExpression(pattern: "<(.+?)>")
+        if let match = regex.firstMatch(in: expression, range: NSMakeRange(0, expression.count)) {
+            let unknown = (expression as NSString).substring(with: match.range(at: 1))
+            preconditionFailure("Unknown example variable \(unknown)")
+        }
+
+        return expression
     }
 }

@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import XCTest_Gherkin
+@testable import XCTest_Gherkin
 
 final class ExampleFeatures: XCTestCase {
 
@@ -150,7 +150,7 @@ final class ExampleFeatures: XCTestCase {
 
     func testStepWithNamedCodableMatch() {
         if #available(iOS 11.0, OSX 10.13, *) {
-            Given("I'm logged in as known \(Person(name: "Alice", age: 27, height: 170))")
+            Given("I'm logged in as a known \(Person(name: "Alice", age: 27, height: 170))")
         }
     }
 
@@ -159,10 +159,24 @@ final class ExampleFeatures: XCTestCase {
             Examples(examples)
 
             Outline {
-                Given("I use the example <name>")
-                Then("The height should be <height>")
+                Then("I use the example <name> and the height <height>")
             }
         }
     }
 
+    func testUnusedStep() {
+        Given("This is a substring")
+
+        UnusedStepsTracker.shared().printUnusedSteps = { steps in
+            XCTAssertFalse(steps.contains(where: { $0.contains("This is a substring") }))
+            XCTAssertTrue(steps.contains(where: { $0.contains("This is unused step") }))
+        }
+        UnusedStepsTracker.shared().performSelector(onMainThread: #selector(XCTestObservation.testBundleDidFinish(_:)), with: nil, waitUntilDone: true)
+    }
+
+    func testMatchingStringLiterals() {
+        /// Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
+        /// in the step
+        Given(MatchStringLiteralStepDefiner.literal)
+    }
 }

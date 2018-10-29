@@ -8,10 +8,26 @@
 
 import Foundation
 
-protocol StepFunctionParameters {}
+public struct StepMatches<T: MatchedStringRepresentable> {
+    let allMatches: [T]
+    let namedMatches: [String: T]
 
-extension Array: StepFunctionParameters where Element == String {}
-extension Dictionary: StepFunctionParameters where Key == String, Value == String {}
+    public var count: Int {
+        return allMatches.count
+    }
+
+    public subscript(_ index: Int) -> T {
+        return allMatches[index]
+    }
+
+    public subscript(_ key: String) -> T? {
+        return namedMatches[key]
+    }
+
+    public func map<U: MatchedStringRepresentable>(_ f: (T) -> U) -> StepMatches<U> {
+        return StepMatches<U>(allMatches: allMatches.map(f), namedMatches: namedMatches.mapValues(f))
+    }
+}
 
 /**
  Represents a single step definition - create it with the expression and the 
@@ -19,13 +35,14 @@ extension Dictionary: StepFunctionParameters where Key == String, Value == Strin
 */
 class Step: Hashable, Equatable, CustomDebugStringConvertible {
     let expression: String
-    let function: (StepFunctionParameters)->()
+    let function: (StepMatches<String>)->()
     
     fileprivate let file: String
     fileprivate let line: Int
     
     // Compute this as part of init
     let regex: NSRegularExpression
+    let groupsNames: [String]
     
     /**
      Create a new Step definition with an expression to match against and a function to be
@@ -34,61 +51,105 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
      The `file` and `line` parameters are for debugging; they should show where the step was
      initially defined.
      */
-    init(_ expression: String, file: String, line: Int, _ function: @escaping (StepFunctionParameters)->() ) {
+    init(_ expression: String, options: NSRegularExpression.Options, file: String, line: Int, _ function: @escaping (StepMatches<String>)->() ) {
         self.expression = expression
         self.function = function
         self.file = file
         self.line = line
-        
-        // Just throw here; the test will fail :)
-        self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
+
+        if #available(iOS 11.0, OSX 10.13, *) {
+            let namedGroupExpr = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+?\\))")
+            groupsNames = namedGroupExpr.matches(in: expression, range: NSMakeRange(0, expression.count)).map { namedGroupMatch in
+                return (expression as NSString).substring(with: namedGroupMatch.range(at: 2))
+            }
+        } else {
+            groupsNames = []
+        }
+
+        var pattern = expression
+        if options.contains(.matchesFullString) {
+            if !expression.hasPrefix("^") {
+                pattern = "^\(expression)"
+            }
+            if !expression.hasSuffix("$") {
+                pattern = "\(expression)$"
+            }
+        }
+        self.regex = try! NSRegularExpression(pattern: pattern, options: options)
     }
 
-    func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepFunctionParameters, stepDescription: String) {
+    func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepMatches<String>, stepDescription: String) {
+        var debugDescription = expression
+        var namedMatches = [String: String]()
+
         if #available(iOS 11.0, OSX 10.13, *) {
-            let namedGroup = try! NSRegularExpression(pattern: "(\\(\\?<(\\w+)>.+\\))")
-            let namedGroups = namedGroup.matches(in: self.expression, range: NSMakeRange(0, self.expression.count))
-            if !namedGroups.isEmpty {
-                var debugDescription = self.expression
-                let matches: [String: String] = .init(uniqueKeysWithValues: namedGroups.map { (namedGroupMatch) -> (String, String) in
-                    let groupName = (self.expression as NSString).substring(with: namedGroupMatch.range(at: 2))
-                    debugDescription = (debugDescription as NSString).replacingCharacters(in: namedGroupMatch.range(at: 1), with: groupName.humanReadableString.lowercased())
-
-                    let range = match.range(withName: groupName)
-                    let string = range.location != NSNotFound ? (expression as NSString).substring(with: range) : ""
-                    return (groupName, string)
-                })
-
-                return (matches, debugDescription)
+            groupsNames.forEach { (groupName) in
+                let range = match.range(withName: groupName)
+                let value = (expression as NSString).substring(with: range)
+                debugDescription = (debugDescription as NSString).replacingCharacters(in: range, with: groupName.humanReadableString.lowercased())
+                namedMatches[groupName] = value
             }
         }
 
-        // Covert them to strings to pass back into the step function
-        let matchStrings = (1..<match.numberOfRanges).map {
+        let allMatches = (1..<match.numberOfRanges).map {
             (expression as NSString).substring(with: match.range(at: $0))
         }
-        return (matchStrings, expression)
+        return (StepMatches(allMatches: allMatches, namedMatches: namedMatches), debugDescription)
     }
 
     var hashValue: Int {
-        get {
-            return expression.hashValue
-        }
+        return expression.hashValue
     }
     
     var debugDescription: String {
-        get {
-            return "/\(expression)/  \(locationDescription)"
-        }
+        return "/\(expression)/  \(shortLocationDescription)"
     }
 
-    var locationDescription: String {
-        // We only want the output the final filename part of `file`
-        let name = (file as NSString).lastPathComponent
-        return "(\(name):\(line))"
+    var fullLocationDescription: String {
+        return "(\(file):\(line))"
     }
+
+    var shortLocationDescription: String {
+        return "(\((file as NSString).lastPathComponent):\(line))"
+    }
+
 }
 
 func ==(lhs: Step, rhs: Step) -> Bool {
     return lhs.expression == rhs.expression
 }
+
+extension Collection where Element == Step {
+    func printStepsDefinitions() {
+        print("-------------")
+        print("Defined steps")
+        print("-------------")
+        print(self.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
+        print("-------------")
+    }
+}
+
+extension Collection where Element == String {
+    func printAsTemplatedCodeForAllMissingSteps(suggestedSteps: (String) -> [Step]) {
+        print("Copy paste these steps in a StepDefiner subclass:")
+        print("-------------")
+        self.forEach {
+            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
+            let suggestedSteps = suggestedSteps($0)
+            if !suggestedSteps.isEmpty {
+                print("-------------\nOr maybe you meant one of these steps:\n-------------")
+                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
+            }
+        }
+        print("-------------")
+    }
+
+    func printAsUnusedSteps() {
+        print("-------------")
+        print("Unused steps")
+        print("-------------")
+        print(self.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"));
+        print("-------------")
+    }
+}
+

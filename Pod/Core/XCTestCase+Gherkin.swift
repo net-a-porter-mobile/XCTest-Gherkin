@@ -52,21 +52,23 @@ class GherkinState: NSObject, XCTestObservation {
         XCTestObservationCenter.shared.addTestObserver(self)
     }
 
-    deinit {
-        XCTestObservationCenter.shared.removeTestObserver(self)
-    }
-
     func testCase(_ testCase: XCTestCase, didFailWithDescription description: String, inFile filePath: String?, atLine lineNumber: Int) {
         guard let test = self.test, let (file, line) = test.state.currentStepLocation else { return }
         if filePath == file && lineNumber == line { return }
 
-        if automaticScreenshotsBehaviour.contains(.onFailure) {
-            test.attachScreenshot()
+        if #available(iOS 9.0, OSX 10.11, *) {
+            if automaticScreenshotsBehaviour.contains(.onFailure) {
+                test.attachScreenshot()
+            }
         }
         test.recordFailure(withDescription: description, inFile: file, atLine: line, expected: false)
         if let exampleLineNumber = self.currentNativeExampleLineNumber, lineNumber != exampleLineNumber {
             test.recordFailure(withDescription: description, inFile: file, atLine: exampleLineNumber, expected: false)
         }
+    }
+
+    func testCaseDidFinish(_ testCase: XCTestCase) {
+        XCTestObservationCenter.shared.removeTestObserver(self)
     }
 
     func gherkinStepsAndMatchesMatchingExpression(_ expression: String) -> [(step: Step, match: NSTextCheckingResult)] {
@@ -107,26 +109,13 @@ class GherkinState: NSObject, XCTestObservation {
     }
     
     func printTemplatedCodeForAllMissingSteps() {
-        print("Copy paste these steps in a StepDefiner subclass:")
-        print("-------------")
-        self.missingStepsImplementations.forEach({
-            print("step(\"\($0)"+"\") {XCTAssertTrue(true)}")
-            let suggestedSteps = self.suggestedSteps(forStep: $0)
-            if !suggestedSteps.isEmpty {
-                print("-------------\nOr maybe you meant one of these steps:\n-------------")
-                print(suggestedSteps.map { String(reflecting: $0) }.joined(separator: "\n"))
-            }
-        })
-        print("-------------")
+        self.missingStepsImplementations
+            .printAsTemplatedCodeForAllMissingSteps(suggestedSteps: self.suggestedSteps(forStep:))
     }
     
     func printStepDefinitions() {
         self.loadAllStepsIfNeeded()
-        print("-------------")
-        print("Defined steps")
-        print("-------------")
-        print(self.steps.map { String(reflecting: $0) }.sorted { $0.lowercased() < $1.lowercased() }.joined(separator: "\n"))
-        print("-------------")
+        self.steps.printStepsDefinitions()
     }
     
     func loadAllStepsIfNeeded() {
@@ -136,7 +125,10 @@ class GherkinState: NSObject, XCTestObservation {
         allSubclassesOf(StepDefiner.self).forEach { subclass in
             subclass.init(test: self.test!).defineSteps()
         }
-        
+
+        UnusedStepsTracker.shared().setSteps(self.steps.map { String(reflecting: $0) })
+        UnusedStepsTracker.shared().printUnusedSteps = { $0.printAsUnusedSteps() }
+
         precondition(self.steps.count > 0, "No steps have been defined - there must be at least one subclass of StepDefiner which defines at least one step!")
     }
 }
@@ -194,7 +186,6 @@ public extension XCTestCase {
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
-    
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none
@@ -214,6 +205,7 @@ public struct AutomaticScreenshotsBehaviour: OptionSet {
     public static let all: AutomaticScreenshotsBehaviour = [.onFailure, .beforeStep, .afterStep]
 }
 
+@available(iOS 9.0, OSX 10.11, *)
 extension XCTestCase {
 
     /// Set behaviour for automatic screenshots (default is `.none`), their quality (default is `.medium`) and lifetime (default is `.deleteOnSuccess`)
@@ -240,25 +232,20 @@ extension XCTestCase {
  Put our package methods into this extension
 */
 extension XCTestCase {
+
+    fileprivate  var testName: String {
+        let rawName = String(describing: self.invocation!.selector)
+        let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
+        return testName
+    }
+
     // MARK: Adding steps
     
     /**
      Adds a step to the global store of steps, but only if this expression isn't already defined with a step
     */
-    func addStep(_ expression: String, file: String, line: Int, functionWithUnnamedMatchs function: @escaping ([String])->()) {
-        self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches as! [String])
-        })
-    }
-
-    func addStep(_ expression: String, file: String, line: Int, functionWithNamedMatches function: @escaping ([String: String])->()) {
-        self.addStep(expression, file: file, line: line, function: { matches in
-            function(matches as! [String: String])
-        })
-    }
-
-    private func addStep(_ expression: String, file: String, line: Int, function: @escaping (StepFunctionParameters)->()) {
-        let step = Step(expression, file: file, line: line, function)
+    func addStep(_ expression: String, options: NSRegularExpression.Options, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
+        let step = Step(expression, options: options, file: file, line: line, function)
         state.steps.insert(step);
     }
 
@@ -275,9 +262,7 @@ extension XCTestCase {
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
             // For each field in the example, go through the step expression and replace the placeholders if needed
-            expression = example.reduce(expression) {
-                $0.replacingOccurrences(of: "<\($1.key)>", with: String(describing: $1.value))
-            }
+            expression = expression.replacingExamplePlaceholders(example)
         }
 
         // Get the step and the matches inside it
@@ -290,7 +275,9 @@ extension XCTestCase {
             preconditionFailure("Failed to find a match for a step: \(expression)")
         }
 
-        // If this the first step, debug the test name as well
+        UnusedStepsTracker.shared().performedStep(String(reflecting: step))
+
+        // If this is the first step, debug the test (scenario) name and feature as well
         if state.currentStepDepth == 0 {
             let suiteName = String(describing: type(of: self))
             if suiteName != state.currentSuiteName {
@@ -298,11 +285,12 @@ extension XCTestCase {
                 state.currentSuiteName = suiteName
             }
 
-            let rawName = String(describing: self.invocation!.selector)
-            let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
-            if testName != state.currentTestName {
+            if self.testName != state.currentTestName {
                 print("  Scenario: \(testName.humanReadableString)")
-                state.currentTestName = testName
+                state.currentTestName = self.testName
+                if state.currentExample == nil {
+                    performBackground()
+                }
             }
         }
 
@@ -310,21 +298,27 @@ extension XCTestCase {
         let (matches, debugDescription) = step.matches(from: match, expression: expression)
 
         // Debug the step name
-        print("    step \(keyword) \(currentStepDepthString())\(expression)  \(step.locationDescription)")
+        print("    step \(keyword) \(currentStepDepthString())\(debugDescription)  \(step.fullLocationDescription)")
 
         // Run the step
-        XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.locationDescription)") { (_) in
+        XCTContext.runActivity(named: "\(keyword) \(debugDescription)  \(step.shortLocationDescription)") { (_) in
             state.currentStepDepth += 1
             state.currentStepLocation = (file, line)
-            if automaticScreenshotsBehaviour.contains(.beforeStep) {
-                attachScreenshot()
+
+            if #available(iOS 9.0, OSX 10.11, *) {
+                if automaticScreenshotsBehaviour.contains(.beforeStep) {
+                    attachScreenshot()
+                }
             }
 
             step.function(matches)
 
-            if automaticScreenshotsBehaviour.contains(.afterStep) {
-                attachScreenshot()
+            if #available(iOS 9.0, OSX 10.11, *) {
+                if automaticScreenshotsBehaviour.contains(.afterStep) {
+                    attachScreenshot()
+                }
             }
+
             state.currentStepLocation = nil
             state.currentStepDepth -= 1
         }
@@ -343,4 +337,8 @@ extension XCTestCase {
 func requireNotNil<T>(_ expr: @autoclosure () -> T?, _ message: String) -> T {
     guard let value = expr() else { preconditionFailure(message) }
     return value
+}
+
+func requireToConvert<T>(_ expr: @autoclosure () -> T?, _ match: String, _ expression: String) -> T {
+    return requireNotNil(expr, "Could not convert '\(match)' to \(T.self) in '\(expression)'")
 }

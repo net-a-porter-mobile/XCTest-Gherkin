@@ -122,7 +122,7 @@ extension XCTestCase {
             }
 
             precondition(allScenarioStepsDefined && allFeatureBackgroundStepsDefined,
-                         "Some step definitions not found for the scenario: \(scenario.scenarioDescription)")
+                         "Some step definitions not found for the scenario: \(scenario.name)")
 
             if let background = feature.background {
                 background.stepDescriptions.forEach({ self.performStep($0.expression, keyword: $0.keyword, file: $0.file, line: $0.line) })
@@ -137,9 +137,7 @@ extension XCTestCase {
                 // This hoop is because the compiler doesn't seem to
                 // recognize map directly on the state.steps object
                 let steps = outline.stepDescriptions.map { step -> StepDescription in
-                    let expression = example.pairs.reduce(step.expression, {
-                        $0.replacingOccurrences(of: "<\($1.key)>", with: $1.value)
-                    })
+                    let expression = step.expression.replacingExamplePlaceholders(example.pairs)
                     return StepDescription(keyword: step.keyword, expression: expression, file: step.file, line: step.line)
                 }
 

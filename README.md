@@ -1,6 +1,6 @@
 # XCTest-Gherkin
 
-[![CI Status](http://img.shields.io/travis/net-a-porter-mobile/XCTest-Gherkin.svg?style=flat)](https://travis-ci.org/net-a-porter-mobile/XCTest-Gherkin)
+[![CI Status](http://img.shields.io/travis/net-a-porter-mobile/XCTest-Gherkin.svg?style=flat)](https://travis-ci.org/net-a-porter-mobile/XCTest-Gherkin.svg?branch=master)
 [![Version](https://img.shields.io/cocoapods/v/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 [![License](https://img.shields.io/cocoapods/l/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
 [![Platform](https://img.shields.io/cocoapods/p/XCTest-Gherkin.svg?style=flat)](http://cocoapods.org/pods/XCTest-Gherkin)
@@ -113,10 +113,10 @@ will produce following logs:
 step User is loggeed in as {"name":"Nick"}
 ```
 
-With named capture groups the step definition can look like
+With named capture groups the step definition can look like this (notice that `match` is now a `StepMatches<Person>`)
 
 ```swift
-step("User is logged in as (?<aRegisteredUser>.+)") { (match: Person) in ... }
+step("User is logged in as (?<aRegisteredUser>.+)") { (match: StepMatches<Person>) in ... }
 ```
 
 and the same test will produce logs:
@@ -124,6 +124,8 @@ and the same test will produce logs:
 ```
 step User is logged in as a registered user
 ```
+
+In step implementation you will access matched values using the name of the group, i.e. `match["aRegisteredUser"]`. You can access all matched values (including matched by unnamed groups) by their index, starting from 0, i.e. `match[0]`. So you can have more than one named group and you can mix them with unnamed groups.
 
 ### Examples and feature outlines
 If you want to test the same situation with a set of data, Gherkin allows you to specify example input for your tests. We used this all over our previous tests so we needed to deal with it here too!
@@ -146,6 +148,33 @@ func testOutlineTests() {
 This will run the tests twice, once with the values `Alice,20` and once with the values `Bob,20`.
 
 NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherkin you specify them afterwards. Sorry about that.
+
+### Background
+If you are repeating the same steps in each scenario you can move them to a `Background`. A `Background` is run before each scenario (effectively just before first scenario step is execuated) or outline pass (but **after** `setUp()`). You can have as many steps in `Background` as you want.
+
+```swift
+class OnboardingTests: XCTestCase {
+
+    func Background() {
+        Given("I launch the app")
+    }
+
+    func testOnboardingIsDisplayed() {
+        Then("I see onboarding screen")
+    }
+
+    func testOnboardingIsDisplayedEachTime() {
+        Examples([""], ["1"], ["2"])
+
+        Outline {
+            Then("I see onboarding screen")
+            And("I kill the app")
+        }
+    }
+
+}
+
+```
 
 ### Page Object
 Built in `PageObject` type can be used as a base type for your own page objects. It will assert that its `isPresented()`, that you should override, returnes `true` when instance of it is created. It aslo defines a `name` property which by default is the name of the type without `PageObject` suffix, if any.  
@@ -175,26 +204,40 @@ XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures test
 
 Sometimes, multiple steps might contain the same text. The library will match with what it thinks is the right step, but it might get it wrong. For example if you have these step definitions:
 
-```
+```swift
 step("email button") { ... }
 step("I tap the email button") { ... }
 ```
 
 When you try to run this Given
-```
+
+```swift
 func testStepAnchorMatching() {
     Given("I tap the email button")
 }
 ```
 
-it might match against the "email button" step, instead of the "I tap the email button" step. To fix this, you can anchor the regular expression to the start and end of the string using `^` and `$`, like this:
+it might match against the "email button" step, instead of the "I tap the email button" step. To fix this, there are two options.
 
+1. You can pass an exact string literal to the step definition instead of using the normal method, which treats everything as a regular expression.
+
+```swift
+step(exactly: "I tap the email button")
 ```
+
+This will match _only_ the exact text "I tap the email button". Any regular expression special characters in this string will be matched exactly.
+
+2. You can anchor the regular expression to the start and end of the string using `^` and `$`, like this:
+
+```swift
 step("^email button$") { ... }
 step("I tap the email button") { ... }
 ```
 
 Now, "I tap the email button" doesn't match the first step.
+
+This method is useful if you need to match ambiguous steps, but can't use approach (1) because you also need other features of regular expressions (i.e. pattern matching etc)
+
 
 ### Screenshots
 
@@ -249,6 +292,21 @@ you will also include the ability to parse true Gherkin syntax feature files and
 There is an example of this in the Example/ project as part of this pod. Look at the `ExampleNativeTest` class - all you need to do is specify the containing folder and all the feature files in that folder will be read.
 
 The advantages of this are obvious; you get to quickly run your existing feature files and can get up and running quickly. The disadvanages are beacuse the tests are generated at runtime they can't be run individually from inside Xcode so debugging is tricker. I would use this to start testing inside Xcode but if it gets hairy, convert that feature file into a native Swift test and debug from there.
+
+
+### Localisation of feature files
+
+You can use feature files written in multiple languages. To set the language of a feature file put a `# language: en` with appropriate language code at the first line of a feature file. By default English localisation is used. You can see all available localisations in `gherkin-languages.json` file or from code using `NativeTestCase.availableLanguages` property. Here is an example of a feature file in Russian:
+
+```
+# language: ru
+Функция: Разбор простого функционального файла
+
+    Сценарий: Это очень простой пример успешного сценария
+        Допустим Я имею рабочее окружение Gherkin
+        Тогда этот тест не должен завершиться ошибкой
+```
+
 
 ### Disclaimer
 The Gherkin syntax parser here isn't really production ready - it's certainly not a validator and will probably happily parse malformed Gherkin files quite happily. The feature files it's parsing are assumed to be fairly well constructed. The purpose of this subpod is to help migrate from old feature files into the Swift way of doing things so that's all it does. Feel free to submit pull requests if you want to change this :)
