@@ -17,12 +17,12 @@ public extension String {
 
     */
     var camelCaseify: String {
-        get {
-            guard case let characters = (self.split { $0 == " " || $0 == "-" }), characters.count > 1 else {
-                return self.uppercaseFirstLetterString
-            }
-            return characters.map { String($0).lowercased().uppercaseFirstLetterString }.joined(separator: "")
+        let allowed = CharacterSet(charactersIn: "-").union(.alphanumerics).union(.whitespaces)
+        let filtered = self.filter({ CharacterSet(charactersIn: "\($0)").isSubset(of: allowed) })
+        guard case let characters = (filtered.split { $0 == " " || $0 == "-" }).filter({ !$0.isEmpty }), characters.count > 1 else {
+            return self.uppercaseFirstLetterString
         }
+        return characters.map { String($0).lowercased().uppercaseFirstLetterString }.joined(separator: "")
     }
 
     /**
@@ -32,10 +32,8 @@ public extension String {
      - "HeLLO" -> "HeLLO"
     */
     var uppercaseFirstLetterString: String {
-        get {
-            guard let firstCharacter = self.first else { return self }
-            return String(firstCharacter).uppercased() + String(self.dropFirst())
-        }
+        guard let firstCharacter = self.first else { return self }
+        return String(firstCharacter).uppercased() + String(self.dropFirst())
     }
 
     var snakeToCamelCase: String {
@@ -51,28 +49,26 @@ public extension String {
      TODO: There is probably a more efficient way to do this. Technically this is O(n) I guess, just not a very nice O(n).
      */
     var humanReadableString: String {
-        get {
-            let string = self.snakeToCamelCase
-            guard string.count > 1 else { return string }
-            var words = [String]()
-            var word: String = ""
-            string.forEach { (character) in
-                let letter = String(character)
-                let lastIsLetter = !word.isEmpty && String(word.last!).rangeOfCharacter(from: .letters) != nil
-                let thisIsLetter = letter.rangeOfCharacter(from: .letters) != nil
-                if (letter == letter.uppercased() && lastIsLetter)
-                    || (thisIsLetter && !lastIsLetter)
-                    && !word.isEmpty {
-                    words.append(word)
-                    word = letter != " " ? letter : ""
-                }
-                else {
-                    word += letter != " " ? letter : ""
-                }
+        let string = self.snakeToCamelCase
+        guard string.count > 1 else { return string }
+        var words = [String]()
+        var word: String = ""
+        string.forEach { (character) in
+            let letter = String(character)
+            let lastIsLetter = !word.isEmpty && String(word.last!).rangeOfCharacter(from: .letters) != nil
+            let thisIsLetter = letter.rangeOfCharacter(from: .letters) != nil
+            if (letter == letter.uppercased() && lastIsLetter)
+                || (thisIsLetter && !lastIsLetter)
+                && !word.isEmpty {
+                words.append(word)
+                word = letter != " " ? letter : ""
             }
-            words.append(word)
-            return words.joined(separator: " ")
+            else {
+                word += letter != " " ? letter : ""
+            }
         }
+        words.append(word)
+        return words.joined(separator: " ")
     }
 }
 
