@@ -1,7 +1,10 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
-+ Add `step(exactly: String)` to explicitly exactly match a step instead of using regexes
+
+## 0.18.0
++ Add `step(exactly: String)` to explicitly exactly match a step instead of using regexes (fixes #142)
++ Add regex options to step definitions (thanks @ilyapuchka)
 
 ### 0.17.1
 + fix for name property on PageObject (thanks @ilyapuchka)
