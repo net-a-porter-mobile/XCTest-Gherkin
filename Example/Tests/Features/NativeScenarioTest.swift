@@ -20,5 +20,8 @@ final class NativeScenarioTest: XCTestCase {
         
         let scenario100 = NativeScenario("This is a test", steps: [], index: 111)
         XCTAssertEqual(scenario100.selectorString, "test111ThisIsATest")
+
+        let complexScenarioName = NativeScenario("This is a test, scenario name - it shouldn't have any special characters", steps: [], index: 1)
+        XCTAssertEqual(complexScenarioName.selectorString, "test001ThisIsATestScenarioNameItShouldntHaveAnySpecialCharacters")
     }
 }

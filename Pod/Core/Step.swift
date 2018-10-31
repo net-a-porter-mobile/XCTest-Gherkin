@@ -51,7 +51,7 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
      The `file` and `line` parameters are for debugging; they should show where the step was
      initially defined.
      */
-    init(_ expression: String, file: String, line: Int, _ function: @escaping (StepMatches<String>)->() ) {
+    init(_ expression: String, options: NSRegularExpression.Options, file: String, line: Int, _ function: @escaping (StepMatches<String>)->() ) {
         self.expression = expression
         self.function = function
         self.file = file
@@ -66,8 +66,16 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
             groupsNames = []
         }
 
-        // Just throw here; the test will fail :)
-        self.regex = try! NSRegularExpression(pattern: expression, options: .caseInsensitive)
+        var pattern = expression
+        if options.contains(.matchesFullString) {
+            if !expression.hasPrefix("^") {
+                pattern = "^\(expression)"
+            }
+            if !expression.hasSuffix("$") {
+                pattern = "\(expression)$"
+            }
+        }
+        self.regex = try! NSRegularExpression(pattern: pattern, options: options)
     }
 
     func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepMatches<String>, stepDescription: String) {

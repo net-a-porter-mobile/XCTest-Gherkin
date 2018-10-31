@@ -204,26 +204,40 @@ XCTestCase+Gherkin.swift:165: error: -[XCTest_Gherkin_Tests.ExampleFeatures test
 
 Sometimes, multiple steps might contain the same text. The library will match with what it thinks is the right step, but it might get it wrong. For example if you have these step definitions:
 
-```
+```swift
 step("email button") { ... }
 step("I tap the email button") { ... }
 ```
 
 When you try to run this Given
-```
+
+```swift
 func testStepAnchorMatching() {
     Given("I tap the email button")
 }
 ```
 
-it might match against the "email button" step, instead of the "I tap the email button" step. To fix this, you can anchor the regular expression to the start and end of the string using `^` and `$`, like this:
+it might match against the "email button" step, instead of the "I tap the email button" step. To fix this, there are two options.
 
+1. You can pass an exact string literal to the step definition instead of using the normal method, which treats everything as a regular expression.
+
+```swift
+step(exactly: "I tap the email button")
 ```
+
+This will match _only_ the exact text "I tap the email button". Any regular expression special characters in this string will be matched exactly.
+
+2. You can anchor the regular expression to the start and end of the string using `^` and `$`, like this:
+
+```swift
 step("^email button$") { ... }
 step("I tap the email button") { ... }
 ```
 
 Now, "I tap the email button" doesn't match the first step.
+
+This method is useful if you need to match ambiguous steps, but can't use approach (1) because you also need other features of regular expressions (i.e. pattern matching etc)
+
 
 ### Screenshots
 

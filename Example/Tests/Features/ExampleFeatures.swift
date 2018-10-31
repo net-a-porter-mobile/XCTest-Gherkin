@@ -174,4 +174,9 @@ final class ExampleFeatures: XCTestCase {
         UnusedStepsTracker.shared().performSelector(onMainThread: #selector(XCTestObservation.testBundleDidFinish(_:)), with: nil, waitUntilDone: true)
     }
 
+    func testMatchingStringLiterals() {
+        /// Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
+        /// in the step
+        Given(MatchStringLiteralStepDefiner.literal)
+    }
 }
