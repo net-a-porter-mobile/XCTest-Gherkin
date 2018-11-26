@@ -233,8 +233,9 @@ extension XCTestCase {
 */
 extension XCTestCase {
 
-    fileprivate  var testName: String {
-        let rawName = String(describing: self.invocation!.selector)
+    fileprivate  var testName: String? {
+        guard let selector = self.invocation?.selector else { return nil }
+        let rawName = String(describing: selector)
         let testName = rawName.hasPrefix("test") ? String(rawName.dropFirst(4)) : rawName
         return testName
     }
@@ -285,9 +286,9 @@ extension XCTestCase {
                 state.currentSuiteName = suiteName
             }
 
-            if self.testName != state.currentTestName {
+            if let testName = self.testName, testName != state.currentTestName {
                 print("  Scenario: \(testName.humanReadableString)")
-                state.currentTestName = self.testName
+                state.currentTestName = testName
                 if state.currentExample == nil {
                     performBackground()
                 }
