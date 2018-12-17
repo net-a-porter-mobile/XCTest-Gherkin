@@ -12,11 +12,16 @@ import XCTest_Gherkin
 final class SanitySteps: StepDefiner {
     
     private var numberOfExamplesExecutedInOrder = 1
+    private var backgroundStepsExecuted = false
     
     override func defineSteps() {
         
         // Examples of defining a step with no capture groups
         step("I have a working Gherkin environment") {
+            XCTAssertTrue(true)
+        }
+
+        step("Я имею рабочее окружение Gherkin") {
             XCTAssertTrue(true)
         }
         
@@ -33,7 +38,11 @@ final class SanitySteps: StepDefiner {
         step("This test should not ([a-zA-Z0-9]*)") { (matches: [String]) in
             XCTAssertEqual(matches.first, "fail")
         }
-        
+
+        step("этот тест не должен завершиться ([\\w0-9]*)") { (matches: [String]) in
+            XCTAssertEqual(matches.first, "ошибкой")
+        }
+
         // Example of a nested step definition
         step("This step should call another step") {
             self.step("This is another step")
@@ -102,7 +111,7 @@ final class SanitySteps: StepDefiner {
             XCTAssertFalse(match)
         }
 
-        step("I have a double (.*)") { (match: Double) in
+        step("I have a double ([0-9\\.]*)$") { (match: Double) in
             XCTAssertEqual(match, 1.2)
         }
 
@@ -123,13 +132,54 @@ final class SanitySteps: StepDefiner {
             // This step should match instead of the one above, even though the other one is defined first
         }
 
-        step("I know (.+)") { (match: ExampleFeatures.Person) in
-            XCTAssertTrue(match.name == "Alice" || match.name == "Bob")
-        }
-        
-        step("I know these (.+)") { (match: [ExampleFeatures.Person]) in
-            XCTAssertTrue(match[0].name == "Alice" || match[1].name == "Bob")
+        step("first execute background step") {
+            XCTAssertFalse(self.backgroundStepsExecuted, "Background should be executed once per scenario or example")
+            self.backgroundStepsExecuted = true
         }
 
+        step("background step should be executed") {
+            XCTAssertTrue(self.backgroundStepsExecuted, "Background should be executed for each scenario or example")
+            self.backgroundStepsExecuted = false
+        }
+
+        step("I'm logged in as (?!known)(\\{.+\\})") { (match: ExampleFeatures.Person) in
+            XCTAssertEqual(match.name, "Alice")
+        }
+
+        if #available(iOS 11.0, OSX 10.13, *) {
+            step("I'm logged in as (?<aKnownUser>Alice|Bob)") { (match: StepMatches<String>) in
+                XCTAssertNotNil(match["aKnownUser"])
+            }
+
+            step("I'm logged in as a known (?<user>.+)") { (match: StepMatches<ExampleFeatures.Person>) in
+                let person = match["user"]!
+                XCTAssertEqual(person.name, "Alice")
+            }
+
+            step("I use the example (?<name>Alice|Bob) and the height ([0-9]+)") { (match: StepMatches<String>) in
+                XCTAssertNotNil(match["name"])
+                XCTAssertEqual(match["name"], match[0])
+                XCTAssertEqual(match[1], "170")
+            }
+        }
+
+        step("This is unused step") {}
+
+    }
+}
+
+final class MatchStringLiteralStepDefiner: StepDefiner {
+
+    /// This is a literal, which if used as a regular expression will match pretty much everything. This tests that this doesn't happen :)
+    static let literal = "^(.*)$"
+
+    override func defineSteps() {
+        step(exactly: MatchStringLiteralStepDefiner.literal) {
+        }
+
+        /// Explicitly define a step here which contains `literal` to sanity check that the exact matcher doesn't match against substrings.
+        step(MatchStringLiteralStepDefiner.literal + " NOPE") {
+            XCTFail("This step should definitely not have matched")
+        }
     }
 }

@@ -2,6 +2,23 @@
 
 ### Unreleased
 
+## 0.18.0
++ Add `step(exactly: String)` to explicitly exactly match a step instead of using regexes (fixes #142)
++ Add regex options to step definitions (thanks @ilyapuchka)
+
+### 0.17.1
++ fix for name property on PageObject (thanks @ilyapuchka)
+
+## 0.17.0 (all @ilyapuchka)
++ Xcode 10 support
++ Support for named matches
++ Add descriptions to feature files
++ Improvements to logging
++ Feature file localisation support
++ Highlight correct lien in feature files for failing tests
++ Track unused steps
++ Introduce PageObject
+
 ## 0.16.0
 + Pass arbitary object in/out of a step (thanks @ilyapuchka)
 

@@ -107,6 +107,7 @@ public extension XCTestCase {
 
         state.examples!.forEach { example in
             state.currentExample = example
+            self.performBackground()
             routine()
             state.currentExample = nil
         }

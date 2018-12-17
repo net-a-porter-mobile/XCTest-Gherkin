@@ -30,3 +30,69 @@ final class UIStepDefiner: StepDefiner {
     }
     
 }
+
+final class InitialScreenStepDefiner: StepDefiner {
+
+    override func defineSteps() {
+
+        step("I press Push Me button") {
+            InitialScreenPageObject().pressPushMe()
+        }
+
+    }
+
+}
+
+final class InitialScreenPageObject: PageObject {
+
+    let app = XCUIApplication()
+
+    class override var name: String {
+        return "Initial Screen"
+    }
+    
+    override func isPresented() -> Bool {
+        return tryWaitFor(element: app.buttons["PushMe"], withState: "exists == true")
+    }
+
+    func pressPushMe() {
+        app.buttons["PushMe"].tap()
+    }
+}
+
+final class ModalScreenStepDefiner: StepDefiner {
+
+    override func defineSteps() {
+
+        step("I press Close Me button") {
+            ModalScreen().pressCloseMe()
+        }
+
+    }
+
+}
+
+final class ModalScreen: PageObject {
+
+    let app = XCUIApplication()
+
+    override func isPresented() -> Bool {
+        return tryWaitFor(element: app.buttons["CloseMe"], withState: "exists == true")
+    }
+
+    func pressCloseMe() {
+        app.buttons["CloseMe"].tap()
+    }
+}
+
+extension PageObject {
+
+    func tryWaitFor(element: XCUIElement, withState state: String, waiting timeout: TimeInterval = 5.0) -> Bool {
+        let predicate = NSPredicate(format: state)
+        guard predicate.evaluate(with: element) == false else { return true }
+
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
+        let result = XCTWaiter().wait(for: [expectation], timeout: timeout) ==  XCTWaiter.Result.completed
+        return result
+    }
+}

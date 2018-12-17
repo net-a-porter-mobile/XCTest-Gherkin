@@ -11,17 +11,18 @@ import Foundation
 private let whitespace = CharacterSet.whitespaces
 
 class ParseState {
-    var description: String?
-    var steps: [String]
+    var name: String?
+    var description: [String] = []
+    var steps: [StepDescription]
     var exampleLines: [(lineNumber: Int, line: String)]
     var parsingBackground: Bool
 
     convenience init() {
-        self.init(description: nil)
+        self.init(name: nil)
     }
     
-    required init(description: String?, parsingBackground: Bool = false) {
-        self.description = description
+    required init(name: String?, parsingBackground: Bool = false) {
+        self.name = name
         steps = []
         exampleLines = []
         self.parsingBackground = parsingBackground
@@ -46,8 +47,9 @@ class ParseState {
                     // Get the title and value for this column
                     let title = titles[n]
                     let value = line.count > n ? line[n] : ""
-                    
-                    pairs[title] = value
+                    if title != "" && value != "" {
+                        pairs[title] = value
+                    }
                 }
                 
                 examples.append( (rawLine.lineNumber, pairs ) )
@@ -58,43 +60,25 @@ class ParseState {
     }
     
     func background() -> NativeBackground? {
-        guard parsingBackground, let description = self.description, self.steps.count > 0 else { return nil }
+        guard parsingBackground, let name = self.name, self.steps.count > 0 else { return nil }
         
-        return NativeBackground(description, steps: self.steps)
+        return NativeBackground(name, steps: self.steps)
     }
     
     func scenarios(at index: Int) -> [NativeScenario]? {
-        guard let description = self.description, self.steps.count > 0 else { return nil }
+        guard let name = self.name, self.steps.count > 0 else { return nil }
         
         var scenarios = Array<NativeScenario>()
         
         // If we have no examples then we have one scenario.
         // Otherwise we need to make more than one scenario.
         if self.examples.isEmpty {
-            scenarios.append(NativeScenario(description, steps: self.steps, index: index))
+            scenarios.append(NativeScenario(name, steps: self.steps, index: index))
         } else {
-            // Replace each matching placeholder in each line with the example data
-            for (exampleIndex, example) in self.examples.enumerated() {
-                // This hoop is because the compiler doesn't seem to
-                // recognize map directly on the state.steps object
-                var steps = self.steps
-                steps = self.steps.map { originalStep in
-                    var step = originalStep
-                    
-                    example.pairs.forEach { (title, value) in
-                        step = step.replacingOccurrences(of: "<\(title)>", with: value)
-                    }
-                    
-                    return step
-                }
-                
-                // The scenario description must be unique
-                let description = "\(description)_line\(example.lineNumber)"
-                scenarios.append(NativeScenario(description, steps: steps, index: index + exampleIndex))
-            }
+            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index))
         }
         
-        self.description = nil
+        self.name = nil
         self.steps = []
         self.exampleLines = []
         
