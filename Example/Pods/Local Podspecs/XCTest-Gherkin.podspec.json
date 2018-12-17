@@ -1,6 +1,6 @@
 {
   "name": "XCTest-Gherkin",
-  "version": "0.16.0",
+  "version": "0.18.0",
   "summary": "Gherkin style tests",
   "description": "Adds Gherkin syntax to XCTestCase",
   "homepage": "https://github.com/net-a-porter-mobile/XCTest-Gherkin",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git",
-    "tag": "0.16.0"
+    "tag": "0.18.0"
   },
   "platforms": {
     "ios": "8.0",

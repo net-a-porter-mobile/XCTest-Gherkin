@@ -98,11 +98,18 @@ extension NativeFeature {
 
                     if let dataTableLines = state.dataTableLines {
                         let lastStep = state.steps.removeLast()
-                        state.steps.append(lastStep + " \(dataTableLines.joined(separator: ","))")
-                        state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+                        state.steps.append(
+                            StepDescription(
+                                keyword: lastStep.keyword,
+                                expression: lastStep.expression + " \(dataTableLines.joined(separator: ","))",
+                                file: path,
+                                line: lineNumber
+                            )
+                        )
+                        state.steps.append(StepDescription(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
                         state.dataTableLines = nil
                     } else {
-                        state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
+                        state.steps.append(StepDescription(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
                     }
 
                 case Language.current.keywords.Examples:
@@ -128,7 +135,14 @@ extension NativeFeature {
         // the last scenarios
         if let dataTableLines = state.dataTableLines {
             let lastStep = state.steps.removeLast()
-            state.steps.append(lastStep + " \(dataTableLines.joined(separator: ","))")
+            state.steps.append(
+                StepDescription(
+                    keyword: lastStep.keyword,
+                    expression: lastStep.expression + " \(dataTableLines.joined(separator: ","))",
+                    file: path,
+                    line: lineNumber
+                )
+            )
             state.dataTableLines = nil
         }
         if let newScenarios = state.scenarios(at: scenarios.count) {

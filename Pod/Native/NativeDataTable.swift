@@ -41,8 +41,8 @@ public struct NativeDataTable<T: Collection> {
 
 extension StepDefiner {
     func step<T: Collection>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<T>)->(), transform: @escaping ([[String]]) throws -> T) {
-        self.test.addStep(expression, file: file, line: line) { (matches: [String]) in
-            guard let match = matches.first else {
+        self.test.addStep(expression, options: [], file: file, line: line) { (matches: StepMatches<String>) in
+            guard let match = matches.allMatches.first else {
                 XCTFail("Expected single match not found in \"\(expression)\"")
                 return
             }

@@ -12,7 +12,8 @@ private let whitespace = CharacterSet.whitespaces
 
 class ParseState {
     var name: String?
-    var steps: [String]
+    var description: [String] = []
+    var steps: [StepDescription]
     var exampleLines: [(lineNumber: Int, line: String)]?
     var dataTableLines: [String]?
     var parsingBackground: Bool
@@ -74,7 +75,14 @@ class ParseState {
         if self.examples.isEmpty {
             if let dataTableLines = self.dataTableLines {
                 let lastStep = self.steps.removeLast()
-                self.steps.append(lastStep + " \(dataTableLines.joined(separator: ","))")
+                self.steps.append(
+                    StepDescription(
+                        keyword: lastStep.keyword,
+                        expression: lastStep.expression + " \(dataTableLines.joined(separator: ","))",
+                        file: lastStep.file,
+                        line: lastStep.line
+                    )
+                )
             }
             scenarios.append(NativeScenario(name, steps: self.steps, index: index))
         } else {
