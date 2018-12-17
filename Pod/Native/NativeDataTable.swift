@@ -83,15 +83,15 @@ extension StepDefiner {
         }
     }
 
-    //    /**
-    //     Input:
-    //     | 1 | 4 |
-    //     | 2 | 5 |
-    //     | 3 | 6 |
-    //
-    //     Result:
-    //     [[1, 4], [2, 5], [3, 6]]
-    //     */
+    /**
+     Input:
+     | 1 | 4 |
+     | 2 | 5 |
+     | 3 | 6 |
+
+     Result:
+     [[1, 4], [2, 5], [3, 6]]
+     */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[[T]]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [[T]] in
             return try values.map { row in
@@ -114,9 +114,9 @@ extension StepDefiner {
 
      Result:
      [
-     [ "firstName": "Annie M.G", "lastName": "Schmidt",  "birthDate": "1911-03-20" ],
-     [ "firstName": "Roald",     "lastName": "Dahl",     "birthDate": "1916-09-13" ],
-     [ "firstName": "Astrid",    "lastName": "Lindgren", "birthDate": "1907-11-14" ]
+         [ "firstName": "Annie M.G", "lastName": "Schmidt",  "birthDate": "1911-03-20" ],
+         [ "firstName": "Roald",     "lastName": "Dahl",     "birthDate": "1916-09-13" ],
+         [ "firstName": "Astrid",    "lastName": "Lindgren", "birthDate": "1907-11-14" ]
      ]
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[[String: T]]>)->()) {
@@ -145,10 +145,10 @@ extension StepDefiner {
 
      Result:
      [
-     "KMSY": "Louis Armstrong New Orleans International Airport",
-     "KSFO": "San Francisco International Airport",
-     "KSEA": "Seattle–Tacoma International Airport",
-     "KJFK": "John F. Kennedy International Airport"
+         "KMSY": "Louis Armstrong New Orleans International Airport",
+         "KSFO": "San Francisco International Airport",
+         "KSEA": "Seattle–Tacoma International Airport",
+         "KJFK": "John F. Kennedy International Airport"
      ]
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: T]>)->()) {
@@ -175,10 +175,10 @@ extension StepDefiner {
 
      Result:
      [
-     "KMSY": ["29.993333", "-90.258056"],
-     "KSFO": ["37.618889", "-122.375000"],
-     "KSEA": ["47.448889", "-122.309444"],
-     "KJFK": ["40.639722", "-73.778889"]
+         "KMSY": ["29.993333", "-90.258056"],
+         "KSFO": ["37.618889", "-122.375000"],
+         "KSEA": ["47.448889", "-122.309444"],
+         "KJFK": ["40.639722", "-73.778889"]
      ]
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: [T]]>)->()) {
@@ -204,10 +204,10 @@ extension StepDefiner {
 
      Result:
      [
-     "KMSY": [ "lat": "29.993333", "lon": "-90.258056" ],
-     "KSFO": [ "lat": "37.618889", "lon": "-122.375000" ],
-     "KSEA": [ "lat": "47.448889", "lon": "-122.309444" ],
-     "KJFK": [ "lat": "40.639722", "lon": "-73.778889" ]
+         "KMSY": [ "lat": "29.993333", "lon": "-90.258056" ],
+         "KSFO": [ "lat": "37.618889", "lon": "-122.375000" ],
+         "KSEA": [ "lat": "47.448889", "lon": "-122.309444" ],
+         "KJFK": [ "lat": "40.639722", "lon": "-73.778889" ]
      ]
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: [String: T]]>)->()) {
@@ -236,8 +236,8 @@ extension StepDefiner {
 
      Output:
      [
-     Person(name: "Alice", age: 20, height: 170),
-     Person(name: "Bob", age: 21, height: 171)
+         Person(name: "Alice", age: 20, height: 170),
+         Person(name: "Bob", age: 21, height: 171)
      ]
     */
     open func step<T: CodableMatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[T]>)->()) {
@@ -266,8 +266,8 @@ extension StepDefiner {
 
      Output:
      [
-     1: Person(name: "Alice", age: 20, height: 170),
-     2: Person(name: "Bob", age: 21, height: 171)
+         1: Person(name: "Alice", age: 20, height: 170),
+         2: Person(name: "Bob", age: 21, height: 171)
      ]
     */
     open func step<T: CodableMatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[U: T]>)->()) {

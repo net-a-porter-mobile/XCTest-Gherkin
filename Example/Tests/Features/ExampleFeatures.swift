@@ -175,34 +175,39 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testMatchingStringLiterals() {
-        /// Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
-        /// in the step
+        // Test that calling Given when defining the step using `step(exactly:...` will work,
+        // and won't be horribly confused by regular expression characters in the step
         Given(MatchStringLiteralStepDefiner.literal)
     }
 
     func testArrayDataTable() {
-        Given("I add the following numbers: \(DataTable([1, 2, 3]))")
+        Given("I add the following numbers:") {
+            [1, 2, 3]
+        }
         Then("I end up with 6")
     }
 
     func testDictionaryDataTable() {
-        Given("I add the following letters: \(DataTable(["a": 1, "b": 2, "c": 3]))")
+        Given("I add the following letters:") {
+            ["a": 1, "b": 2, "c": 3]
+        }
         Then("I end up with 6")
     }
 
     func testCodableDataTable() {
-        let persons = [
-            Person(name: "Alice", age: 27, height: 170),
-            Person(name: "Bob", age: 27, height: 170)
-        ]
-        Given("I know the following persons: \(DataTable(persons))")
+        Given("I know the following persons:") {
+            [
+                Person(name: "Alice", age: 27, height: 170),
+                Person(name: "Bob", age: 27, height: 170)
+            ]
+        }
 
-        let personsByName = [
-            "Alice": Person(name: "Alice", age: 27, height: 170),
-            "Bob": Person(name: "Bob", age: 27, height: 170)
-        ]
-        Given("I know the following persons by name: \(DataTable(personsByName))")
+        Given("I know the following persons by name:") {
+            [
+                "Alice": Person(name: "Alice", age: 27, height: 170),
+                "Bob": Person(name: "Bob", age: 27, height: 170)
+            ]
+        }
     }
-
 
 }
