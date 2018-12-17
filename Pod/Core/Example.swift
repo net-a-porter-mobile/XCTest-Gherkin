@@ -113,24 +113,24 @@ public extension XCTestCase {
         }
     }
 
-    func Outline(_ routine: ()->(), Examples titles: [String], _ allValues: [String]...) {
-        Outline(routine, Examples: [titles] + allValues)
+    func Outline(_ routine: ()->(), examples titles: [String], _ allValues: [String]...) {
+        Outline(routine, examples: [titles] + allValues)
     }
 
     func Outline(_ routine: ()->(), _ allValues: () -> [[String]]) {
-        Outline(routine, Examples: allValues())
+        Outline(routine, examples: allValues())
     }
 
-    func Outline(_ routine: ()->(), Examples allValues: [[String]]) {
+    func Outline(_ routine: ()->(), examples allValues: [[String]]) {
         Examples(allValues)
         Outline(routine)
     }
 
     func Outline(_ routine: ()->(), _ allValues: () -> [[String: ExampleStringRepresentable]]) {
-        Outline(routine, Examples: allValues())
+        Outline(routine, examples: allValues())
     }
 
-    func Outline(_ routine: ()->(), Examples allValues: [[String: ExampleStringRepresentable]]) {
+    func Outline(_ routine: ()->(), examples allValues: [[String: ExampleStringRepresentable]]) {
         Examples(allValues)
         Outline(routine)
     }

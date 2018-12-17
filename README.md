@@ -154,21 +154,25 @@ func testOutlineTests() {
     Outline({
         Given("I use the example name <name>")
         Then("The age should be <age>")
-    }) {[
-        [ "name",   "age", "height" ],
-        [  "Alice",  "20",  "170"   ],
-        [  "Bob",    "20",  "170"   ]
-        ]}
+    }) {
+        [
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
+        ]
+    }
         
     // or
     
     Outline({
         Given("I use the example name <name>")
         Then("The age should be <age>")
-    }, Examples:
-         [ "name",   "age", "height" ],
-        [  "Alice",  "20",  "170"   ],
-        [  "Bob",    "20",  "170"   ]
+    }, examples: 
+        [
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
+        ]
     )
 }
 ```

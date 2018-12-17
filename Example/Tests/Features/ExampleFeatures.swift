@@ -47,37 +47,41 @@ final class ExampleFeatures: XCTestCase {
             Given("I use the example name <name>")
             Then("The age should be <age>")
         }) {[
-            [ "name",   "age", "height" ],
-            [  "Alice",  "20",  "170"   ],
-            [  "Bob",    "20",  "170"   ]
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
             ]}
 
         Outline({
             Given("I use the example name <name>")
             Then("The age should be <age>")
-        }) {[
-            ["name": "Alice", "age": 20, "height": 170],
-            ["name": "Bob", "age": 20, "height": 170 ]
-            ]}
+        }) {
+            [
+                ["name": "Alice", "age": 20, "height": 170],
+                ["name": "Bob", "age": 20, "height": 170 ]
+            ]
+        }
         // swiftlint:enable multiple_closures_with_trailing_closure
 
         // or via explicit Examples parameter
         Outline({
             Given("I use the example name <name>")
             Then("The age should be <age>")
-        }, Examples:
-            [ "name",   "age", "height" ],
-           [  "Alice",  "20",  "170"   ],
-           [  "Bob",    "20",  "170"   ]
-        )
+        }, examples: [
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
+            ])
 
         Outline({
             Given("I use the example name <name>")
             Then("The age should be <age>")
-        }, Examples: [
-            ["name": "Alice", "age": 20, "height": 170],
-            ["name": "Bob", "age": 20, "height": 170 ]
-            ])
+        }, examples:
+            [
+                ["name": "Alice", "age": 20, "height": 170],
+                ["name": "Bob", "age": 20, "height": 170 ]
+            ]
+        )
     }
 
     let examples: [[ExampleStringRepresentable]] = [
