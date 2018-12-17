@@ -147,7 +147,35 @@ func testOutlineTests() {
 
 This will run the tests twice, once with the values `Alice,20` and once with the values `Bob,20`.
 
-NB The examples have to be defined _before_ the `Outline {..}` whereas in Gherkin you specify them afterwards. Sorry about that.
+The easiest way to use `Examples` and `Outline` functions is to call `Examples` before `Outline`. But in Gherkin feature files Examples always go after Scenario Outline. If you want to keep this order in native tests (and don't care about little bit funky Xcode indentation) you can provide examples after defining Outline via trailing closure or explicit `Examples` parameter:
+
+```swift
+func testOutlineTests() {
+    Outline({
+        Given("I use the example name <name>")
+        Then("The age should be <age>")
+    }) {
+        [
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
+        ]
+    }
+        
+    // or
+    
+    Outline({
+        Given("I use the example name <name>")
+        Then("The age should be <age>")
+    }, examples: 
+        [
+            [ "name" , "age", "height" ],
+            [ "Alice", "20" , "170"    ],
+            [ "Bob"  , "20" , "170"    ]
+        ]
+    )
+}
+```
 
 ### Background
 If you are repeating the same steps in each scenario you can move them to a `Background`. A `Background` is run before each scenario (effectively just before first scenario step is execuated) or outline pass (but **after** `setUp()`). You can have as many steps in `Background` as you want.
