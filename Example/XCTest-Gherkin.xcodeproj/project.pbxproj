@@ -473,7 +473,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd \"${SRCROOT}/..\"\n    ./scripts/lint\n    exit $?\npopd";
+			shellScript = "pushd \"${SRCROOT}/..\"\n    ./scripts/lint\n    exit $?\npopd\n";
 		};
 		4A3C67E5CC96F27175DCF5DB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

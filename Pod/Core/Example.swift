@@ -101,7 +101,7 @@ public extension XCTestCase {
 
      - parameter routine: A block containing your Given/When/Then which will be run once per example
      */
-    func Outline( _ routine: ()->() ) {
+    func Outline(_ routine: ()->()) {
         precondition(state.examples != nil, "You need to define examples before running an Outline block - use Examples(...)");
         precondition(state.examples!.count > 0, "You've called Examples but haven't passed anything in. Nice try.")
 
@@ -111,6 +111,28 @@ public extension XCTestCase {
             routine()
             state.currentExample = nil
         }
+    }
+
+    func Outline(_ routine: ()->(), examples titles: [String], _ allValues: [String]...) {
+        Outline(routine, examples: [titles] + allValues)
+    }
+
+    func Outline(_ routine: ()->(), _ allValues: () -> [[String]]) {
+        Outline(routine, examples: allValues())
+    }
+
+    func Outline(_ routine: ()->(), examples allValues: [[String]]) {
+        Examples(allValues)
+        Outline(routine)
+    }
+
+    func Outline(_ routine: ()->(), _ allValues: () -> [[String: ExampleStringRepresentable]]) {
+        Outline(routine, examples: allValues())
+    }
+
+    func Outline(_ routine: ()->(), examples allValues: [[String: ExampleStringRepresentable]]) {
+        Examples(allValues)
+        Outline(routine)
     }
 
     func exampleValue<T: ExampleStringRepresentable>(_ title: String) -> T? {
