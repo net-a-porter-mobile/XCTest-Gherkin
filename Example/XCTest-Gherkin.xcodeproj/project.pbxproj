@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		15CF04C3896FB4DA1D7B5DEC /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3AC2FD70988184EBE408E62 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */; };
+		1168CE4D6DC2635FC45A7915 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3AC2FD70988184EBE408E62 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */; };
 		27D846191C59282A002C835B /* StringGherkinExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D846181C59282A002C835B /* StringGherkinExtensionTests.swift */; };
 		4192DCBF36495401CB2EB045 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42EF7CD93ACD3376C1634DE7 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */; };
 		578212291E94B1610048D25F /* ExampleNativeOrderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578212281E94B1610048D25F /* ExampleNativeOrderTest.swift */; };
@@ -123,7 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4192DCBF36495401CB2EB045 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */,
-				15CF04C3896FB4DA1D7B5DEC /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */,
+				1168CE4D6DC2635FC45A7915 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
