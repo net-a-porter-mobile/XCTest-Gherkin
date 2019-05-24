@@ -97,8 +97,8 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
         return (StepMatches(allMatches: allMatches, namedMatches: namedMatches), debugDescription)
     }
 
-    var hashValue: Int {
-        return expression.hashValue
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(expression)
     }
     
     var debugDescription: String {

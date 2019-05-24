@@ -11,10 +11,10 @@
 /// Note: without being a subclass of XCTestCase this class will not be initialised before tests start
 @interface UnusedStepsTracker: XCTestCase
 
-@property (nonatomic, strong) void (^printUnusedSteps)(NSArray<NSString*> * _Nonnull);
+@property (nonatomic, strong) void (^ _Nullable printUnusedSteps)(NSArray<NSString*> * _Nonnull);
 
-+ (instancetype)shared;
-- (void)setSteps:(NSArray<NSString *> *)steps;
-- (void)performedStep:(NSString *)step;
++ (instancetype _Nonnull)shared;
+- (void)setSteps:(NSArray<NSString *> * _Nonnull)steps;
+- (void)performedStep:(NSString * _Nonnull)step;
 
 @end
