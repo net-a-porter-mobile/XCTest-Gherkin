@@ -99,6 +99,8 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(expression)
+        hasher.combine(file)
+        hasher.combine(line)
     }
     
     var debugDescription: String {
