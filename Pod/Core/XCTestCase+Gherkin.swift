@@ -341,5 +341,5 @@ func requireNotNil<T>(_ expr: @autoclosure () -> T?, _ message: String) -> T {
 }
 
 func requireToConvert<T>(_ expr: @autoclosure () -> T?, _ match: String, _ expression: String) -> T {
-    return requireNotNil(expr, "Could not convert '\(match)' to \(T.self) in '\(expression)'")
+    return requireNotNil(expr(), "Could not convert '\(match)' to \(T.self) in '\(expression)'")
 }
