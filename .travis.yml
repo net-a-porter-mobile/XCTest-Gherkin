@@ -6,8 +6,6 @@ language: objective-c
 
 before_install:
   - gem install xcpretty
-#  - gem install cocoapods --version 1.6.0.beta.1 --pre
-#   - bundle
 
 matrix:
   include:
@@ -26,4 +24,4 @@ script:
 - travis/validate_carthage.sh
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty; fi
-- pod lib lint --allow-warnings
+- bundle exec pod lib lint --allow-warnings
