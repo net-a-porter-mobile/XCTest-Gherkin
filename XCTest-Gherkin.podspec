@@ -21,7 +21,7 @@ Adds Gherkin syntax to XCTestCase
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
-  s.swift_version = '4.1'
+  s.swift_version = '5.0'
 
   s.default_subspec = 'Core'
   s.ios.deployment_target = '8.0'
