@@ -20,7 +20,11 @@
     "osx": "10.10.0"
   },
   "requires_arc": true,
-  "swift_versions": "5.0",
+  "swift_versions": [
+    "4.0",
+    "4.2",
+    "5.0"
+  ],
   "default_subspecs": "Core",
   "pod_target_xcconfig": {
     "ENABLE_BITCODE": "NO"
