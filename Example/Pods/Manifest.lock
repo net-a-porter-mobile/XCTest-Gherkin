@@ -1,7 +1,7 @@
 PODS:
   - SwiftLint (0.32.0)
-  - XCTest-Gherkin/Core (0.19.0)
-  - XCTest-Gherkin/Native (0.19.0):
+  - XCTest-Gherkin/Core (0.19.1)
+  - XCTest-Gherkin/Native (0.19.1):
     - XCTest-Gherkin/Core
 
 DEPENDENCIES:
@@ -18,7 +18,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
-  XCTest-Gherkin: eb04a20ecb91eff25f4d1227db4a7d25794681c0
+  XCTest-Gherkin: 71eeaec8abc348688fd483e3af8020219a82bf6e
 
 PODFILE CHECKSUM: 040d56cac22fe93f01093a8f0021b445faf03233
 
