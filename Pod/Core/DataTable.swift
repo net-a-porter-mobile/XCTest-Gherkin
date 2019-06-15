@@ -7,6 +7,20 @@
 
 import Foundation
 
+/**
+ Use DataTable as the type of the step parameter to be able to pass collection of values to the step.
+ 
+ Example:
+ ```
+ Given("I use the following names:") {
+    ["Alice", "Bob"]
+ }
+
+ step("I use the following names: (.+)") { (match: DataTable<[String]>) in
+    ...
+ }
+ ```
+ */
 public struct DataTable<T: Collection>: CodableMatchedStringRepresentable where T: Codable {
     public let values: T
 

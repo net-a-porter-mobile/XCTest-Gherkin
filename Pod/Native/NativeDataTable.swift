@@ -60,13 +60,19 @@ extension StepDefiner {
 extension StepDefiner {
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | 1 |
      | 2 |
      | 3 |
-
-     Result:
+     ```
+     
+     Values passed to the step:
+     ```
      [1, 2, 3]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[T]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [T] in
@@ -84,13 +90,19 @@ extension StepDefiner {
     }
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | 1 | 4 |
      | 2 | 5 |
      | 3 | 6 |
+     ```
 
-     Result:
+     Values passed to the step:
+     ```
      [[1, 4], [2, 5], [3, 6]]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[[T]]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [[T]] in
@@ -106,18 +118,24 @@ extension StepDefiner {
     }
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | firstName   | lastName | birthDate  |
      | Annie M. G. | Schmidt  | 1911-03-20 |
      | Roald       | Dahl     | 1916-09-13 |
      | Astrid      | Lindgren | 1907-11-14 |
+     ```
 
-     Result:
+     Values passed to the step:
+     ```
      [
          [ "firstName": "Annie M.G", "lastName": "Schmidt",  "birthDate": "1911-03-20" ],
          [ "firstName": "Roald",     "lastName": "Dahl",     "birthDate": "1916-09-13" ],
          [ "firstName": "Astrid",    "lastName": "Lindgren", "birthDate": "1907-11-14" ]
      ]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[[String: T]]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [[String: T]] in
@@ -137,19 +155,25 @@ extension StepDefiner {
     }
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | KMSY | Louis Armstrong New Orleans International Airport |
      | KSFO | San Francisco International Airport               |
      | KSEA | Seattle–Tacoma International Airport              |
      | KJFK | John F. Kennedy International Airport             |
+     ```
 
-     Result:
+     Values passed to the step:
+     ```
      [
          "KMSY": "Louis Armstrong New Orleans International Airport",
          "KSFO": "San Francisco International Airport",
          "KSEA": "Seattle–Tacoma International Airport",
          "KJFK": "John F. Kennedy International Airport"
      ]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: T]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [String: T] in
@@ -167,19 +191,25 @@ extension StepDefiner {
     }
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | KMSY | 29.993333 |  -90.258056 |
      | KSFO | 37.618889 | -122.375000 |
      | KSEA | 47.448889 | -122.309444 |
      | KJFK | 40.639722 |  -73.778889 |
+     ```
 
-     Result:
+     Values passed to the step:
+     ```
      [
-         "KMSY": ["29.993333", "-90.258056"],
-         "KSFO": ["37.618889", "-122.375000"],
-         "KSEA": ["47.448889", "-122.309444"],
-         "KJFK": ["40.639722", "-73.778889"]
+         "KMSY": [29.993333, -90.258056],
+         "KSFO": [37.618889, -122.375000],
+         "KSEA": [47.448889, -122.309444],
+         "KJFK": [40.639722, -73.778889]
      ]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: [T]]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [String: [T]] in
@@ -195,20 +225,26 @@ extension StepDefiner {
     }
 
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      |      |       lat |         lon |
      | KMSY | 29.993333 |  -90.258056 |
      | KSFO | 37.618889 | -122.375000 |
      | KSEA | 47.448889 | -122.309444 |
      | KJFK | 40.639722 |  -73.778889 |
+     ```
 
-     Result:
+     Values passed to the step:
+     ```
      [
-         "KMSY": [ "lat": "29.993333", "lon": "-90.258056" ],
-         "KSFO": [ "lat": "37.618889", "lon": "-122.375000" ],
-         "KSEA": [ "lat": "47.448889", "lon": "-122.309444" ],
-         "KJFK": [ "lat": "40.639722", "lon": "-73.778889" ]
+         "KMSY": [ "lat": 29.993333, "lon": -90.258056 ],
+         "KSFO": [ "lat": 37.618889, "lon": -122.375000 ],
+         "KSEA": [ "lat": 47.448889, "lon": -122.309444 ],
+         "KJFK": [ "lat": 40.639722, "lon": -73.778889 ]
      ]
+     ```
      */
     open func step<T: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[String: [String: T]]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [String: [String: T]] in
@@ -227,18 +263,25 @@ extension StepDefiner {
     }
 
     // TODO: implement custom decoder that will decode string cell values to expected types instead of failing
-    // This currently only works if all properties are strings
     /**
-     Input:
+     Step that parses data table
+     
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      | name  | age | height |
      | Alice | 20  | 170    |
      | Bob   | 21  | 171    |
-
-     Output:
+     ```
+     
+     Values passed to the step:
+     ```
      [
-         Person(name: "Alice", age: 20, height: 170),
-         Person(name: "Bob", age: 21, height: 171)
+         Person(name: "Alice", age: "20", height: 170),
+         Person(name: "Bob", age: "21", height: 171)
      ]
+     ```
     */
     open func step<T: CodableMatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[T]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [T] in
@@ -257,18 +300,23 @@ extension StepDefiner {
     }
 
     // TODO: implement custom decoder that will decode string cell values to expected types instead of failing
-    // This currently only works if all properties are strings
     /**
-     Input:
+     Define the step that accepts a data table as a single parameter.
+     
+     Input from the feature file:
+     ```
      |   | name  | age | height |
      | 1 | Alice | 20  | 170    |
      | 2 | Bob   | 21  | 171    |
+     ```
 
-     Output:
+     Values passed to the step:
+     ```
      [
          1: Person(name: "Alice", age: 20, height: 170),
          2: Person(name: "Bob", age: 21, height: 171)
      ]
+     ```
     */
     open func step<T: CodableMatchedStringRepresentable, U: MatchedStringRepresentable>(_ expression: String, file: String = #file, line: Int = #line, f1: @escaping (NativeDataTable<[U: T]>)->()) {
         self.step(expression, file: file, line: line, f1: f1) { (values: [[String]]) throws -> [U: T] in

@@ -234,10 +234,10 @@ final class SanitySteps: StepDefiner {
             XCTAssertEqual(
                 match.values,
                 [
-                    "KMSY": [ "lat": "29.993333", "lon": "-90.258056" ],
-                    "KSFO": [ "lat": "37.618889", "lon": "-122.375000" ],
-                    "KSEA": [ "lat": "47.448889", "lon": "-122.309444" ],
-                    "KJFK": [ "lat": "40.639722", "lon": "-73.778889" ]
+                    "KMSY": [ "lat": 29.993333, "lon": -90.258056 ],
+                    "KSFO": [ "lat": 37.618889, "lon": -122.375000 ],
+                    "KSEA": [ "lat": 47.448889, "lon": -122.309444 ],
+                    "KJFK": [ "lat": 40.639722, "lon": -73.778889 ]
                 ]
             )
         }
