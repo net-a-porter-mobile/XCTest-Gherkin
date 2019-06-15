@@ -114,12 +114,12 @@ extension XCTestCase {
         func perform(scenario: NativeScenario) {
             let allScenarioStepsDefined = scenario.stepDescriptions
                 .map { state.matchingGherkinStepExpressionFound($0.expression) }
-                .reduce(true) { $0 && $1 }
+                .allSatisfy { $0 }
             var allFeatureBackgroundStepsDefined = true
 
             if let defined = feature.background?.stepDescriptions
                 .map({ state.matchingGherkinStepExpressionFound($0.expression) })
-                .reduce(true, { $0 && $1 }) {
+                .allSatisfy({ $0 }) {
                 allFeatureBackgroundStepsDefined = defined
             }
 

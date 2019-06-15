@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XCTest-Gherkin"
-  s.version          = "0.18.0"
+  s.version          = "0.19.1"
   s.summary          = "Gherkin style tests"
   s.description      = <<-DESC
 Adds Gherkin syntax to XCTestCase
@@ -21,7 +21,7 @@ Adds Gherkin syntax to XCTestCase
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
-  s.swift_version = '4.1'
+  s.swift_version = [ '4.0', '4.2', '5.0' ]
 
   s.default_subspec = 'Core'
   s.ios.deployment_target = '8.0'

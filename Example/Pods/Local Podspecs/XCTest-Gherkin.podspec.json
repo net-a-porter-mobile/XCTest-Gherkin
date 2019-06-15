@@ -1,6 +1,6 @@
 {
   "name": "XCTest-Gherkin",
-  "version": "0.18.0",
+  "version": "0.19.1",
   "summary": "Gherkin style tests",
   "description": "Adds Gherkin syntax to XCTestCase",
   "homepage": "https://github.com/net-a-porter-mobile/XCTest-Gherkin",
@@ -13,14 +13,18 @@
   },
   "source": {
     "git": "https://github.com/net-a-porter-mobile/XCTest-Gherkin.git",
-    "tag": "0.18.0"
+    "tag": "0.19.1"
   },
   "platforms": {
     "ios": "8.0",
     "osx": "10.10.0"
   },
   "requires_arc": true,
-  "swift_version": "4.1",
+  "swift_versions": [
+    "4.0",
+    "4.2",
+    "5.0"
+  ],
   "default_subspecs": "Core",
   "pod_target_xcconfig": {
     "ENABLE_BITCODE": "NO"
@@ -47,5 +51,6 @@
         ]
       }
     }
-  ]
+  ],
+  "swift_version": "5.0"
 }

@@ -2,7 +2,12 @@
 
 ### Unreleased
 
-## 0.18.0
+### 0.19.0
++ Update to Swift 5
++ Update to cocoapods 1.7.0
++ Use bundler to help dependency management
+
+### 0.18.0
 + Add `step(exactly: String)` to explicitly exactly match a step instead of using regexes (fixes #142)
 + Add regex options to step definitions (thanks @ilyapuchka)
 

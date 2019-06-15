@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9CB3B145D6C2ADCD2CAAAB316D2AD281"
+               BlueprintIdentifier = "7253876069CAFF74EA327FC0DC46466E"
                BuildableName = "XCTest_Gherkin.framework"
                BlueprintName = "XCTest-Gherkin"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9CB3B145D6C2ADCD2CAAAB316D2AD281"
+            BlueprintIdentifier = "7253876069CAFF74EA327FC0DC46466E"
             BuildableName = "XCTest_Gherkin.framework"
             BlueprintName = "XCTest-Gherkin"
             ReferencedContainer = "container:Pods.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9CB3B145D6C2ADCD2CAAAB316D2AD281"
+            BlueprintIdentifier = "7253876069CAFF74EA327FC0DC46466E"
             BuildableName = "XCTest_Gherkin.framework"
             BlueprintName = "XCTest-Gherkin"
             ReferencedContainer = "container:Pods.xcodeproj">

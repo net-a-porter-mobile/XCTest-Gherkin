@@ -2,27 +2,21 @@
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
-language: objective-c
+language: swift
 
 before_install:
-  - gem install cocoapods --version 1.6.0.beta.1 --pre
+  - gem install xcpretty
 
 matrix:
   include:
-  - name: "Xcode 9.4 iOS 11.3"
-    osx_image: xcode9.4
+  - name: "Xcode 10.2 iOS 12.2"
+    osx_image: xcode10.2
+    env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=12.2' UI=true
+  - name: "Xcode 10.2 iOS 11.3"
+    osx_image: xcode10.2
     env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.3' UI=true
-  - name: "Xcode 9.4 iOS 10.3.1"
-    osx_image: xcode9.4
-    env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
-  - name: "Xcode 10 iOS 12.0"
-    osx_image: xcode10
-    env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=12.0' UI=true
-  - name: "Xcode 10 iOS 11.3"
-    osx_image: xcode10
-    env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.3' UI=true
-  - name: "Xcode 10 iOS 10.3.1"
-    osx_image: xcode10
+  - name: "Xcode 10.2 iOS 10.3.1"
+    osx_image: xcode10.2
     env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
 
 script:
@@ -30,4 +24,4 @@ script:
 - travis/validate_carthage.sh
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty -f `xcpretty-gherkin-formatter/bin/xcpretty-gherkin-formatter`
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty -f `xcpretty-gherkin-formatter/bin/xcpretty-gherkin-formatter`; fi
-- pod lib lint --allow-warnings
+- bundle exec pod lib lint --allow-warnings
