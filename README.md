@@ -177,6 +177,35 @@ func testOutlineTests() {
 }
 ```
 
+### Data tables
+
+Data tables are used for passing collections of values to the steps. Unlike examples data tables do not result in running steps multiple times. Instead all the data in the data table is passed into the step as a single parameter and the step is run only once. Data tables can be defined with arrays or dictionaries:
+
+```swift
+Given("I use the following names:") {
+    ["Alice", "Bob"]
+}
+
+step("I use the following names: (.+)") { (match: DataTable<[String]>) in
+    // match.values[0] == "Alice"
+    // match.values[1] == "Bob"
+}
+
+Given("I register as the following users:") {
+    [
+        "Alice": Person(name: "Alice", age: 27, height: 170),
+        "Bob": Person(name: "Bob", age: 27, height: 170)
+    ]
+}
+
+step("I register as the following users: (.+)") { (match: DataTable<[String: Person]>) in
+    // match.values["Alice"]?.name == "Alice"
+    // match.values["Bob"]?.name == "Bob"
+}
+```
+
+In the step
+
 ### Background
 If you are repeating the same steps in each scenario you can move them to a `Background`. A `Background` is run before each scenario (effectively just before first scenario step is execuated) or outline pass (but **after** `setUp()`). You can have as many steps in `Background` as you want.
 
