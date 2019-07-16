@@ -17,6 +17,7 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		63D949F922DE7740002646F3 /* ScenarioContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D949F822DE7740002646F3 /* ScenarioContextTests.swift */; };
 		9B9DF95F1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DF95E1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift */; };
 		A055C1B120F8DC5B00539791 /* MultipleTestRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055C1AE20F8D68800539791 /* MultipleTestRunTests.swift */; };
 		AE7D6C386C4DAF0C1292DE0B /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */; };
@@ -72,6 +73,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* XCTest-Gherkin_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "XCTest-Gherkin_Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		63D949F822DE7740002646F3 /* ScenarioContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioContextTests.swift; sourceTree = "<group>"; };
 		6B239BDEED48C1DC1299C5E1 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7150CEEAA1CD24EB97D789AC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		9B9DF95E1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeRunnerTest.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				B5F7CFB821320DDF001643BD /* ExampleNativeLocalisationTest.swift */,
 				A055C1AE20F8D68800539791 /* MultipleTestRunTests.swift */,
 				B5FC01AE213AB45F006B5A48 /* BackgroundTests.swift */,
+				63D949F822DE7740002646F3 /* ScenarioContextTests.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				578212291E94B1610048D25F /* ExampleNativeOrderTest.swift in Sources */,
 				E5E12D691BEBE1AA00EA1D61 /* ExampleNativeTest.swift in Sources */,
 				5782122B1E974A570048D25F /* NativeScenarioTest.swift in Sources */,
+				63D949F922DE7740002646F3 /* ScenarioContextTests.swift in Sources */,
 				E5805C031BEA93E900D3ECD5 /* SanitySteps.swift in Sources */,
 				B5F7CFB921320DDF001643BD /* ExampleNativeLocalisationTest.swift in Sources */,
 			);
