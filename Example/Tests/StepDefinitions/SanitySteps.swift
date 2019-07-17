@@ -48,6 +48,19 @@ final class SanitySteps: StepDefiner {
             self.step("This is another step")
         }
         
+        // Example of a step that sets value in scenario context
+        step("This step should set state") {
+            self.test.scenarioContext["state"] = 1
+        }
+        
+        step("This step should read state as ([0-9]+)") { (stateValue: Int) in
+            XCTAssertEqual(self.test.scenarioContext["state"] as? Int, stateValue)
+        }
+
+        step("This step should not read state") {
+            XCTAssertNil(self.test.scenarioContext["state"])
+        }
+
         // This step is only called from another step
         step("This is another step") {
             XCTAssertTrue(true)

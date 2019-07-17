@@ -20,6 +20,9 @@ This means that anytime I want to access my extra properties I just do `state.{p
 class GherkinState: NSObject, XCTestObservation {
     var test: XCTestCase?
     
+    // Arbitrary user data associated with the current test scenario
+    var scenarioContext: [String: MatchedStringRepresentable] = [:]
+    
     // The list of all steps the system knows about
     var steps = Set<Step>()
     
@@ -68,6 +71,10 @@ class GherkinState: NSObject, XCTestObservation {
     }
 
     func testCaseDidFinish(_ testCase: XCTestCase) {
+        testCase.scenarioContext = [:]
+    }
+    
+    func testSuiteDidFinish(_ testSuite: XCTestSuite) {
         XCTestObservationCenter.shared.removeTestObserver(self)
     }
 
@@ -157,6 +164,15 @@ public extension XCTestCase {
 
             return s as! GherkinState
         }
+    }
+    
+    /**
+     Current scenario context used to share the state between steps in a single scenario.
+     Note: Example values will override context values associated with the same key.
+     */
+    var scenarioContext: [String: MatchedStringRepresentable] {
+        get { return state.scenarioContext }
+        set { state.scenarioContext = newValue }
     }
     
     /**
@@ -260,12 +276,14 @@ extension XCTestCase {
         // Make sure that we have created our steps
         self.state.loadAllStepsIfNeeded()
 
+        var variables = scenarioContext
         // If we are in an example, transform the step to reflect the current example's value
         if let example = state.currentExample {
-            // For each field in the example, go through the step expression and replace the placeholders if needed
-            expression = expression.replacingExamplePlaceholders(example)
+            variables = scenarioContext.merging(example, uniquingKeysWith: { $1 })
         }
-
+        // For each variable go through the step expression and replace the placeholders if needed
+        expression = expression.replacingExamplePlaceholders(variables)
+        
         // Get the step and the matches inside it
         guard let (step, match) = self.state.gherkinStepsAndMatchesMatchingExpression(expression).first else {
             if !self.state.matchingGherkinStepExpressionFound(expression) && self.state.shouldPrintTemplateCodeForAllMissingSteps() {
