@@ -177,6 +177,33 @@ func testOutlineTests() {
 }
 ```
 
+### Data tables
+
+Data tables are used for passing collections of values to the steps. Unlike examples data tables do not result in running steps multiple times. Instead all the data in the data table is passed into the step as a single parameter and the step is run only once. Data tables can be defined with arrays or dictionaries:
+
+```swift
+Given("I use the following names:") {
+    ["Alice", "Bob"]
+}
+
+step("I use the following names: (.+)") { (match: DataTable<[String]>) in
+    // match.values[0] == "Alice"
+    // match.values[1] == "Bob"
+}
+
+Given("I register as the following users:") {
+    [
+        "Alice": Person(name: "Alice", age: 27, height: 170),
+        "Bob": Person(name: "Bob", age: 27, height: 170)
+    ]
+}
+
+step("I register as the following users: (.+)") { (match: DataTable<[String: Person]>) in
+    // match.values["Alice"]?.name == "Alice"
+    // match.values["Bob"]?.name == "Bob"
+}
+```
+
 ### Background
 If you are repeating the same steps in each scenario you can move them to a `Background`. A `Background` is run before each scenario (effectively just before first scenario step is execuated) or outline pass (but **after** `setUp()`). You can have as many steps in `Background` as you want.
 
@@ -321,6 +348,7 @@ There is an example of this in the Example/ project as part of this pod. Look at
 
 The advantages of this are obvious; you get to quickly run your existing feature files and can get up and running quickly. The disadvanages are beacuse the tests are generated at runtime they can't be run individually from inside Xcode so debugging is tricker. I would use this to start testing inside Xcode but if it gets hairy, convert that feature file into a native Swift test and debug from there.
 
+Note: when working with native feature files with data tables steps should use `NativeDataTable` type instead of `DataTable`. See [native_data_table.feature](Example/Tests/Features/NativeFeatures/native_data_table.feature) for examples of data table formats that you can use in the feature files.
 
 ### Localisation of feature files
 

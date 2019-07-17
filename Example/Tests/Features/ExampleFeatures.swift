@@ -135,10 +135,10 @@ final class ExampleFeatures: XCTestCase {
         }
     }
 
-    struct Person: CodableMatchedStringRepresentable {
+    struct Person: CodableMatchedStringRepresentable, Equatable {
         let name: String
         let age: Int
-        let height: Int
+        let height: Float
     }
 
     func testCustomExampleValues() {
@@ -220,8 +220,39 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testMatchingStringLiterals() {
-        /// Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
-        /// in the step
+        // Test that calling Given when defining the step using `step(exactly:...` will work,
+        // and won't be horribly confused by regular expression characters in the step
         Given(MatchStringLiteralStepDefiner.literal)
     }
+
+    func testArrayDataTable() {
+        Given("I add the following numbers:") {
+            [1, 2, 3]
+        }
+        Then("I end up with 6")
+    }
+
+    func testDictionaryDataTable() {
+        Given("I add the following letters:") {
+            ["a": 1, "b": 2, "c": 3]
+        }
+        Then("I end up with 6")
+    }
+
+    func testCodableDataTable() {
+        Given("I know the following persons:") {
+            [
+                Person(name: "Alice", age: 27, height: 170),
+                Person(name: "Bob", age: 27, height: 170)
+            ]
+        }
+
+        Given("I know the following persons by name:") {
+            [
+                "Alice": Person(name: "Alice", age: 27, height: 170),
+                "Bob": Person(name: "Bob", age: 27, height: 170)
+            ]
+        }
+    }
+
 }

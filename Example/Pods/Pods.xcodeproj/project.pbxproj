@@ -36,6 +36,8 @@
 		57016AD8FF80351FA2CD5F47C2E84B4B /* XCTestCase+Gherkin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9022EBF590D7CCE34875CB4005179E47 /* XCTestCase+Gherkin.swift */; };
 		5D2463A18F78956988C993F3A8235BB0 /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 463A282C0F1A22465E5514AFFF7FF32A /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F4EA5BFFCF3A7E1573A093700F861BF /* UnusedStepsTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A019A5A6229C2D52D360505F7D722A6 /* UnusedStepsTracker.m */; };
+		6310EB4422B5021F003E9C4F /* NativeDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6310EB4322B5021F003E9C4F /* NativeDataTable.swift */; };
+		6310EB4622B50229003E9C4F /* DataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6310EB4522B50229003E9C4F /* DataTable.swift */; };
 		63A4D4EC2E81C3AC0B6F9912FB0C49CF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 033A36A29482FD32230FE0CA177F9BD3 /* Foundation.framework */; };
 		65DA43C4E99916AAFC7721F639DCA19A /* NativeRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7910B4901AC8EC350A2B5D6D7A9BAEB1 /* NativeRunner.swift */; };
 		6B15018CFA0A19AFD2B971ECE9B6DABD /* NativeScenario.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080A944EC5CEF73D1272EF6DA97856FE /* NativeScenario.swift */; };
@@ -135,6 +137,8 @@
 		587019597B6911C340A329F161C42396 /* Background.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Background.swift; path = Pod/Core/Background.swift; sourceTree = "<group>"; };
 		5C164DF15CA7EF1133642FE653F9D6EC /* Pods-XCTest-Gherkin_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-XCTest-Gherkin_Example-umbrella.h"; sourceTree = "<group>"; };
 		613D3FAA75F3A769D58636E7A763BF9A /* XCGNativeInitializer.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XCGNativeInitializer.h; path = Pod/Native/XCGNativeInitializer.h; sourceTree = "<group>"; };
+		6310EB4322B5021F003E9C4F /* NativeDataTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NativeDataTable.swift; path = Pod/Native/NativeDataTable.swift; sourceTree = "<group>"; };
+		6310EB4522B50229003E9C4F /* DataTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataTable.swift; path = Pod/Core/DataTable.swift; sourceTree = "<group>"; };
 		6A019A5A6229C2D52D360505F7D722A6 /* UnusedStepsTracker.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = UnusedStepsTracker.m; path = Pod/Core/UnusedStepsTracker.m; sourceTree = "<group>"; };
 		6C8993ECC1CB4F7013DF2530DD4AF77E /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_ExampleUITests-Info.plist"; sourceTree = "<group>"; };
 		6F78CAF0CB4E3DF2190D47E9E3895E1B /* XCTest-Gherkin.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = "XCTest-Gherkin.podspec"; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -229,6 +233,7 @@
 				587019597B6911C340A329F161C42396 /* Background.swift */,
 				A4238BC9890C0489CA1A9C8A9B84D94D /* ClassHelperMethods.swift */,
 				1A931BFE367A1475795A673AB8A3E494 /* Example.swift */,
+				6310EB4522B50229003E9C4F /* DataTable.swift */,
 				CC376A5FADAF684813ACCC94BF3D189D /* LevenshteinDistance.swift */,
 				03CE594742A62F026E955AE028A1CEED /* MatchedStringRepresentable.swift */,
 				E3B30F9A4E48603BEB67C978E8EEA7B9 /* PageObject.swift */,
@@ -266,6 +271,7 @@
 			children = (
 				C2AE81503F9B7E164C1B9E7F4C62EA88 /* Language.swift */,
 				575C032990D9BD294CF1CD79522292FE /* NativeExample.swift */,
+				6310EB4322B5021F003E9C4F /* NativeDataTable.swift */,
 				BE892E1794340EB70513FABCF43D3B0C /* NativeFeature.swift */,
 				DA65A109413868C92FA9CF6C8BE0C3CD /* NativeFeatureParser.swift */,
 				7910B4901AC8EC350A2B5D6D7A9BAEB1 /* NativeRunner.swift */,
@@ -643,10 +649,12 @@
 				6B15018CFA0A19AFD2B971ECE9B6DABD /* NativeScenario.swift in Sources */,
 				07A72B799536470FE9A9F109CCD27312 /* NativeTestCase.swift in Sources */,
 				3D65C3F1226794B0A0E05F7F3B624DAC /* PageObject.swift in Sources */,
+				6310EB4422B5021F003E9C4F /* NativeDataTable.swift in Sources */,
 				0DC4D7E4A5848701D03313269FF2CB33 /* ParseState.swift in Sources */,
 				F1B6E151B7394D8F00FA135FFF11C5BF /* Step.swift in Sources */,
 				B75F90135C50BE5D613CFF7D700BB6CF /* StepDefiner.swift in Sources */,
 				357E63DD6985EB2790E8C610DD251881 /* StringGherkinExtension.swift in Sources */,
+				6310EB4622B50229003E9C4F /* DataTable.swift in Sources */,
 				5F4EA5BFFCF3A7E1573A093700F861BF /* UnusedStepsTracker.m in Sources */,
 				21E56923BF3AE784E46EFDCAE7CF5CE4 /* XCGNativeInitializer.m in Sources */,
 				8C60BAEF186803B8DECE0354C4171A6E /* XCTest-Gherkin-dummy.m in Sources */,

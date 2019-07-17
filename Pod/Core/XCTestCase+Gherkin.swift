@@ -181,27 +181,56 @@ public extension XCTestCase {
     func Given(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "Given", file: file, line: line)
     }
-    
+
+    /**
+     Run the step matching the specified expression followed by a data table
+     */
+    func Given<T: Collection & Codable>(_ expression: String, file: String = #file, line: Int = #line, dataTable values: () -> T) {
+        self.performStep(expression + " \(DataTable(values()))", keyword: "Given", file: file, line: line)
+    }
+
     /**
      Run the step matching the specified expression
      */
     func When(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "When", file: file, line: line)
     }
-    
+
+    /**
+     Run the step matching the specified expression followed by a data table
+     */
+    func When<T: Collection & Codable>(_ expression: String, file: String = #file, line: Int = #line, dataTable values: () -> T) {
+        self.performStep(expression + " \(DataTable(values()))", keyword: "When", file: file, line: line)
+    }
+
     /**
      Run the step matching the specified expression
      */
     func Then(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "Then", file: file, line: line)
     }
-    
+
+    /**
+     Run the step matching the specified expression followed by a data table
+     */
+    func Then<T: Collection & Codable>(_ expression: String, file: String = #file, line: Int = #line, dataTable values: () -> T) {
+        self.performStep(expression + " \(DataTable(values()))", keyword: "Then", file: file, line: line)
+    }
+
     /**
      Run the step matching the specified expression
      */
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
     }
+
+    /**
+     Run the step matching the specified expression followed by a data table
+     */
+    func And<T: Collection & Codable>(_ expression: String, file: String = #file, line: Int = #line, dataTable values: () -> T) {
+        self.performStep(expression + " \(DataTable(values()))", keyword: "And", file: file, line: line)
+    }
+
 }
 
 private var automaticScreenshotsBehaviour: AutomaticScreenshotsBehaviour = .none

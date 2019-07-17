@@ -13,6 +13,7 @@ final class SanitySteps: StepDefiner {
     
     private var numberOfExamplesExecutedInOrder = 1
     private var backgroundStepsExecuted = false
+    private var answer = 0
     
     override func defineSteps() {
         
@@ -177,6 +178,103 @@ final class SanitySteps: StepDefiner {
         }
 
         step("This is unused step") {}
+
+        step("I know the following persons: (.+)") { (match: DataTable<[ExampleFeatures.Person]>) in
+            XCTAssertTrue(match.values[0].name == "Alice" || match.values[1].name == "Bob")
+        }
+
+        step("I know the following persons by name: (.+)") { (match: DataTable<[String: ExampleFeatures.Person]>) in
+            XCTAssertTrue(match.values["Alice"]?.name == "Alice" || match.values["Bob"]?.name == "Bob")
+        }
+
+        step("I add the following numbers: (.+)") { (match: DataTable<[Int]>) in
+            self.answer = match.values.reduce(self.answer, +)
+        }
+
+        step("I add the following letters: (.+)") { (match: DataTable<[String: Int]>) in
+            self.answer = match.values.values.reduce(self.answer, +)
+        }
+
+        step("I end up with (\\d+)") { (match: Int) in
+            XCTAssertEqual(self.answer, match)
+            self.answer = 0
+        }
+
+        step("I have the following array: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(match.values, [1, 2, 3])
+        }
+
+        step("I have the following array of arrays: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(match.values, [[1, 4], [2, 5], [3, 6]])
+        }
+
+        step("I have the following hash maps: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    [ "firstName": "Annie M.G.","lastName": "Schmidt",  "birthDate": "1911-03-20" ],
+                    [ "firstName": "Roald",     "lastName": "Dahl",     "birthDate": "1916-09-13" ],
+                    [ "firstName": "Astrid",    "lastName": "Lindgren", "birthDate": "1907-11-14" ]
+                ]
+            )
+        }
+
+        step("I have the following hash map: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    "KMSY": "Louis Armstrong New Orleans International Airport",
+                    "KSFO": "San Francisco International Airport",
+                    "KSEA": "Seattle–Tacoma International Airport",
+                    "KJFK": "John F. Kennedy International Airport"
+                ]
+            )
+        }
+
+        step("I have the following hash map list: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    "KMSY": [29.993333, -90.258056],
+                    "KSFO": [37.618889, -122.375000],
+                    "KSEA": [47.448889, -122.309444],
+                    "KJFK": [40.639722, -73.778889]
+                ]
+            )
+        }
+
+        step("I have the following hash map hash: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    "KMSY": [ "lat": 29.993333, "lon": -90.258056 ],
+                    "KSFO": [ "lat": 37.618889, "lon": -122.375000 ],
+                    "KSEA": [ "lat": 47.448889, "lon": -122.309444 ],
+                    "KJFK": [ "lat": 40.639722, "lon": -73.778889 ]
+                ]
+            )
+        }
+
+        step("I have the following persons: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    NativeDataTableTest.Person(name: "Alice", age: "20", height: 170, fulltime: true),
+                    NativeDataTableTest.Person(name: "Bob", age: "21", height: 171, fulltime: false)
+                ]
+            )
+        }
+
+        step("I have the following persons by id: (.+)") { (match: NativeDataTable) in
+            XCTAssertEqual(
+                match.values,
+                [
+                    1: NativeDataTableTest.Person(name: "Alice", age: "20", height: 170, fulltime: true),
+                    2: NativeDataTableTest.Person(name: "Bob", age: "21", height: 171, fulltime: false)
+                ]
+            )
+        }
+
 
     }
 }

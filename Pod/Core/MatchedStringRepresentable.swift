@@ -25,7 +25,11 @@ extension Double: MatchedStringRepresentable { }
 
 extension Bool: MatchedStringRepresentable {
     public init?(fromMatch match: String) {
-        self.init(match.lowercased())
+        switch match.lowercased() {
+        case "true", "yes", "y": self = true
+        case "false", "no", "n": self = false
+        default: return nil
+        }
     }
 }
 
@@ -42,24 +46,6 @@ extension CodableMatchedStringRepresentable {
         let decoder = JSONDecoder()
         guard let data = match.data(using: .utf8),
             let decoded = try? decoder.decode(Self.self, from: data) else {
-                return nil
-        }
-        self = decoded
-    }
-
-    public var description: String {
-        let encoder = JSONEncoder()
-        let encoded = try! encoder.encode(self)
-        return String(data: encoded, encoding: .utf8)!
-    }
-}
-// For some reason extending array with CodableMatchedStringRepresentable makes `pod lint` to fail
-// but this way it works and its sufficient as CodableMatchedStringRepresentable is just a composition of protocols 🤷‍♂️
-extension Array: MatchedStringRepresentable where Element: CodableMatchedStringRepresentable {
-    public init?(fromMatch match: String) {
-        let decoder = JSONDecoder()
-        guard let data = match.data(using: .utf8),
-            let decoded = try? decoder.decode([Element].self, from: data) else {
                 return nil
         }
         self = decoded
