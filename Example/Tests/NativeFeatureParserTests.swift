@@ -40,7 +40,7 @@ class NativeFeatureParserTests: XCTestCase {
 
         let scenarios = feature?.scenarios
 
-        XCTAssertEqual(scenarios?.count, 3)
+        XCTAssertEqual(scenarios?.count, 4)
         XCTAssertEqual(scenarios?[0].name, "This is a basic happy path example")
         XCTAssertEqual(scenarios?[0].scenarioDescription, "Scenario can have a discription too")
 

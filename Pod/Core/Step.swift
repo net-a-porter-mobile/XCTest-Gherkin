@@ -91,8 +91,12 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
             }
         }
 
-        let allMatches = (1..<match.numberOfRanges).map {
-            (expression as NSString).substring(with: match.range(at: $0))
+        let allMatches = (1..<match.numberOfRanges).compactMap { at -> String? in
+            let range = match.range(at: at)
+            guard range.location != NSNotFound else {
+                return nil
+            }
+            return (expression as NSString).substring(with: range)
         }
         return (StepMatches(allMatches: allMatches, namedMatches: namedMatches), debugDescription)
     }
