@@ -177,6 +177,13 @@ final class SanitySteps: StepDefiner {
         }
 
         step("This is unused step") {}
+        
+        step("I verify (.+) password( against (.+) username)?") { (matches: [String]) in
+            XCTAssertEqual(matches.first, "test")
+            if matches.count > 1 {
+                XCTAssertEqual(matches.last, "user")
+            }
+        }
 
     }
 }

@@ -35,3 +35,7 @@ Feature: Feature file parsing
         | name  | age |
         | Alice | 20  |
         | Bob   | 20  |
+
+    Scenario: Optional capturing string at the end
+        Given I verify test password
+        Given I verify test password against user username
