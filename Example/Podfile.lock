@@ -1,5 +1,5 @@
 PODS:
-  - SwiftLint (0.32.0)
+  - SwiftLint (0.35.0)
   - XCTest-Gherkin/Core (0.19.1)
   - XCTest-Gherkin/Native (0.19.1):
     - XCTest-Gherkin/Core
@@ -9,7 +9,7 @@ DEPENDENCIES:
   - XCTest-Gherkin/Native (from `../`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - SwiftLint
 
 EXTERNAL SOURCES:
@@ -17,9 +17,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SwiftLint: 009a898ef2a1c851f45e1b59349bf6ff2ddc990d
+  SwiftLint: 5553187048b900c91aa03552807681bb6b027846
   XCTest-Gherkin: 71eeaec8abc348688fd483e3af8020219a82bf6e
 
 PODFILE CHECKSUM: 040d56cac22fe93f01093a8f0021b445faf03233
 
-COCOAPODS: 1.7.0
+COCOAPODS: 1.8.3

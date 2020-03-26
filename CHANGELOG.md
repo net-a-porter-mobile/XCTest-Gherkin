@@ -2,6 +2,11 @@
 
 ### Unreleased
 
+### 0.19.2
++ Bugfix for macOS test targets
+
+### 0.19.1
+
 ### 0.19.0
 + Update to Swift 5
 + Update to cocoapods 1.7.0

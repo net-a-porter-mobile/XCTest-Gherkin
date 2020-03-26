@@ -24,8 +24,12 @@ public func allSubclassesOf<T>(_ baseClass: T) -> [T] {
     var matches: [T] = []
 
     for currentClass in allClasses() {
-
-        guard class_getRootSuperclass(currentClass) == NSObject.self else {
+        #if os(macOS)
+        let skip = String(describing: currentClass) == "UINSServiceViewController"
+        #else
+        let skip = false
+        #endif
+        guard class_getRootSuperclass(currentClass) == NSObject.self && !skip else {
             continue
         }
 
