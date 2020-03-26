@@ -3,7 +3,8 @@
 ### Unreleased
 
 ### 0.19.2
-+ Bugfix for macOS test targets
++ Bugfix for macOS test targets (thanks @cyrusingraham)
++ Fix case where incorrect number of ranges reported (thanks @jcavar)
 
 ### 0.19.1
 
