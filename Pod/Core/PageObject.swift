@@ -4,7 +4,8 @@ import XCTest
 open class PageObject: NSObject {
     required public override init() {
         super.init()
-        XCTAssertTrue(isPresented(), "\(type(of: self).name) is not presented")
+        let presented = isPresented()
+        XCTAssertTrue(presented, "\(type(of: self).name) is not presented")
     }
 
     /// Name of the screen (or its part) that this page object represent.
