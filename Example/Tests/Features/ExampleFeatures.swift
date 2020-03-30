@@ -220,8 +220,8 @@ final class ExampleFeatures: XCTestCase {
     }
 
     func testMatchingStringLiterals() {
-        /// Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
-        /// in the step
+        // Test that calling Given when defining the step using `step(exactly:...` will work, and won't be horribly confused by regular expression characters
+        // in the step
         Given(MatchStringLiteralStepDefiner.literal)
     }
 }

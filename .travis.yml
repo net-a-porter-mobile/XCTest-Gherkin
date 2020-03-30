@@ -9,19 +9,25 @@ before_install:
 
 matrix:
   include:
-  - name: "Xcode 10.2 iOS 12.2"
+  - name: "Xcode 10.2 iOS 12.2 iPhone 6"
     osx_image: xcode10.2
     env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=12.2' UI=true
-  - name: "Xcode 10.2 iOS 11.3"
+  - name: "Xcode 10.2 iOS 11.3 iPhone 6"
     osx_image: xcode10.2
     env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=11.3' UI=true
-  - name: "Xcode 10.2 iOS 10.3.1"
+  - name: "Xcode 10.2 iOS 10.3.1 iPhone 6"
     osx_image: xcode10.2
     env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=10.3.1' UI=true
+  - name: "Xcode 11.3.1 iOS 12.4 iPhone 6"
+    osx_image: xcode11.3
+    env: DESTINATION='platform=iOS Simulator,name=iPhone 6,OS=12.4' UI=true
+  - name: "Xcode 11.3.1 iOS 13.3 iPhone 8"
+    osx_image: xcode11.3
+    env: DESTINATION='platform=iOS Simulator,name=iPhone 8,OS=13.3' UI=true
 
 script:
 - set -o pipefail
 - travis/validate_carthage.sh
 - xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty -f `xcpretty-gherkin-formatter/bin/xcpretty-gherkin-formatter`
 - if [ $UI ]; then xcodebuild -destination "$DESTINATION" -workspace Example/XCTest-Gherkin.xcworkspace -scheme XCTest-Gherkin-Example-UI -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO test | xcpretty -f `xcpretty-gherkin-formatter/bin/xcpretty-gherkin-formatter`; fi
-- bundle exec pod lib lint --allow-warnings
+- bundle exec pod lib lint

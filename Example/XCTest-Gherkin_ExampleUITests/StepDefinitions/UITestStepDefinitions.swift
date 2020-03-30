@@ -24,11 +24,9 @@ final class UIStepDefiner: StepDefiner {
             
             let identifier = matches.first!
             
-            XCUIApplication().buttons[identifier].tap()
+            XCUIApplication().buttons[identifier].firstMatch.tap()
         }
-        
     }
-    
 }
 
 final class InitialScreenStepDefiner: StepDefiner {
@@ -38,25 +36,23 @@ final class InitialScreenStepDefiner: StepDefiner {
         step("I press Push Me button") {
             InitialScreenPageObject().pressPushMe()
         }
-
     }
-
 }
 
 final class InitialScreenPageObject: PageObject {
 
-    let app = XCUIApplication()
+    private let app = XCUIApplication()
 
     class override var name: String {
         return "Initial Screen"
     }
     
     override func isPresented() -> Bool {
-        return tryWaitFor(element: app.buttons["PushMe"], withState: "exists == true")
+        return tryWaitFor(element: app.buttons["PushMe"].firstMatch, withState: .exists)
     }
 
     func pressPushMe() {
-        app.buttons["PushMe"].tap()
+        app.buttons["PushMe"].firstMatch.tap()
     }
 }
 
@@ -67,21 +63,19 @@ final class ModalScreenStepDefiner: StepDefiner {
         step("I press Close Me button") {
             ModalScreen().pressCloseMe()
         }
-
     }
-
 }
 
 final class ModalScreen: PageObject {
 
-    let app = XCUIApplication()
+    private let app = XCUIApplication()
 
     override func isPresented() -> Bool {
-        return tryWaitFor(element: app.buttons["CloseMe"], withState: "exists == true")
+        return tryWaitFor(element: app.buttons["CloseMe"].firstMatch, withState: .exists)
     }
 
     func pressCloseMe() {
-        app.buttons["CloseMe"].tap()
+        app.buttons["CloseMe"].firstMatch.tap()
     }
 }
 
@@ -92,7 +86,12 @@ extension PageObject {
         guard predicate.evaluate(with: element) == false else { return true }
 
         let expectation = XCTNSPredicateExpectation(predicate: predicate, object: element)
-        let result = XCTWaiter().wait(for: [expectation], timeout: timeout) ==  XCTWaiter.Result.completed
+        let result = XCTWaiter().wait(for: [expectation], timeout: timeout) == .completed
         return result
     }
+}
+
+extension String {
+
+    fileprivate static let exists = "exists == true"
 }
