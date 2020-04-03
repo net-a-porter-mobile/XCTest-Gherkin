@@ -11,7 +11,6 @@
 #endif
 
 #import "UnusedStepsTracker.h"
-#import "XCGNativeInitializer.h"
 #import "XCTest_Gherkin.h"
 
 FOUNDATION_EXPORT double XCTest_GherkinVersionNumber;

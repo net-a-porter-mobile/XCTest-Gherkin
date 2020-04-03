@@ -11,11 +11,25 @@ import ObjectiveC
 
 import XCTest
 
-open class NativeTestCase: XCGNativeInitializer {
+/// Store the types which have already created their test cases. This will prevent multiple calls to processFeatures
+/// from creating duplicate methods.
+private var initializedTestCases: [AnyObject] = []
 
-    /// Overrides XCGNativeInitializer processFeatures to create the necessary
-    /// test classes and methods. There is no reason to call this method directly.
-    override open class func processFeatures() {
+open class NativeTestCase: XCTestCase {
+
+    /// An override of this property to load in the test features before we create the test suite.
+    override public class var defaultTestSuite: XCTestSuite {
+        self.processFeatures()
+
+        return super.defaultTestSuite
+    }
+
+    /// Creates the necessary test classes and methods. There is no reason to call this method directly.
+    open class func processFeatures() {
+        // We only want to run this method once per type
+        guard !initializedTestCases.contains(where: { self === $0 }) else { return }
+        initializedTestCases.append(self)
+
         // We don't want to process any features for this class, all the features
         // processed should be for subclasses of this class.
         if self == NativeTestCase.self {
