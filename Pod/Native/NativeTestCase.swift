@@ -18,7 +18,7 @@ private var initializedTestCases: [AnyObject] = []
 open class NativeTestCase: XCTestCase {
 
     /// An override of this property to load in the test features before we create the test suite.
-    override public class var defaultTestSuite: XCTestSuite {
+    override open class var defaultTestSuite: XCTestSuite {
         self.processFeatures()
 
         return super.defaultTestSuite
