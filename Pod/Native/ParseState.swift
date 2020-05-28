@@ -12,6 +12,7 @@ private let whitespace = CharacterSet.whitespaces
 
 class ParseState {
     var name: String?
+    var tags: [String] = []
     var description: [String] = []
     var steps: [StepDescription]
     var exampleLines: [(lineNumber: Int, line: String)]
@@ -73,15 +74,14 @@ class ParseState {
         // If we have no examples then we have one scenario.
         // Otherwise we need to make more than one scenario.
         if self.examples.isEmpty {
-            scenarios.append(NativeScenario(name, steps: self.steps, index: index))
+            scenarios.append(NativeScenario(name, steps: self.steps, index: index, tags: tags))
         } else {
-            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index))
+            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index, tags: tags))
         }
         
         self.name = nil
         self.steps = []
         self.exampleLines = []
-        
         return scenarios
     }
 }

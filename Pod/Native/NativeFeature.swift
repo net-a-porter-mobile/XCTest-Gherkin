@@ -61,6 +61,7 @@ extension NativeFeature {
         var scenarios = Array<NativeScenario>()
         var background: NativeBackground?
         var featureDescription: [String]?
+        var scenarioTags: [String] = []
         
         func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
             let description = state.description.joined(separator: "\n")
@@ -72,6 +73,8 @@ extension NativeFeature {
                 scenarios.append(contentsOf: newScenarios)
             }
             state = ParseState(name: lineSuffix)
+            state.tags = scenarioTags
+            scenarioTags = []
         }
         
         // Go through each line in turn
@@ -80,7 +83,11 @@ extension NativeFeature {
             lineNumber += 1
 
             // Filter comments (#) and tags (@), also filter white lines
-            guard line.first != "#" &&  line.first != "@" && !line.isEmpty else { continue }
+            guard line.first != "#" && !line.isEmpty else { continue }
+            if line.hasPrefix("@") {
+                scenarioTags.append(line.replacingOccurrences(of: "@", with: ""))
+                continue
+            }
 
             if let (linePrefix, lineSuffix) = line.lineComponents() {
                 switch linePrefix {
@@ -100,6 +107,8 @@ extension NativeFeature {
                     state.exampleLines = []
                 case Language.current.keywords.ExampleLine:
                     state.exampleLines.append((lineIndex+1, lineSuffix))
+                case Language.current.keywords.Feature:
+                    scenarioTags = []
                 default:
                     break
                 }
