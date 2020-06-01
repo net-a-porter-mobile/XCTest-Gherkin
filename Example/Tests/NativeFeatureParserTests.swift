@@ -82,6 +82,11 @@ class NativeFeatureParserTests: XCTestCase {
                 ["name": "Alice", "age": "20"],
                 ["name": "Bob", "age": "20"]
             ])
+
+        XCTAssertEqual(scenarios?[0].tags, ["iOS1","iOS2","iOS3"])
+        XCTAssertEqual(scenarios?[1].tags, ["iOS1"])
+        XCTAssertEqual(scenarios?[2].tags, ["iOS1","iOS5"])
+
     }
 
 }

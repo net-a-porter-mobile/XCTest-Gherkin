@@ -20,6 +20,7 @@ class NativeScenario: CustomStringConvertible {
     var scenarioDescription: String = ""
     let stepDescriptions: [StepDescription]
     let index: Int
+    let tags: [String]
 
     /**
      If the scenario description is 'Test funny things are funny' then the result of calling
@@ -33,10 +34,11 @@ class NativeScenario: CustomStringConvertible {
         get { return strdup(self.selectorString) }
     }
     
-    required init(_ name: String, steps: [StepDescription], index: Int = 0) {
+    required init(_ name: String, steps: [StepDescription], index: Int = 0, tags: [String] = []) {
         self.name = name
         self.stepDescriptions = steps
         self.index = index
+        self.tags = tags
     }
     
     var description: String {
@@ -53,14 +55,20 @@ class NativeScenario: CustomStringConvertible {
 class NativeScenarioOutline: NativeScenario {
     let examples: [NativeExample]
 
-    required init(_ name: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0) {
+    required init(_ name: String, steps: [StepDescription], examples: [NativeExample], index: Int = 0, tags: [String] = []) {
         self.examples = examples
-        super.init(name, steps: steps, index: index)
+        super.init(name, steps: steps, index: index, tags: tags)
+    }
+
+    required init(_ name: String, steps: [StepDescription], index: Int = 0, tags: [String] = []) {
+        fatalError("init(_:steps:index:tags:) has not been implemented")
     }
 
     required init(_ description: String, steps: [StepDescription], index: Int) {
         fatalError("init(_:steps:index:) has not been implemented")
     }
+
+
 }
 
 // The "Background" is a number of steps executed before every scenario, so this can be modelled as another scenario.
