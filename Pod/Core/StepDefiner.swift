@@ -149,6 +149,19 @@ open class StepDefiner: NSObject, XCTestObservation {
             f(value)
         }
     }
+    
+    /**
+     Create a step which _exactly_ matches the passed in string abd contains one matching group to match collection of `MatchedStringRepresentable` values
+
+     Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:
+
+     - parameter exactly: The expression to _exactly_ match against
+     - parameter f: The step definition to be run, passing in the first capture group from the expression
+     */
+    open func step<T: MatchedStringRepresentable>(exactly exact: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
+        let regexp = "^\(exact)$"
+        step(regexp, file: file, line: line, f: f)
+    }
 
     /**
      Create a new step with an expression that contains one matching group to match collection of `MatchedStringRepresentable` values
@@ -163,6 +176,19 @@ open class StepDefiner: NSObject, XCTestObservation {
             let value = requireToConvert(T(fromMatch: match), match, expression)
             f(value)
         }
+    }
+    
+    /**
+     Create a step which _exactly_ matches the passed in string abd contains one matching group to match collection of `MatchedStringRepresentable` values
+
+     Don't pass anything for file: or path: - these will be automagically filled out for you. Use it like this:
+
+     - parameter exactly: The expression to _exactly_ match against
+     - parameter f: The step definition to be run, passing in the first capture group from the expression
+     */
+    open func step<T: Collection & MatchedStringRepresentable>(exactly exact: String, file: String = #file, line: Int = #line, f: @escaping (T)->()) {
+        let regexp = "^\(exact)$"
+        step(regexp, file: file, line: line, f: f)
     }
 
     /**
