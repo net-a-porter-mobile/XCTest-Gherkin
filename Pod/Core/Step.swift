@@ -79,16 +79,37 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
     }
 
     func matches(from match: NSTextCheckingResult, expression: String) -> (matches: StepMatches<String>, stepDescription: String) {
-        var debugDescription = expression
-        var namedMatches = [String: String]()
+
+        let namedMatches: [String: String]
+        let debugDescription: String
 
         if #available(iOS 11.0, OSX 10.13, *) {
-            groupsNames.forEach { (groupName) in
-                let range = match.range(withName: groupName)
-                let value = (expression as NSString).substring(with: range)
-                debugDescription = (debugDescription as NSString).replacingCharacters(in: range, with: groupName.humanReadableString.lowercased())
-                namedMatches[groupName] = value
+
+            let cleanedMatches = groupsNames
+                .compactMap { (groupName) -> (groupName: String, range: Range<String.Index>)? in
+                    let nsRange = match.range(withName: groupName)
+                    guard
+                        nsRange.location != NSNotFound,
+                        let range = Range(nsRange, in: expression)
+                    else {
+                        return nil
+                    }
+                    return (groupName, range)
+                }
+                .reversed()
+
+            debugDescription = cleanedMatches.reduce(into: expression, { (result, row) in
+                let replacement = row.groupName.humanReadableString.lowercased()
+                result.replaceSubrange(row.range, with: replacement)
+            })
+
+            namedMatches = cleanedMatches.reduce(into: [String: String]()) { (result, row) in
+                result[row.groupName] = expression.substring(with: row.range)
             }
+
+        } else {
+            debugDescription = expression
+            namedMatches = .init()
         }
 
         let allMatches = (1..<match.numberOfRanges).compactMap { at -> String? in
