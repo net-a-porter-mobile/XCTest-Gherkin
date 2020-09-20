@@ -20,6 +20,7 @@
 		63D949F922DE7740002646F3 /* ScenarioContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D949F822DE7740002646F3 /* ScenarioContextTests.swift */; };
 		9B9DF95F1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9DF95E1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift */; };
 		A055C1B120F8DC5B00539791 /* MultipleTestRunTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055C1AE20F8D68800539791 /* MultipleTestRunTests.swift */; };
+		A084BB5025177F7700613BB0 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A084BB4F25177F7700613BB0 /* XCTest.framework */; };
 		AE7D6C386C4DAF0C1292DE0B /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */; };
 		B5F7CFB921320DDF001643BD /* ExampleNativeLocalisationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F7CFB821320DDF001643BD /* ExampleNativeLocalisationTest.swift */; };
 		B5FC01A7213A0A66006B5A48 /* NativeFeatureParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FC01A6213A0A65006B5A48 /* NativeFeatureParserTests.swift */; };
@@ -78,6 +79,7 @@
 		7150CEEAA1CD24EB97D789AC /* Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests/Pods-XCTest-Gherkin_Example-XCTest-Gherkin_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		9B9DF95E1DDB3A4500EDBDDF /* ExampleNativeRunnerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleNativeRunnerTest.swift; sourceTree = "<group>"; };
 		A055C1AE20F8D68800539791 /* MultipleTestRunTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleTestRunTests.swift; sourceTree = "<group>"; };
+		A084BB4F25177F7700613BB0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		AD8DF65B966910B5E42CBECB /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3AC2FD70988184EBE408E62 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +111,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DECAC73D7389FA6DBB085AF4 /* Pods_XCTest_Gherkin_Example.framework in Frameworks */,
+				A084BB5025177F7700613BB0 /* XCTest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +216,7 @@
 		7544643F8FED89CB84D0740A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A084BB4F25177F7700613BB0 /* XCTest.framework */,
 				295FB96ECF4E36A80D3B3F04 /* Pods_XCTest_Gherkin_Example.framework */,
 				B23A6E26B52E88BC1F182097 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_Tests.framework */,
 				B3AC2FD70988184EBE408E62 /* Pods_XCTest_Gherkin_Example_XCTest_Gherkin_ExampleUITests.framework */,
@@ -677,6 +681,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -734,6 +739,7 @@
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTING_SEARCH_PATHS = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
