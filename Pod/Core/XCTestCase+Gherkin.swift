@@ -10,6 +10,10 @@ import Foundation
 import XCTest
 import WebKit
 
+#if canImport(XCTest_Gherkin_ObjC)
+import XCTest_Gherkin_ObjC
+#endif
+
 /**
 I wanted this to work with both KIFTestCase and UITestCase which meant extending
 UITestCase - a subclass wouldn't work with both of them.

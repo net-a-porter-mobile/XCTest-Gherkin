@@ -297,6 +297,11 @@ github "net-a-porter-mobile/XCTest-Gherkin" == 0.13.2
 
 and run `carthage bootstrap --platform iOS`. The generated framework is named `XCTest_Gherkin.framework`.
 
+### Swift Package Manager
+In your Xcode project add XCTest-Gherkin via the File -> Swift Packages -> Add package dependency... menu.
+
+Note that Xcode 12 and Swift 5.3 is a minimum requirement for using XCTest-Gherkin in combination with Swift Package Manager.
+
 ## Configuration
 
 No configuration is needed.
