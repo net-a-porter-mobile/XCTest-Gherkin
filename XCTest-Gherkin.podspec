@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XCTest-Gherkin"
-  s.version          = "0.19.2"
+  s.version          = "0.20.0"
   s.summary          = "Gherkin style tests"
   s.description      = <<-DESC
 Adds Gherkin syntax to XCTestCase

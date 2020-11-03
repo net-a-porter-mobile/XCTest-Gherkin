@@ -2,6 +2,9 @@
 
 ### Unreleased
 
+### 0.20.0
++ Added package.swift (thanks @t-unit)
+
 ### 0.19.2
 + Bugfix for macOS test targets (thanks @cyrusingraham)
 + Fix case where incorrect number of ranges reported (thanks @jcavar)
