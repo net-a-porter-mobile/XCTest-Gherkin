@@ -7,7 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "XCTest_Gherkin",
-            targets: ["XCTest_Gherkin"]),
+            targets: ["XCTest_Gherkin"])
     ],
     dependencies: [],
     targets: [
@@ -44,7 +44,7 @@ let package = Package(
             ],
             cSettings: [
                 .headerSearchPath("Core"),
-                .headerSearchPath("Native"),
+                .headerSearchPath("Native")
             ]
         ),
         .target(
@@ -81,6 +81,6 @@ let package = Package(
             ],
             resources: [
                 .process("Native/gherkin-languages.json")
-            ]),
+            ])
     ]
 )
