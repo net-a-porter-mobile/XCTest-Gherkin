@@ -94,7 +94,8 @@ extension NativeFeature {
                 case Language.current.keywords.Given,
                      Language.current.keywords.When,
                      Language.current.keywords.Then,
-                     Language.current.keywords.And:
+                     Language.current.keywords.And,
+                     Language.current.keywords.But:
                     state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
                 case Language.current.keywords.Examples:
                     state.exampleLines = []
@@ -150,6 +151,7 @@ extension String {
             Language.current.keywords.When,
             Language.current.keywords.Then,
             Language.current.keywords.And,
+            Language.current.keywords.But,
             Language.current.keywords.ScenarioOutline,
             Language.current.keywords.Examples,
             Language.current.keywords.ExampleLine
