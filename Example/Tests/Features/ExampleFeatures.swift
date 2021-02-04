@@ -224,4 +224,8 @@ final class ExampleFeatures: XCTestCase {
         // in the step
         Given(MatchStringLiteralStepDefiner.literal)
     }
+
+    func testButStep() {
+        But("This test should not fail")
+    }
 }

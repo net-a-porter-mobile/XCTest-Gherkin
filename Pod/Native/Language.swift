@@ -59,6 +59,7 @@ struct Keywords {
     let When = Language.current.localized(expression: "when", default: "When", ending: " ")
     let Then = Language.current.localized(expression: "then", default: "Then", ending: " ")
     let And = Language.current.localized(expression: "and", default: "And", ending: " ")
+    let But = Language.current.localized(expression: "but", default: "But", ending: " ")
     let ExampleLine = Keyword(variants: ["|"])
 }
 
