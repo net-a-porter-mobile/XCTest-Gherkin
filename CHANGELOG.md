@@ -2,6 +2,10 @@
 
 ### Unreleased
 
+### 0.21.0
+# Added "But" (thanks @jmp)
+
+
 ### 0.20.0
 + Added package.swift (thanks @t-unit)
 
