@@ -9,7 +9,7 @@ DEPENDENCIES:
   - XCTest-Gherkin/Native (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/CocoaPods/Specs:
     - SwiftLint
 
 EXTERNAL SOURCES:
