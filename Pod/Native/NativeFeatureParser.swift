@@ -36,7 +36,18 @@ struct NativeFeatureParser {
     }
     
     private func parseFeatureFiles(_ files: FileManager.DirectoryEnumerator) -> [NativeFeature] {
-        return files.map({ return self.parseFeatureFile($0 as! URL)!})
+        let resourceKeys = Set<URLResourceKey>([.isDirectoryKey])
+
+        return files.compactMap { entry in
+            guard
+                let url = entry as? URL,
+                let values = try? url.resourceValues(forKeys: resourceKeys),
+                values.isDirectory == false else {
+                    return nil
+            }
+
+            return self.parseFeatureFile(entry as! URL)!
+        }
     }
     
     private func parseFeatureFile(_ file: URL) -> NativeFeature? {
