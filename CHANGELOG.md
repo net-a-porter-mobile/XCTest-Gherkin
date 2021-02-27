@@ -2,22 +2,32 @@
 
 ### Unreleased
 
+### 0.21.1
++ Support subfolders in native folder parsing (recurse into them)
+
+## 0.21.0
++ Added "But" (thanks @jmp)
+
+
+## 0.20.0
++ Added package.swift (thanks @t-unit)
+
 ### 0.19.2
 + Bugfix for macOS test targets (thanks @cyrusingraham)
 + Fix case where incorrect number of ranges reported (thanks @jcavar)
 
 ### 0.19.1
 
-### 0.19.0
+## 0.19.0
 + Update to Swift 5
 + Update to cocoapods 1.7.0
 + Use bundler to help dependency management
 
-### 0.18.0
+## 0.18.0
 + Add `step(exactly: String)` to explicitly exactly match a step instead of using regexes (fixes #142)
 + Add regex options to step definitions (thanks @ilyapuchka)
 
-### 0.17.1
+## 0.17.1
 + fix for name property on PageObject (thanks @ilyapuchka)
 
 ## 0.17.0 (all @ilyapuchka)

@@ -11,6 +11,10 @@ import ObjectiveC
 
 import XCTest
 
+#if canImport(XCTest_Gherkin_ObjC)
+import XCTest_Gherkin_ObjC
+#endif
+
 open class NativeTestCase: XCGNativeInitializer {
 
     /// Overrides XCGNativeInitializer processFeatures to create the necessary
