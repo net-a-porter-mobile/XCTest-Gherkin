@@ -11,6 +11,7 @@ import Foundation
 private let whitespace = CharacterSet.whitespaces
 
 class ParseState {
+    var tags: [String]
     var name: String?
     var description: [String] = []
     var steps: [StepDescription]
@@ -21,8 +22,9 @@ class ParseState {
         self.init(name: nil)
     }
     
-    required init(name: String?, parsingBackground: Bool = false) {
+    required init(name: String?, parsingBackground: Bool = false, tags: [String] = []) {
         self.name = name
+        self.tags = tags
         steps = []
         exampleLines = []
         self.parsingBackground = parsingBackground
@@ -58,7 +60,7 @@ class ParseState {
             return examples
         }
     }
-    
+
     func background() -> NativeBackground? {
         guard parsingBackground, let name = self.name, self.steps.count > 0 else { return nil }
         
@@ -73,9 +75,9 @@ class ParseState {
         // If we have no examples then we have one scenario.
         // Otherwise we need to make more than one scenario.
         if self.examples.isEmpty {
-            scenarios.append(NativeScenario(name, steps: self.steps, index: index))
+            scenarios.append(NativeScenario(name, steps: self.steps, index: index, tags: tags))
         } else {
-            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index))
+            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index, tags: tags))
         }
         
         self.name = nil
