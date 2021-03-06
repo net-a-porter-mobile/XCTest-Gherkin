@@ -228,4 +228,14 @@ final class ExampleFeatures: XCTestCase {
     func testButStep() {
         But("This test should not fail")
     }
+
+    func testMultipleOddNamedCodableMatchesDoNotCrash() {
+        // This is an odd one, found by @stefanrenne. In Step.swift, a debug description is created by replacing the literal values with
+        // the named match in the step definition (in this case, user1 and user2) - it has a bug where if you're replacing with a shorter
+        // string (which is incredibly likely!) then there might be an out of bounds exception replacing subsequent values. And if there
+        // isn't then you're going to get garbage as your debug description :|
+        //
+        // This should just not crash.
+        Given("I have two users \(Person(name: "Alice", age: 27, height: 170)) and \(Person(name: "Bob", age: 20, height: 180))")
+    }
 }

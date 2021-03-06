@@ -174,6 +174,11 @@ final class SanitySteps: StepDefiner {
                 XCTAssertEqual(match["name"], match[0])
                 XCTAssertEqual(match[1], "170")
             }
+
+            step("I have two users (?<user1>.+) and (?<user2>.+)") { (match: StepMatches<ExampleFeatures.Person>) in
+                XCTAssertNotNil(match["user1"])
+                XCTAssertNotNil(match["user2"])
+            }
         }
 
         step("This is unused step") {}
