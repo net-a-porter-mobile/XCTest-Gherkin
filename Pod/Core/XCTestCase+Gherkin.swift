@@ -10,6 +10,10 @@ import Foundation
 import XCTest
 import WebKit
 
+#if canImport(XCTest_Gherkin_ObjC)
+import XCTest_Gherkin_ObjC
+#endif
+
 /**
 I wanted this to work with both KIFTestCase and UITestCase which meant extending
 UITestCase - a subclass wouldn't work with both of them.
@@ -201,6 +205,13 @@ public extension XCTestCase {
      */
     func And(_ expression: String, file: String = #file, line: Int = #line) {
         self.performStep(expression, keyword: "And", file: file, line: line)
+    }
+
+    /**
+     Run the step matching the specified expression
+     */
+    func But(_ expression: String, file: String = #file, line: Int = #line) {
+        self.performStep(expression, keyword: "But", file: file, line: line)
     }
 }
 

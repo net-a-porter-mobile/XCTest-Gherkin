@@ -61,7 +61,8 @@ extension NativeFeature {
         var scenarios = Array<NativeScenario>()
         var background: NativeBackground?
         var featureDescription: [String]?
-        
+        var scenarioTags: [String] = []
+
         func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
             let description = state.description.joined(separator: "\n")
             if let aBackground = state.background() {
@@ -71,7 +72,8 @@ extension NativeFeature {
                 newScenarios.forEach { $0.scenarioDescription = description }
                 scenarios.append(contentsOf: newScenarios)
             }
-            state = ParseState(name: lineSuffix)
+            state = ParseState(name: lineSuffix, tags: scenarioTags)
+            scenarioTags = []
         }
         
         // Go through each line in turn
@@ -80,8 +82,11 @@ extension NativeFeature {
             lineNumber += 1
 
             // Filter comments (#) and tags (@), also filter white lines
-            guard line.first != "#" &&  line.first != "@" && !line.isEmpty else { continue }
-
+            guard line.first != "#" && !line.isEmpty else { continue }
+            if line.first == "@" {
+                scenarioTags.append(String(line.dropFirst()))
+                continue
+            }
             if let (linePrefix, lineSuffix) = line.lineComponents() {
                 switch linePrefix {
                 case Language.current.keywords.Background:
@@ -94,12 +99,15 @@ extension NativeFeature {
                 case Language.current.keywords.Given,
                      Language.current.keywords.When,
                      Language.current.keywords.Then,
-                     Language.current.keywords.And:
+                     Language.current.keywords.And,
+                     Language.current.keywords.But:
                     state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
                 case Language.current.keywords.Examples:
                     state.exampleLines = []
                 case Language.current.keywords.ExampleLine:
                     state.exampleLines.append((lineIndex+1, lineSuffix))
+                case Language.current.keywords.Feature:
+                    scenarioTags = []
                 default:
                     break
                 }
@@ -150,6 +158,7 @@ extension String {
             Language.current.keywords.When,
             Language.current.keywords.Then,
             Language.current.keywords.And,
+            Language.current.keywords.But,
             Language.current.keywords.ScenarioOutline,
             Language.current.keywords.Examples,
             Language.current.keywords.ExampleLine
