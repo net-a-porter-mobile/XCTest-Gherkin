@@ -1,6 +1,8 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
+
+### 0.21.2
 + Fix for typo in localisation (thanks @nugmanoff)
 + Fix for crash replacing multiple objects (thanks @stefanrenne)
 
