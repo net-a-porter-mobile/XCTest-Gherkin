@@ -1,6 +1,7 @@
 # XCTest-Gherkin changelog
 
 ### Unreleased
++ Fix for typo in localisation (thanks @nugmanoff)
 
 ### 0.21.1
 + Support subfolders in native folder parsing (recurse into them)
