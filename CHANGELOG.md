@@ -2,6 +2,7 @@
 
 ### Unreleased
 + Fix for typo in localisation (thanks @nugmanoff)
++ Fix for crash replacing multiple objects (thanks @stefanrenne)
 
 ### 0.21.1
 + Support subfolders in native folder parsing (recurse into them)
