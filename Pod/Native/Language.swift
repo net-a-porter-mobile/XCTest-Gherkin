@@ -53,7 +53,7 @@ struct Keywords {
     let Feature = Language.current.localized(expression: "feature", default: "Feature", ending: ":")
     let Background = Language.current.localized(expression: "background", default: "Background", ending: ":")
     let Scenario = Language.current.localized(expression: "scenario", default: "Scenario", ending: ":")
-    let ScenarioOutline = Language.current.localized(expression: "scenarioOutline", default: "Scenario Outline", ending: ":")
+    let ScenarioOutline = Language.current.localized(expression: "scenario outline", default: "Scenario Outline", ending: ":")
     let Examples = Language.current.localized(expression: "examples", default: "Examples", ending: ":")
     let Given = Language.current.localized(expression: "given", default: "Given", ending: " ")
     let When = Language.current.localized(expression: "when", default: "When", ending: " ")
