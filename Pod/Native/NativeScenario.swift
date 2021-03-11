@@ -23,8 +23,8 @@ class NativeScenario: CustomStringConvertible {
     let tags: [String]
 
     /**
-     If the scenario description is 'Test funny things are funny' then the result of calling
-     `selectorName` would be `testTestFunnyThingsAreFunny`
+     If the scenario description is 'Test funny things are funny' and this is the 3rd test then the result of calling
+     `selectorName` would be `test003TestFunnyThingsAreFunny`
      */
     var selectorString: String {
         get { return "test\(self.leftPad(index))\(self.name.camelCaseify)" }
