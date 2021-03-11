@@ -70,4 +70,11 @@ class StringGherkinExtensionTests: XCTestCase {
     func testHumanReadableString_doesNotTransformAlreadyReadableString() {
         XCTAssertEqual("Camel Case String 123 abc 456", "camelCaseString123abc456".humanReadableString.humanReadableString)
     }
+
+    func testCamelCaseify_isIdempotent() {
+        let simpleString = "two words"
+        XCTAssertEqual("TwoWords", simpleString.camelCaseify)
+        XCTAssertEqual("TwoWords", simpleString.camelCaseify.camelCaseify)
+        XCTAssertEqual("TwoWords", simpleString.camelCaseify.camelCaseify.camelCaseify)
+    }
 }
