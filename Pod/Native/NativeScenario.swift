@@ -42,9 +42,7 @@ class NativeScenario: CustomStringConvertible {
     }
     
     var description: String {
-        get {
-            return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
-        }
+        return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
     }
     
     private func leftPad(_ index: Int) -> NSString {
