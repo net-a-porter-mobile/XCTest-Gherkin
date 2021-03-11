@@ -65,11 +65,8 @@ class NativeScenarioOutline: NativeScenario {
     required init(_ description: String, steps: [StepDescription], index: Int) {
         fatalError("init(_:steps:index:) has not been implemented")
     }
-
-
 }
 
 // The "Background" is a number of steps executed before every scenario, so this can be modelled as another scenario.
 class NativeBackground: NativeScenario {
-    
 }
