@@ -11,7 +11,7 @@ import Foundation
 class NativeFeature: CustomStringConvertible {
     let name: String
     let featureDescription: String
-    let scenarios: [NativeScenario]
+    var scenarios: [NativeScenario]
     let background: NativeBackground?
     
     required init(name: String, description: String, scenarios: [NativeScenario], background: NativeBackground?) {
@@ -62,6 +62,7 @@ extension NativeFeature {
         var background: NativeBackground?
         var featureDescription: [String]?
         var scenarioTags: [String] = []
+        var featureTags: [String] = []
 
         func saveBackgroundOrScenarioAndUpdateParseState(_ lineSuffix: String){
             let description = state.description.joined(separator: "\n")
@@ -83,10 +84,20 @@ extension NativeFeature {
 
             // Filter comments (#) and tags (@), also filter white lines
             guard line.first != "#" && !line.isEmpty else { continue }
+            
+            // Adds Feature tags to each Scenario within the Feature
+            if !featureTags.isEmpty && !scenarioTags.contains(where: featureTags.contains) {
+                scenarioTags.append(contentsOf: featureTags)
+            }
+
             if line.first == "@" {
-                scenarioTags.append(String(line.dropFirst()))
+                let tags = String(line).replacingOccurrences(of: "@", with: "")
+                                       .components(separatedBy: " ")
+                                       .filter{ !$0.isEmpty }
+                scenarioTags.append(contentsOf: tags)
                 continue
             }
+            
             if let (linePrefix, lineSuffix) = line.lineComponents() {
                 switch linePrefix {
                 case Language.current.keywords.Background:
@@ -107,6 +118,10 @@ extension NativeFeature {
                 case Language.current.keywords.ExampleLine:
                     state.exampleLines.append((lineIndex+1, lineSuffix))
                 case Language.current.keywords.Feature:
+                    // Gets all Feature tags
+                    if !scenarioTags.isEmpty {
+                        featureTags = scenarioTags
+                    }
                     scenarioTags = []
                 default:
                     break
