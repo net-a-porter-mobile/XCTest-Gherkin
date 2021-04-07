@@ -45,12 +45,12 @@ struct NativeFeatureParser {
                 values.isDirectory == false else {
                     return nil
             }
-
-            return self.parseFeatureFile(entry as! URL)!
+            return self.parseFeatureFile(entry as! URL)
         }
     }
     
     private func parseFeatureFile(_ file: URL) -> NativeFeature? {
+        if file.pathExtension != "feature" { return nil }
         guard let feature = NativeFeature(contentsOfURL: file) else {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil

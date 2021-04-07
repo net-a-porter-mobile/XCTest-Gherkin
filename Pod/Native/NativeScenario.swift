@@ -27,7 +27,7 @@ class NativeScenario: CustomStringConvertible {
      `selectorName` would be `test003TestFunnyThingsAreFunny`
      */
     var selectorString: String {
-        get { return "test\(self.leftPad(index))\(self.name.camelCaseify)" }
+        get { return "test\(self.name.camelCaseify)" }
     }
     
     var selectorCString: UnsafeMutablePointer<Int8> {
@@ -43,10 +43,6 @@ class NativeScenario: CustomStringConvertible {
     
     var description: String {
         return "<\(type(of: self)) \(self.selectorString) \(self.stepDescriptions.count) steps>"
-    }
-    
-    private func leftPad(_ index: Int) -> NSString {
-        return NSString(format: "%03i", index)
     }
 }
 
