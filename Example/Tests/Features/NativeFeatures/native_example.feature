@@ -23,7 +23,7 @@ Feature: Feature file parsing
         Given I have a working Gherkin environment
         Then This test should not fail
 
-    @iOS1
+    @iOS1 @iOS6 @iOS7
     Scenario: Nested steps
         Given This step should call another step
         Then This test should not fail

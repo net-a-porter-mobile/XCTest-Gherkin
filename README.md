@@ -326,6 +326,25 @@ There is an example of this in the Example/ project as part of this pod. Look at
 
 The advantages of this are obvious; you get to quickly run your existing feature files and can get up and running quickly. The disadvanages are beacuse the tests are generated at runtime they can't be run individually from inside Xcode so debugging is tricker. I would use this to start testing inside Xcode but if it gets hairy, convert that feature file into a native Swift test and debug from there.
 
+### Running using tags
+
+You can use tags to run a subsection of your tests. These can be at Feature level, or on individual Scenarios. Tags must start with "@" and must not contain any spaces.
+
+For Feature level tags, ensure these are before your Feature name declaration in your feature file.
+For Scenario level tags, ensure these are before your Scenario name declaration in your feature file.
+There can be multiple on a single line, or individual tags on individual lines.
+
+To run using the tags:
+#### CLI:
+Append `-Tags=@tagName1,@tagName2` to your CLI command, swapping out @tagName1/2 for your tag names.
+
+#### Test Plan:
+Within Xcode
+1. Go to edit your test plan
+1. Select the 'Configurations' tab
+1. Open the 'Arguments' section
+1. For the 'Arguments Passed On Launch' field, enter the value 'Tags=@tagName1,@tagName2', replacing '@tagName1,@tagName2' with your tag names
+1. Now run your tests in the UI using your Test Plan
 
 ### Localisation of feature files
 

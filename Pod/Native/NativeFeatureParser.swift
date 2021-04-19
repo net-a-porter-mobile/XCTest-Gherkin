@@ -51,10 +51,24 @@ struct NativeFeatureParser {
     
     private func parseFeatureFile(_ file: URL) -> NativeFeature? {
         if file.pathExtension != "feature" { return nil }
-        guard let feature = NativeFeature(contentsOfURL: file) else {
+        guard var feature = NativeFeature(contentsOfURL: file) else {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil
         }
+
+        if let userTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("Tags=") }) {
+            let userTags = CommandLine.arguments[userTagsArgumentIndex].replacingOccurrences(of: "Tags=", with: "")
+                                                                       .replacingOccurrences(of: "@", with: "")
+                                                                       .components(separatedBy: ",")
+                                                                       .filter{ !$0.isEmpty }
+            if userTags.count == 0 { return feature }
+            for index in (0...feature.scenarios.count-1).reversed() {
+                if !feature.scenarios[index].tags.contains(where: userTags.contains) {
+                    feature.scenarios.remove(at: index)
+                }
+            }
+        }
+
         return feature
     }
 }
