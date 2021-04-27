@@ -77,7 +77,19 @@ class ParseState {
         if self.examples.isEmpty {
             scenarios.append(NativeScenario(name, steps: self.steps, index: index, tags: tags))
         } else {
-            scenarios.append(NativeScenarioOutline(name, steps: self.steps, examples: self.examples, index: index, tags: tags))
+            for exampleIndex in 0...self.examples.count - 1 {
+                var newSteps = self.steps
+                var newName = name
+                self.examples[exampleIndex].pairs.forEach { (key, pair) in
+                    let toReplace = "<\(key)>"
+                    let replaceWith = pair
+                    newName = newName.replacingOccurrences(of: toReplace, with: replaceWith)
+                    for stepIndex in 0...newSteps.count - 1 {
+                        newSteps[stepIndex].expression = newSteps[stepIndex].expression.replacingOccurrences(of: toReplace, with: replaceWith)
+                    }
+                }
+                scenarios.append(NativeScenario(newName, steps: newSteps, index: index, tags: tags))
+            }
         }
         
         self.name = nil

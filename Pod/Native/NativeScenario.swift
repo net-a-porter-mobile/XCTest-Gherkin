@@ -10,7 +10,7 @@ import Foundation
 
 struct StepDescription {
     let keyword: String
-    let expression: String
+    var expression: String
     let file: String
     let line: Int
 }
