@@ -78,16 +78,17 @@ class ParseState {
             scenarios.append(NativeScenario(name, steps: self.steps, index: index, tags: tags))
         } else {
             for exampleIndex in 0...self.examples.count - 1 {
+                var newSteps = self.steps
+                var newName = name
                 self.examples[exampleIndex].pairs.forEach { (key, pair) in
                     let toReplace = "<\(key)>"
                     let replaceWith = pair
-                    let newName = name.replacingOccurrences(of: toReplace, with: replaceWith)
-                    var newSteps = self.steps
+                    newName = newName.replacingOccurrences(of: toReplace, with: replaceWith)
                     for stepIndex in 0...newSteps.count - 1 {
                         newSteps[stepIndex].expression = newSteps[stepIndex].expression.replacingOccurrences(of: toReplace, with: replaceWith)
                     }
-                    scenarios.append(NativeScenario(newName, steps: newSteps, index: index, tags: tags))
                 }
+                scenarios.append(NativeScenario(newName, steps: newSteps, index: index, tags: tags))
             }
         }
         
