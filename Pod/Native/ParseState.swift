@@ -88,6 +88,12 @@ class ParseState {
                         newSteps[stepIndex].expression = newSteps[stepIndex].expression.replacingOccurrences(of: toReplace, with: replaceWith)
                     }
                 }
+
+                // Ensuring Scenario names are unique in case the name doesn't have an Example replacement in 
+                if newName == name {
+                    newName = "\(newName)-\(exampleIndex)"
+                }
+
                 scenarios.append(NativeScenario(newName, steps: newSteps, index: index, tags: tags))
             }
         }
