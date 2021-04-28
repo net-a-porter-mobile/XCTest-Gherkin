@@ -89,8 +89,9 @@ class ParseState {
                     }
                 }
 
-                // Ensuring Scenario names are unique in case the name doesn't have an Example replacement in 
-                if newName == name {
+                // Ensuring Scenario names are unique in case the name doesn't have an Example replacement in
+                let nameAlreadyExists = scenarios.firstIndex(where: { $0.name == newName })
+                if (newName == name)  || (nameAlreadyExists != nil) {
                     newName = "\(newName)-\(exampleIndex)"
                 }
                 
