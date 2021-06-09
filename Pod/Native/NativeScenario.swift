@@ -27,7 +27,7 @@ class NativeScenario: CustomStringConvertible {
      `selectorName` would be `test003TestFunnyThingsAreFunny`
      */
     var selectorString: String {
-        get { return "test\(self.name.camelCaseify)" }
+        get { return "test_\(NSSelectorFromString(self.name))" }
     }
     
     var selectorCString: UnsafeMutablePointer<Int8> {
