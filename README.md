@@ -336,14 +336,15 @@ There can be multiple on a single line, or individual tags on individual lines.
 
 To run using the tags:
 #### CLI:
-Append `-Tags=@tagName1,@tagName2` to your CLI command, swapping out @tagName1/2 for your tag names.
+For tag ignoring, append `-IgnoreTags=@tagName1,@tagName2` to your CLI command, swapping out @tagName1/2 for your tag names.
+For tag inclusion, append `-Tags=@tagName1,@tagName2` to your CLI command, swapping out @tagName1/2 for your tag names.
 
 #### Test Plan:
 Within Xcode
 1. Go to edit your test plan
 1. Select the 'Configurations' tab
 1. Open the 'Arguments' section
-1. For the 'Arguments Passed On Launch' field, enter the value 'Tags=@tagName1,@tagName2', replacing '@tagName1,@tagName2' with your tag names
+1. For the 'Arguments Passed On Launch' field, enter the value 'Tags=@tagName1,@tagName2', replacing '@tagName1,@tagName2' with your tag names, or '-IgnoreTags=@tagName1,@tagName2' for tag ignoring
 1. Now run your tests in the UI using your Test Plan
 
 ### Localisation of feature files
