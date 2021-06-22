@@ -75,7 +75,7 @@ struct NativeFeatureParser {
                                                                        .replacingOccurrences(of: "@", with: "")
                                                                        .components(separatedBy: ",")
                                                                        .filter{ !$0.isEmpty }
-            if userTags.count == 0 { return feature }
+            if userTags.isEmpty { return feature }
             for index in (0...feature.scenarios.count-1).reversed() {
                 if !feature.scenarios[index].tags.contains(where: userTags.contains) {
                     feature.scenarios.remove(at: index)
