@@ -64,9 +64,10 @@ open class NativeTestCase: XCGNativeInitializer {
         var found = false
         for feature in features {
             for index in (0...feature.scenarios.count-1).reversed() {
-            if !feature.scenarios[index].tags.contains("ignore") && feature.scenarios[index].tags.contains("include") {
-                found = true
-                break
+                if !feature.scenarios[index].tags.contains("ignore") && feature.scenarios[index].tags.contains("include") {
+                    found = true
+                    break
+                }
             }
         }
 
