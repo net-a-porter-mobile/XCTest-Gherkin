@@ -88,7 +88,9 @@ open class NativeTestCase: XCGNativeInitializer {
 
         for feature in features {   
             for index in (0...feature.scenarios.count-1).reversed() {
-                if  (feature.scenarios[index].tags.contains(where: userIgnoreTags.contains)) ||
+                if feature.scenarios[index].tags.contains("ignore") && feature.scenarios[index].tags.contains("include") {
+                    continue
+                } else if  (feature.scenarios[index].tags.contains(where: userIgnoreTags.contains)) ||
                     (found == true && !feature.scenarios[index].tags.contains("include")) ||
                     (!userTags.isEmpty && !feature.scenarios[index].tags.contains(where: userTags.contains)) {
                     feature.scenarios.remove(at: index)
