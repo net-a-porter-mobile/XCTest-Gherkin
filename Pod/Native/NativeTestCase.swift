@@ -72,9 +72,9 @@ open class NativeTestCase: XCGNativeInitializer {
         var userIgnoreTags: [String] = []
         if let userIgnoreTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("IgnoreTags=") }) {
             userIgnoreTags = CommandLine.arguments[userIgnoreTagsArgumentIndex].replacingOccurrences(of: "IgnoreTags=", with: "")
-                                                                    .replacingOccurrences(of: "@", with: "")
-                                                                    .components(separatedBy: ",")
-                                                                    .filter{ !$0.isEmpty }
+                                                                                .replacingOccurrences(of: "@", with: "")
+                                                                                .components(separatedBy: ",")
+                                                                                .filter{ !$0.isEmpty }
         }
         userIgnoreTags.append("ignore")
 
@@ -84,7 +84,6 @@ open class NativeTestCase: XCGNativeInitializer {
                                                                     .replacingOccurrences(of: "@", with: "")
                                                                     .components(separatedBy: ",")
                                                                     .filter{ !$0.isEmpty }
-            
         }
 
         for feature in features {   
