@@ -55,34 +55,6 @@ struct NativeFeatureParser {
             assertionFailure("Could not parse feature at URL \(file.description)")
             return nil
         }
-        
-        // Note: Ignored tags take precendence over 'wanted' tags
-        if let userIgnoreTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("IgnoreTags=") }) {
-            let userIgnoreTags = CommandLine.arguments[userIgnoreTagsArgumentIndex].replacingOccurrences(of: "IgnoreTags=", with: "")
-                                                                       .replacingOccurrences(of: "@", with: "")
-                                                                       .components(separatedBy: ",")
-                                                                       .filter{ !$0.isEmpty }
-            if userIgnoreTags.isEmpty { return feature }
-            for index in (0...feature.scenarios.count-1).reversed() {
-                if feature.scenarios[index].tags.contains(where: userIgnoreTags.contains) {
-                    feature.scenarios.remove(at: index)
-                }
-            }
-        }
-
-        if let userTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("Tags=") }) {
-            let userTags = CommandLine.arguments[userTagsArgumentIndex].replacingOccurrences(of: "Tags=", with: "")
-                                                                       .replacingOccurrences(of: "@", with: "")
-                                                                       .components(separatedBy: ",")
-                                                                       .filter{ !$0.isEmpty }
-            if userTags.isEmpty { return feature }
-            for index in (0...feature.scenarios.count-1).reversed() {
-                if !feature.scenarios[index].tags.contains(where: userTags.contains) {
-                    feature.scenarios.remove(at: index)
-                }
-            }
-        }
-
         return feature
     }
 }

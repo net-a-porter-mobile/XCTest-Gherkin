@@ -60,7 +60,42 @@ open class NativeTestCase: XCGNativeInitializer {
             assertionFailure("Could not retrieve features from the path '\(path)'")
             return []
         }
-        
+
+        var found = false
+        for feature in features {
+            found = (feature.scenarios.firstIndex(where: { $0.tags.contains("include") }) ?? -1) != -1
+            if found == true {
+                break
+            }
+        }
+
+        var userIgnoreTags: [String] = []
+        if let userIgnoreTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("IgnoreTags=") }) {
+            userIgnoreTags = CommandLine.arguments[userIgnoreTagsArgumentIndex].replacingOccurrences(of: "IgnoreTags=", with: "")
+                                                                    .replacingOccurrences(of: "@", with: "")
+                                                                    .components(separatedBy: ",")
+                                                                    .filter{ !$0.isEmpty }
+        }
+        userIgnoreTags.append("ignore")
+
+        var userTags: [String] = []  
+        if let userTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("Tags=") }) {
+            userTags = CommandLine.arguments[userTagsArgumentIndex].replacingOccurrences(of: "Tags=", with: "")
+                                                                    .replacingOccurrences(of: "@", with: "")
+                                                                    .components(separatedBy: ",")
+                                                                    .filter{ !$0.isEmpty }
+            
+        }
+
+        for feature in features {   
+            for index in (0...feature.scenarios.count-1).reversed() {
+                if  (feature.scenarios[index].tags.contains(where: userIgnoreTags.contains)) ||
+                    (found == true && !feature.scenarios[index].tags.contains("include")) ||
+                    (!userTags.isEmpty && !feature.scenarios[index].tags.contains(where: userTags.contains)) {
+                    feature.scenarios.remove(at: index)
+                }
+            }
+        }
         return features
     }
     
