@@ -61,16 +61,6 @@ open class NativeTestCase: XCGNativeInitializer {
             return []
         }
 
-        var found = false
-        for feature in features {
-            for index in (0...feature.scenarios.count-1).reversed() {
-                if !feature.scenarios[index].tags.contains("ignore") && feature.scenarios[index].tags.contains("include") {
-                    found = true
-                    break
-                }
-            }
-        }
-
         var userIgnoreTags: [String] = []
         if let userIgnoreTagsArgumentIndex = CommandLine.arguments.firstIndex(where: { $0.hasPrefix("IgnoreTags=") }) {
             userIgnoreTags = CommandLine.arguments[userIgnoreTagsArgumentIndex].replacingOccurrences(of: "IgnoreTags=", with: "")
@@ -90,9 +80,7 @@ open class NativeTestCase: XCGNativeInitializer {
 
         for feature in features {   
             for index in (0...feature.scenarios.count-1).reversed() {
-                if  (feature.scenarios[index].tags.contains("ignore") && feature.scenarios[index].tags.contains("include")) ||
-                    (feature.scenarios[index].tags.contains(where: userIgnoreTags.contains)) ||
-                    (found == true && !feature.scenarios[index].tags.contains("include")) ||
+                if  (feature.scenarios[index].tags.contains("ignore")) ||
                     (!userTags.isEmpty && !feature.scenarios[index].tags.contains(where: userTags.contains)) {
                     feature.scenarios.remove(at: index)
                 }
