@@ -78,14 +78,22 @@ open class NativeTestCase: XCGNativeInitializer {
                                                                     .filter{ !$0.isEmpty }
         }
 
+        var remainingScenarioCount = 0
         for feature in features {   
             for index in (0...feature.scenarios.count-1).reversed() {
                 if  (feature.scenarios[index].tags.contains(where: userIgnoreTags.contains)) ||
                     (!userTags.isEmpty && !feature.scenarios[index].tags.contains(where: userTags.contains)) {
                     feature.scenarios.remove(at: index)
+                } else {
+                    remainingScenarioCount+=1
                 }
             }
         }
+
+        if remainingScenarioCount == 0 {
+            print("There aren't any scenarios to run. Maybe you need to check the tags you're using?")
+        }
+
         return features
     }
     
