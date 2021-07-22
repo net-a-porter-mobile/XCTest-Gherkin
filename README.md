@@ -328,7 +328,7 @@ The advantages of this are obvious; you get to quickly run your existing feature
 
 ### Running using tags
 
-You can use tags to run a subsection of your tests. These can be at Feature level, or on individual Scenarios. Tags must start with "@" and must not contain any spaces.
+You can use tags to run or ignore a subsection of your tests. These can be at Feature level, or on individual Scenarios. Tags must start with "@" and must not contain any spaces.
 
 For Feature level tags, ensure these are before your Feature name declaration in your feature file.
 For Scenario level tags, ensure these are before your Scenario name declaration in your feature file.
