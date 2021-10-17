@@ -12,8 +12,11 @@ import XCTest
 //Gives us the ability to run features or scenarios directly by specifying file and name
 open class NativeRunner {
     
-    public class func runScenario(featureFile: String, scenario: String?, testCase: XCTestCase) {
-        testCase.state.loadAllStepsIfNeeded()
+    public class func runScenario(featureFile: String,
+                                  scenario: String?,
+                                  testCase: XCTestCase,
+                                  mapStepDefiner: StepDefiner.Type? = nil) {
+        testCase.state.loadAllStepsIfNeeded(mapStepDefiner)
 
         let path = Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile)
         let featureFilePath = requireNotNil(path, "Path could not be built for feature file: \(featureFile)")
