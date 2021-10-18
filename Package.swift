@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.4
 
 import PackageDescription
 
@@ -81,6 +81,9 @@ let package = Package(
             ],
             resources: [
                 .process("Native/gherkin-languages.json")
+            ],
+            swiftSettings: [
+                .define("SWIFT_PACKAGE")
             ])
     ]
 )
