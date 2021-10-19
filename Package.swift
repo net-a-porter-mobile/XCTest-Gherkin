@@ -81,6 +81,9 @@ let package = Package(
             ],
             resources: [
                 .process("Native/gherkin-languages.json")
+            ],
+            swiftSettings: [
+                .define("SWIFT_PACKAGE")
             ])
     ]
 )
