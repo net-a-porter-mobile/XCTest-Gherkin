@@ -78,6 +78,7 @@ extension NativeFeature {
         
         // Go through each line in turn
         var lineNumber = 0
+        var isPreviousStepKeyword = false
         for (lineIndex, line) in lines.enumerated() {
             lineNumber += 1
 
@@ -92,26 +93,34 @@ extension NativeFeature {
                 case Language.current.keywords.Background:
                     featureDescription = featureDescription ?? state.description
                     state = ParseState(name: lineSuffix, parsingBackground: true)
+                    isPreviousStepKeyword = false
                 case Language.current.keywords.Scenario,
                      Language.current.keywords.ScenarioOutline:
                     featureDescription = featureDescription ?? state.description
                     saveBackgroundOrScenarioAndUpdateParseState(lineSuffix)
+                    isPreviousStepKeyword = false
                 case Language.current.keywords.Given,
                      Language.current.keywords.When,
                      Language.current.keywords.Then,
                      Language.current.keywords.And,
                      Language.current.keywords.But:
+                    isPreviousStepKeyword = true
                     state.steps.append(.init(keyword: linePrefix, expression: lineSuffix, file: path, line: lineNumber))
                 case Language.current.keywords.Examples:
                     state.exampleLines = []
+                    isPreviousStepKeyword = false
                 case Language.current.keywords.ExampleLine:
                     state.exampleLines.append((lineIndex+1, lineSuffix))
+                    isPreviousStepKeyword = false
                 case Language.current.keywords.Feature:
                     scenarioTags = []
+                    isPreviousStepKeyword = false
                 default:
+                    isPreviousStepKeyword = false
                     break
                 }
             } else {
+                precondition(!isPreviousStepKeyword, "Invalid keyword step")
                 state.description.append(line)
             }
         }
