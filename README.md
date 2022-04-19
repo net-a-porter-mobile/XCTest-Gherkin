@@ -89,7 +89,7 @@ step("User is logged in as (.+)") { (match: Person) in
 
 func testLoggedInUser() {
     let nick = Person(name: "Nick")
-    Given("User is loggeed in as \(nick)")
+    Given("User is logged in as \(nick)")
 }
 ```
 
