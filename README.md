@@ -89,7 +89,7 @@ step("User is logged in as (.+)") { (match: Person) in
 
 func testLoggedInUser() {
     let nick = Person(name: "Nick")
-    Given("User is loggeed in as \(nick)")
+    Given("User is logged in as \(nick)")
 }
 ```
 
@@ -103,14 +103,14 @@ step("User is logged in as (.+)") { (match: Person) in ... }
 
 func testLoggedInUser() {
     let nick = Person(name: "Nick")
-    Given("User is loggeed in as \(Person(name: "Nick"))")
+    Given("User is logged in as \(Person(name: "Nick"))")
 }
 ```
 
 will produce following logs:
 
 ```
-step User is loggeed in as {"name":"Nick"}
+step User is logged in as {"name":"Nick"}
 ```
 
 With named capture groups the step definition can look like this (notice that `match` is now a `StepMatches<Person>`)
