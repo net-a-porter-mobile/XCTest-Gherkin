@@ -8,7 +8,10 @@
 
 import Foundation
 import XCTest
+
+#if canImport(WebKit)
 import WebKit
+#endif
 
 #if canImport(XCTest_Gherkin_ObjC)
 import XCTest_Gherkin_ObjC
