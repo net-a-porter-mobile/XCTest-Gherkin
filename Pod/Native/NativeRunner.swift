@@ -11,21 +11,31 @@ import XCTest
 
 //Gives us the ability to run features or scenarios directly by specifying file and name
 open class NativeRunner {
-    
-    public class func runScenario(featureFile: String, scenario: String?, testCase: XCTestCase) {
-        testCase.state.loadAllStepsIfNeeded()
 
-        let path = Bundle(for: type(of: testCase)).resourceURL?.appendingPathComponent(featureFile)
+    public class func runScenario(featureFile: String,
+                                  scenario: String?,
+                                  testCase: XCTestCase,
+                                  mapStepDefiner: StepDefiner.Type? = nil) {
+        testCase.state.loadAllStepsIfNeeded(mapStepDefiner)
+
+        var bundle = Bundle(for: type(of: testCase))
+        #if SWIFT_PACKAGE
+            bundle = Bundle.module
+        #endif
+        let path = bundle.resourceURL?.appendingPathComponent(featureFile)
         let featureFilePath = requireNotNil(path, "Path could not be built for feature file: \(featureFile)")
 
         let features = loadFeatures(path: featureFilePath)
         
         for feature in features {
-            let scenarios = feature.scenarios.filter {
-                scenario == nil || $0.name.hasPrefix(scenario!)
+            let scenarios: [NativeScenario]
+            if let scenario = scenario {
+                scenarios = feature.scenarios.filter { $0.name == scenario }
+            } else {
+                scenarios = feature.scenarios
             }
             
-            precondition(!scenarios.isEmpty, "No scenario found with name: \(scenario ?? "<no scenario provided>")")
+            precondition(!scenarios.isEmpty, "No scenario found with name: \(scenario)")
 
             for scenario in scenarios {
                 testCase.perform(scenario: scenario, from: feature)

@@ -129,12 +129,16 @@ class GherkinState: NSObject, XCTestObservation {
         self.steps.printStepsDefinitions()
     }
     
-    func loadAllStepsIfNeeded() {
+    func loadAllStepsIfNeeded(_ mapStepDefiner: StepDefiner.Type? = nil) {
         guard self.steps.count == 0 else { return }
         
         // Create an instance of each step definer and call it's defineSteps method
-        allSubclassesOf(StepDefiner.self).forEach { subclass in
-            subclass.init(test: self.test!).defineSteps()
+        if mapStepDefiner == nil {
+            allSubclassesOf(StepDefiner.self).forEach { subclass in
+                subclass.init(test: self.test!).defineSteps()
+            }
+        } else {
+            mapStepDefiner!.init(test: self.test!).defineSteps()
         }
 
         UnusedStepsTracker.shared().setSteps(self.steps.map { String(reflecting: $0) })

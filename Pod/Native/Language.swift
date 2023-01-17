@@ -13,7 +13,11 @@ class Language {
     private init() {}
 
     private(set) var vocabulary: [String: [String: [String]]]? = {
-        let bundle = Bundle(for: NativeFeature.self)
+        var bundle = Bundle(for: NativeFeature.self)
+        #if SWIFT_PACKAGE
+            bundle = Bundle.module
+        #endif
+        
         guard let path = bundle.path(forResource: "gherkin-languages", ofType: ".json"),
             let data = FileManager.default.contents(atPath: path),
             let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: [String: [String]]]
