@@ -143,7 +143,9 @@ class Step: Hashable, Equatable, CustomDebugStringConvertible {
 }
 
 func ==(lhs: Step, rhs: Step) -> Bool {
-    return lhs.expression == rhs.expression
+    return lhs.expression == rhs.expression &&
+           lhs.file == rhs.file &&
+           lhs.line == rhs.line
 }
 
 extension Collection where Element == Step {

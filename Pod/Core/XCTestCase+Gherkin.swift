@@ -274,7 +274,11 @@ extension XCTestCase {
     */
     func addStep(_ expression: String, options: NSRegularExpression.Options, file: String, line: Int, function: @escaping (StepMatches<String>)->()) {
         let step = Step(expression, options: options, file: file, line: line, function)
-        state.steps.insert(step);
+        if state.steps.contains(step) {
+            NSLog("Skipped addition of duplicate step: \(step))")
+        } else {
+            state.steps.insert(step)
+        }
     }
 
     /**
